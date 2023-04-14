@@ -1,0 +1,31 @@
+{
+    "name": "@nzyme/utils",
+    "version": "1.0.0",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "exports": {
+        ".": {
+            "node": {
+                "import": "./dist/esm/index.js",
+                "require": "./dist/cjs/index.js"
+            },
+            "default": "./dist/esm/index.js"
+        }
+    },
+    "types": "./src/index.ts",
+    "sideEffects": false,
+    "repository": "https://github.com/kedrzu/lesscms.git",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "private": true,
+    "dependencies": {
+        "@nzyme/types": "1.0.0",
+        "@types/lodash": "^4.14.192",
+        "lodash": "^4.17.21",
+        "tslib": "^2.5.0"
+    },
+    "depcheck": {
+        "ignoreFiles": [
+            "tests"
+        ]
+    }
+}

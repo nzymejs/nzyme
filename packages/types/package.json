@@ -1,0 +1,10 @@
+{
+    "name": "@nzyme/types",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "index.d.ts",
+    "types": "index.d.ts",
+    "dependencies": {
+        "type-fest": "^3.8.0"
+    }
+}
