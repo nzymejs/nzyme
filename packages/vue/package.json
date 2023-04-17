@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "exports": {
         ".": {
-            "import": "./dist/index.js"
+            "import": "./dist/index.js",
+            "source": "./src/index.ts"
         },
         "./types": {
             "types": "./src/types.d.ts"

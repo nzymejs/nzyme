@@ -19,3 +19,5 @@ export * from './random';
 export * from './Nullable';
 export * from './configClass';
 export * from './eventEmitter';
+export * from './CancelError';
+ 

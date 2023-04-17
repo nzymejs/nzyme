@@ -12,3 +12,5 @@ export * from './Format';
 export { useContainer } from './useContainer';
 export * from './useService';
 export { CommonPlugin } from './CommonPlugin';
+export * from './useVirtualHistory';
+export * from './useModal';

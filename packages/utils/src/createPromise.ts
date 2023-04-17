@@ -1,4 +1,4 @@
-export function createPromise<T>() {
+export function createPromise<T = void>() {
     let resolve!: (value: T) => void;
     let reject!: (reason: unknown) => void;
 

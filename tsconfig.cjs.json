@@ -14,5 +14,6 @@
         "noImplicitOverride": false,
         "allowUnreachableCode": true,
         "allowUnusedLabels": true
-    }
+    },
+    "references": []
 }
