@@ -1,0 +1,23 @@
+{
+    "name": "@nzyme/vue",
+    "version": "1.0.0",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js"
+        },
+        "./types": {
+            "types": "./src/types.d.ts"
+        }
+    },
+    "types": "./src/index.ts",
+    "sideEffects": false,
+    "repository": "https://github.com/nzymejs/nzyme.git",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "dependencies": {
+        "@nzyme/ioc": "1.0.0",
+        "@nzyme/types": "1.0.0",
+        "@nzyme/utils": "1.0.0",
+        "lodash": "^4.17.21",
+        "vue": "^3.2.47"
+    }
+}

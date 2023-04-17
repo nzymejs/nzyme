@@ -1,0 +1,21 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "jsx": "preserve"
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "types.d.ts"],
+    "references": [
+        {
+            "path": "../ioc/tsconfig.json"
+        },
+        {
+            "path": "../types/tsconfig.json"
+        },
+        {
+            "path": "../utils/tsconfig.json"
+        }
+    ]
+}
