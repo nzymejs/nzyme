@@ -18,7 +18,7 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "dependencies": {
         "@nzyme/types": "1.0.0",
-        "@types/lodash": "^4.14.192",
+        "@types/lodash": "^4.14.194",
         "lodash": "^4.17.21",
         "tslib": "^2.5.0"
     },

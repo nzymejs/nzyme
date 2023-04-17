@@ -23,9 +23,9 @@
         "eslint": "8.38.0",
         "eslint-config-prettier": "8.8.0",
         "eslint-plugin-import": "2.27.5",
-        "eslint-plugin-jsdoc": "41.1.1",
+        "eslint-plugin-jsdoc": "41.1.2",
         "eslint-plugin-prefer-arrow": "1.2.3",
-        "eslint-plugin-vue": "^9.10.0"
+        "eslint-plugin-vue": "^9.11.0"
     },
     "dependencies": {
         "@types/eslint": "^8.37.0"
