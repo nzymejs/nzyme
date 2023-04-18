@@ -1,7 +1,7 @@
 declare const s: unique symbol;
 
 export class Injectable<T = unknown> {
-    [s]!: T;
+    declare [s]: T;
 
     public readonly name?: string;
 

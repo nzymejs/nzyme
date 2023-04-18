@@ -5,11 +5,9 @@
     "module": "./dist/esm/index.js",
     "exports": {
         ".": {
-            "node": {
-                "import": "./dist/esm/index.js",
-                "require": "./dist/cjs/index.js"
-            },
-            "default": "./dist/esm/index.js"
+            "source": "./src/index.ts",
+            "import": "./dist/esm/index.js",
+            "require": "./dist/cjs/index.js"
         }
     },
     "types": "./src/index.ts",
