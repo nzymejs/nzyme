@@ -11,6 +11,7 @@ import {
     createVNode,
     ExtractPropTypes,
     ComponentOptions,
+    createApp,
     Suspense,
 } from 'vue';
 
@@ -94,9 +95,6 @@ export function useModal(opts?: ModalOptions) {
     }
 
     return {
-        xxx<T extends ModalComponent>(options: OpenModalOptions<T>): ComponentProps<T> {
-            return options.modal as any;
-        },
         async open<T extends ModalComponent>(options: OpenModalOptions<T>) {
             const promise = createPromise<ModalResult<T>>();
             const open = ref(true);
@@ -166,14 +164,17 @@ export function useModal(opts?: ModalOptions) {
                 },
             });
 
-            const vnode = createVNode(component);
-            vnode.appContext = { ...currentInstance.appContext };
+            const app = createApp(component);
+            Object.assign(app._context, currentInstance.appContext);
 
             const host = document.createElement('div');
             host.role = 'dialog';
             document.body.appendChild(host);
+            app.mount(host);
 
-            render(vnode, document.body);
+            // const vnode = createVNode(component);
+            // vnode.appContext = { ...currentInstance.appContext };
+            // render(vnode, document.body);
 
             async function closeModal() {
                 open.value = false;
@@ -185,6 +186,10 @@ export function useModal(opts?: ModalOptions) {
                 historyHandle.cancel();
 
                 await componentPromise.promise;
+
+                app.unmount();
+                host.remove();
+
                 if (modalDone) {
                     promise.resolve(modalResult as ModalResult<T>);
                 } else {

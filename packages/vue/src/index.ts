@@ -14,3 +14,4 @@ export * from './useService';
 export { CommonPlugin } from './CommonPlugin';
 export * from './useVirtualHistory';
 export * from './useModal';
+export * from './transitions/TransitionFade';

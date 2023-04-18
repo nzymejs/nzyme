@@ -4,9 +4,10 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "jsx": "preserve"
+        "jsx": "preserve",
+        "plugins": [{ "name": "typescript-plugin-css-modules" }]
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "types.d.ts"],
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.scss"],
     "references": [
         {
             "path": "../ioc/tsconfig.json"
