@@ -1,6 +1,7 @@
 {
     "name": "@nzyme/vue",
     "version": "1.0.0",
+    "type": "module",
     "exports": {
         ".": {
             "source": "./src/index.ts",
@@ -22,6 +23,13 @@
         "vue": "^3.2.47"
     },
     "devDependencies": {
+        "sass": "1.62.0",
         "typescript-plugin-css-modules": "5.0.1"
+    },
+    "depcheck": {
+        "ignoreDeps": [
+            "sass",
+            "typescript-plugin-css-modules"
+        ]
     }
 }

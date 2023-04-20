@@ -1,4 +1,4 @@
-import { prop } from './prop';
+import { prop } from './prop.js';
 
 export function vueModelProps<T, TModel extends string = 'modelValue'>(name?: TModel) {
     if (!name) {

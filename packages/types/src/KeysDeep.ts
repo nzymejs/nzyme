@@ -1,4 +1,4 @@
-import { Simplify } from './Common';
+import { Simplify } from './Common.js';
 
 export type KeysDeep<T extends Record<string | number, unknown>> = Simplify<
     | keyof T

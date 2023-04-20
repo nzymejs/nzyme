@@ -1,5 +1,5 @@
-import isEqual from 'lodash/isEqual';
+import isEqual from 'lodash.isequal';
 
-export function deepEquals(a: any, b: any) {
+export function deepEquals(a: unknown, b: unknown) {
     return isEqual(a, b);
 }

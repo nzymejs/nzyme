@@ -1,7 +1,7 @@
 import { EmptyObject } from '@nzyme/types';
 
-import { ResolveDeps } from './Container';
-import { Injectable, InjectableOptions } from './Injectable';
+import { ResolveDeps } from './Container.js';
+import { Injectable, InjectableOptions } from './Injectable.js';
 
 export abstract class Resolvable<
     T = unknown,

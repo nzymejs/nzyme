@@ -15,8 +15,8 @@ import {
     Suspense,
 } from 'vue';
 
-import { prop } from './prop';
-import { useVirtualHistory } from './useVirtualHistory';
+import { prop } from './prop.js';
+import { useVirtualHistory } from './useVirtualHistory.js';
 
 type ModalHandlerProps<TResult> = {
     modal: ModalHandler<TResult>;

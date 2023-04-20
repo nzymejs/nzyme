@@ -1,13 +1,12 @@
 {
     "name": "@nzyme/utils",
     "version": "1.0.0",
-    "main": "./dist/cjs/index.js",
-    "module": "./dist/esm/index.js",
+    "type": "module",
+    "main": "./dist/index.js",
     "exports": {
         ".": {
             "source": "./src/index.ts",
-            "import": "./dist/esm/index.js",
-            "require": "./dist/cjs/index.js"
+            "import": "./dist/index.js"
         }
     },
     "types": "./src/index.ts",
@@ -16,8 +15,8 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "dependencies": {
         "@nzyme/types": "1.0.0",
-        "@types/lodash": "^4.14.194",
-        "lodash": "^4.17.21",
+        "@types/lodash.isequal": "^4.5.6",
+        "lodash.isequal": "^4.5.0",
         "tslib": "^2.5.0"
     },
     "depcheck": {

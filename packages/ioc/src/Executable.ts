@@ -1,6 +1,6 @@
-import { ResolveDeps, ResolveResult } from './Container';
-import { InjectableOptions } from './Injectable';
-import { Resolvable } from './Resolvable';
+import { ResolveDeps, ResolveResult } from './Container.js';
+import { InjectableOptions } from './Injectable.js';
+import { Resolvable } from './Resolvable.js';
 
 export class Executable<T, TDeps extends ResolveDeps> extends Resolvable<() => T, TDeps> {
     constructor(private readonly def: ExecutableDefinition<T, TDeps>) {

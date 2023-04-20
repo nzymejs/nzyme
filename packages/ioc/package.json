@@ -1,13 +1,12 @@
 {
     "name": "@nzyme/ioc",
     "version": "1.0.0",
-    "main": "./dist/cjs/index.js",
-    "module": "./dist/esm/index.js",
+    "type": "module",
+    "main": "./dist/index.js",
     "exports": {
         ".": {
             "source": "./src/index.ts",
-            "import": "./dist/esm/index.js",
-            "require": "./dist/cjs/index.js"
+            "import": "./dist/index.js",
         }
     },
     "types": "./src/index.ts",

@@ -1,4 +1,4 @@
-import { Merge } from './Common';
+import { Merge } from './Common.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PartialOnUndefined<T> = PartialOn<T, undefined>;

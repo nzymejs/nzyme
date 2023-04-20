@@ -1,4 +1,4 @@
-import { AbstractConstructor } from './Constructors';
+import { AbstractConstructor } from './Constructors.js';
 
 export interface PropertyDecorator<TResult = void> {
     (target: PropertyDecoratorTarget, propertyKey: string): TResult;

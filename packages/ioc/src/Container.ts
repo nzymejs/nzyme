@@ -1,10 +1,10 @@
 import { Constructor, Flatten } from '@nzyme/types';
 
-import { Executable } from './Executable';
-import { Factory } from './Factory';
-import { Injectable } from './Injectable';
-import { Resolvable } from './Resolvable';
-import { Service } from './Service';
+import { Executable } from './Executable.js';
+import { Factory } from './Factory.js';
+import { Injectable } from './Injectable.js';
+import { Resolvable } from './Resolvable.js';
+import { Service } from './Service.js';
 
 export type ResolveDeps = {
     [key: string]: Injectable<unknown> | Constructor<Container>;

@@ -1,4 +1,4 @@
-import { ValueOf } from './ObjectUtils';
+import { ValueOf } from './ObjectUtils.js';
 
 export function mapObject<T, TTo>(
     obj: T,

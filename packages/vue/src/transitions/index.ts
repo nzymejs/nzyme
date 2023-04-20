@@ -1,2 +1,2 @@
-export * from './defineTransition';
-export * from './TransitionFade';
+export * from './defineTransition.js';
+export * from './TransitionFade.js';
