@@ -15,3 +15,4 @@ export { CommonPlugin } from './CommonPlugin.js';
 export * from './useVirtualHistory.js';
 export * from './useModal.js';
 export * from './transitions/TransitionFade.js';
+export * from './onHistoryBack.js';

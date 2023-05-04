@@ -51,14 +51,14 @@ function initialize() {
         const replaceState = window.history.replaceState;
 
         window.history.pushState = function (data, title, url) {
-            const index = getStateIndex(history.state) + 1;
+            const index = getStateIndex(history.state as VirtualHistoryState | null) + 1;
             const state = getState(index, data);
 
             pushState.call(this, state, title, url);
         };
 
         window.history.replaceState = function (data, title, url) {
-            const index = getStateIndex(history.state);
+            const index = getStateIndex(history.state as VirtualHistoryState | null);
             const state = getState(index, data);
 
             replaceState.call(this, state, title, url);
@@ -88,7 +88,7 @@ function getState(index: number, data?: any) {
 function pushVirtualState(callback: Callback): VirtualHistoryHandle {
     history.pushState(history.state, document.title, null);
 
-    const index = getStateIndex(history.state);
+    const index = getStateIndex(history.state as VirtualHistoryState | null);
 
     callbacks.set(index, callback);
 
