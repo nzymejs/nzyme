@@ -16,3 +16,6 @@ export * from './useVirtualHistory.js';
 export * from './useModal.js';
 export * from './transitions/TransitionFade.js';
 export * from './onHistoryBack.js';
+export * from './onWindowEvent.js';
+export * from './onWindowResize.js';
+export * from './onWindowScroll.js';
