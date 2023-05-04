@@ -7,6 +7,8 @@ export type Primitive = string | boolean | number;
 
 export type Strict<T> = Exclude<T, null | undefined>;
 
+export type Defined<T> = Exclude<T, undefined>;
+
 export type Simplify<T> = Exclude<T, undefined>;
 
 export type Flatten<T> = Exclude<
