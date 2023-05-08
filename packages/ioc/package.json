@@ -6,7 +6,7 @@
     "exports": {
         ".": {
             "source": "./src/index.ts",
-            "import": "./dist/index.js",
+            "import": "./dist/index.js"
         }
     },
     "types": "./src/index.ts",
