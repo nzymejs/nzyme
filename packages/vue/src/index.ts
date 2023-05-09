@@ -7,6 +7,8 @@ export * from './makeRef.js';
 export * from './useAsync.js';
 export * from './useDataSource.js';
 export * from './useElement.js';
+export * from './useEmitAsync.js';
+export * from './useInstance.js';
 export * from './vmodel.js';
 export * from './Format.js';
 export { useContainer } from './useContainer.js';
