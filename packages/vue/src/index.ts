@@ -15,9 +15,11 @@ export { useContainer } from './useContainer.js';
 export * from './useService.js';
 export { CommonPlugin } from './CommonPlugin.js';
 export * from './useVirtualHistory.js';
-export * from './useModal.js';
 export * from './transitions/TransitionFade.js';
 export * from './onHistoryBack.js';
 export * from './onWindowEvent.js';
 export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
+
+export * from './modal/useModal.js';
+export { ModalHost } from './modal/ModalHost.js';

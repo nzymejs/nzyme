@@ -1,54 +1,18 @@
-import { Flatten } from '@nzyme/types';
 import { CancelError, assertValue, createPromise } from '@nzyme/utils';
+import { ref, onUnmounted, getCurrentInstance, defineComponent, h, createApp, Suspense } from 'vue';
+
+import { prop } from '../prop.js';
+import { useVirtualHistory } from '../useVirtualHistory.js';
+
 import {
-    ref,
-    onUnmounted,
-    DefineComponent,
-    getCurrentInstance,
-    defineComponent,
-    h,
-    render,
-    createVNode,
-    ExtractPropTypes,
-    ComponentOptions,
-    createApp,
-    Suspense,
-} from 'vue';
-
-import { prop } from './prop.js';
-import { useVirtualHistory } from './useVirtualHistory.js';
-
-type ModalHandlerProps<TResult> = {
-    modal: ModalHandler<TResult>;
-};
-
-type ComponentProps<T> = T extends DefineComponent<infer TProps, any, any, any>
-    ? ExtractPropTypes<TProps>
-    : never;
-
-type ModalComponent<TProps extends ModalHandlerProps<any> = any> = ComponentOptions<TProps>;
-
-type ModalComponentView<T extends ModalComponent> =
-    | T
-    | (() => Promise<{ default: T }>)
-    | Promise<{ default: T }>;
-
-type ModalPropsWithoutHandler<T extends ModalComponent> = Flatten<Omit<ComponentProps<T>, 'modal'>>;
-type ModalProps<T extends ModalComponent> = keyof ModalPropsWithoutHandler<T> extends never
-    ? void
-    : ModalPropsWithoutHandler<T>;
-
-type ModalResult<T extends ModalComponent> = T extends ModalComponent<infer TProps>
-    ? TProps['modal'] extends ModalHandler<infer TResult>
-        ? TResult
-        : never
-    : never;
-
-export interface ModalHandler<T> {
-    setResult(this: void, result: T): void;
-    done(this: void, result: T): void;
-    close(this: void): void;
-}
+    ModalComponent,
+    ModalComponentView,
+    ModalHandler,
+    ModalHandlerProps,
+    ModalProps,
+    ModalResult,
+    OpenModalOptions,
+} from './ModalTypes.js';
 
 const allModals: ModalHandler<unknown>[] = [];
 
@@ -56,20 +20,6 @@ export function useModalProps<T = void>() {
     return {
         modal: prop<ModalHandler<T>>().required(),
     };
-}
-
-export type OpenModalOptions<T extends ModalComponent> = ModalProps<T> extends void
-    ? OpenModalOptionsWithoutProps<T>
-    : OpenModalOptionsWithProps<T>;
-
-interface OpenModalOptionsWithoutProps<T extends ModalComponent> {
-    modal: ModalComponentView<T>;
-    props?: void;
-}
-
-interface OpenModalOptionsWithProps<T extends ModalComponent> {
-    modal: ModalComponentView<T>;
-    props: ModalProps<T>;
 }
 
 interface ModalOptions {
@@ -96,6 +46,7 @@ export function useModal(opts?: ModalOptions) {
 
     return {
         async open<T extends ModalComponent>(options: OpenModalOptions<T>) {
+            const view = await unwrapModalComponent(options.modal);
             const promise = createPromise<ModalResult<T>>();
             const open = ref(true);
 
@@ -129,8 +80,6 @@ export function useModal(opts?: ModalOptions) {
             allModals.push(handler);
 
             const historyHandle = virtualHistory.pushState(handler.close);
-
-            const view = await unwrapModalComponent(options.modal);
 
             const componentPromise = createPromise();
             const component = defineComponent({
