@@ -12,5 +12,6 @@ export * from './Properties.js';
 export * from './RouteParameters.js';
 export * from './TypeGuards.js';
 export * from './VoidProps.js';
+export * from './FunctionOnly.js';
 
 export type { Class } from 'type-fest';
