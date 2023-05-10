@@ -1,4 +1,5 @@
 import { guid } from '@nzyme/utils';
+import {} from '@nzyme/dom';
 import { onBeforeUnmount } from 'vue';
 
 interface VirtualHistoryState {
