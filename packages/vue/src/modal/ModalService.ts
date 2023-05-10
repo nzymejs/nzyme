@@ -1,5 +1,7 @@
-import { defineService } from '@nzyme/ioc';
 import { Ref, reactive, ref } from 'vue';
+
+import { defineService } from '@nzyme/ioc';
+import { Writable } from '@nzyme/types';
 import { CancelError, createPromise } from '@nzyme/utils';
 
 import {
@@ -9,6 +11,7 @@ import {
     OpenModalOptions,
     ModalComponentView,
     ModalResult,
+    ModalProps,
 } from './ModalTypes';
 
 export const ModalService = defineService({
@@ -16,20 +19,29 @@ export const ModalService = defineService({
     setup() {
         const modals = ref<Modal[]>([]);
 
+        modals.value[0].props;
+
         return reactive({
             open,
             closeAll,
             modals: modals as Readonly<Ref<readonly Modal[]>>,
         });
 
-        async function open<T extends ModalComponent>(options: OpenModalOptions<T>) {
+        async function open<T extends ModalComponent>(
+            options: OpenModalOptions<T>,
+        ): Promise<Modal<T>> {
             const open = ref(true);
             const result = createPromise<ModalResult<T>>();
 
             let modalResult: ModalResult<T> | undefined;
             let modalDone = false;
 
-            const handler: ModalHandler<ModalResult<T>> = {
+            const modal = result.promise as Writable<Modal<T>>;
+
+            modal.component = await unwrapModalComponent(options.modal);
+            modal.props = options.props as ModalProps<T>;
+
+            modal.handler = {
                 setResult(result: ModalResult<T>) {
                     modalResult = result;
                     modalDone = true;
@@ -61,14 +73,7 @@ export const ModalService = defineService({
                 },
             };
 
-            const modal: Modal = {
-                component: await unwrapModalComponent(options.modal),
-                props: options.props ?? {},
-                handler,
-                promise: result.promise,
-            };
-
-            modals.value.push(modal);
+            modals.value.push(modal as Modal);
 
             return modal;
 
@@ -77,7 +82,7 @@ export const ModalService = defineService({
                 modals.value.splice(modals.value.indexOf(modal), 1);
 
                 if (modalDone) {
-                    result.resolve(modalResult as ModalResult<T>);
+                    result.resolve(modalResult);
                 } else {
                     result.reject(new CancelError());
                 }
@@ -92,7 +97,7 @@ export const ModalService = defineService({
 
 async function unwrapModalComponent<T extends ModalComponent>(
     modal: ModalComponentView<T>,
-): Promise<ModalComponent> {
+): Promise<T> {
     if (modal instanceof Promise) {
         const view = await modal;
         return view.default;

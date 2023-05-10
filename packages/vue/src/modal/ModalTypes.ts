@@ -1,13 +1,12 @@
-import { Flatten } from '@nzyme/types';
 import { DefineComponent, ExtractPropTypes, ComponentOptions } from 'vue';
+
+import { Flatten } from '@nzyme/types';
 
 export type ModalHandlerProps<TResult> = {
     modal: ModalHandler<TResult>;
 };
 
-type ComponentProps<T> = T extends DefineComponent<infer TProps, any, any, any>
-    ? ExtractPropTypes<TProps>
-    : never;
+type ComponentProps<T> = T extends ComponentOptions<infer TProps, any, any, any> ? TProps : never;
 
 export type ModalComponent<TProps extends ModalHandlerProps<any> = any> = ComponentOptions<TProps>;
 
@@ -34,7 +33,7 @@ export interface ModalHandler<T> {
     cancel(this: void): void;
 }
 
-export type OpenModalOptions<T extends ModalComponent> = ModalProps<T> extends void
+export type OpenModalOptions<T extends ModalComponent = ModalComponent> = ModalProps<T> extends void
     ? OpenModalOptionsWithoutProps<T>
     : OpenModalOptionsWithProps<T>;
 
@@ -48,9 +47,8 @@ interface OpenModalOptionsWithProps<T extends ModalComponent> {
     props: ModalProps<T>;
 }
 
-export interface Modal {
-    handler: ModalHandler<unknown>;
-    props: Record<string, unknown>;
-    component: ModalComponent;
-    promise: Promise<unknown>;
+export interface Modal<T extends ModalComponent = ModalComponent> extends Promise<ModalResult<T>> {
+    readonly handler: ModalHandler<ModalResult<T>>;
+    readonly props: ModalProps<T>;
+    readonly component: T;
 }
