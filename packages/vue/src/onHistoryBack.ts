@@ -1,4 +1,6 @@
-import { useVirtualHistory, VirtualHistoryHandle } from './useVirtualHistory';
+import { VirtualHistoryHandle } from '@nzyme/dom';
+
+import { useVirtualHistory } from './useVirtualHistory';
 
 export function onHistoryBack(callback: () => void) {
     const virtualHistory = useVirtualHistory();
