@@ -50,5 +50,5 @@ interface OpenModalOptionsWithProps<T extends ModalComponent> {
 export interface Modal<T extends ModalComponent = ModalComponent> extends Promise<ModalResult<T>> {
     readonly handler: ModalHandler<ModalResult<T>>;
     readonly props: ModalProps<T>;
-    readonly component: T;
+    readonly component: Promise<T>;
 }

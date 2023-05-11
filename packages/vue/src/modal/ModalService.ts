@@ -2,16 +2,15 @@ import { Ref, reactive, ref } from 'vue';
 
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
-import { CancelError, createPromise } from '@nzyme/utils';
+import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
 
 import {
-    ModalHandler,
     ModalComponent,
     Modal,
     OpenModalOptions,
-    ModalComponentView,
     ModalResult,
     ModalProps,
+    ModalComponentView,
 } from './ModalTypes';
 
 export const ModalService = defineService({
@@ -27,9 +26,7 @@ export const ModalService = defineService({
             modals: modals as Readonly<Ref<readonly Modal[]>>,
         });
 
-        async function open<T extends ModalComponent>(
-            options: OpenModalOptions<T>,
-        ): Promise<Modal<T>> {
+        function open<T extends ModalComponent>(options: OpenModalOptions<T>): Modal<T> {
             const open = ref(true);
             const result = createPromise<ModalResult<T>>();
 
@@ -38,7 +35,7 @@ export const ModalService = defineService({
 
             const modal = result.promise as Writable<Modal<T>>;
 
-            modal.component = await unwrapModalComponent(options.modal);
+            modal.component = unwrapModalComponent(options.modal);
             modal.props = options.props as ModalProps<T>;
 
             modal.handler = {
@@ -79,10 +76,10 @@ export const ModalService = defineService({
 
             function closeModal() {
                 open.value = false;
-                modals.value.splice(modals.value.indexOf(modal), 1);
+                arrayRemove(modals.value, modal as Modal);
 
                 if (modalDone) {
-                    result.resolve(modalResult);
+                    result.resolve(assertValue(modalResult));
                 } else {
                     result.reject(new CancelError());
                 }
@@ -92,21 +89,17 @@ export const ModalService = defineService({
         function closeAll() {
             modals.value.forEach(m => m.handler.close());
         }
+
+        function unwrapModalComponent<T extends ModalComponent>(modal: ModalComponentView<T>) {
+            if (modal instanceof Promise) {
+                return modal.then(view => view.default);
+            }
+
+            if (modal instanceof Function) {
+                return modal().then(view => view.default);
+            }
+
+            return Promise.resolve(modal);
+        }
     },
 });
-
-async function unwrapModalComponent<T extends ModalComponent>(
-    modal: ModalComponentView<T>,
-): Promise<T> {
-    if (modal instanceof Promise) {
-        const view = await modal;
-        return view.default;
-    }
-
-    if (modal instanceof Function) {
-        const view = await modal();
-        return view.default;
-    }
-
-    return modal;
-}

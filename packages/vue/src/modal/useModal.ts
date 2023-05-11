@@ -1,26 +1,11 @@
-import { CancelError, assertValue, createPromise } from '@nzyme/utils';
-import { ref, onUnmounted, getCurrentInstance, defineComponent, h, createApp, Suspense } from 'vue';
+import { onUnmounted } from 'vue';
 
-import { prop } from '../prop.js';
-import { useVirtualHistory } from '../useVirtualHistory.js';
+import { arrayRemove } from '@nzyme/utils';
 
-import {
-    ModalComponent,
-    ModalComponentView,
-    ModalHandler,
-    ModalHandlerProps,
-    ModalProps,
-    ModalResult,
-    OpenModalOptions,
-} from './ModalTypes.js';
+import { useService } from '../useService';
 
-const allModals: ModalHandler<unknown>[] = [];
-
-export function useModalProps<T = void>() {
-    return {
-        modal: prop<ModalHandler<T>>().required(),
-    };
-}
+import { ModalService } from './ModalService';
+import { Modal, ModalComponent, OpenModalOptions } from './ModalTypes.js';
 
 interface ModalOptions {
     /**
@@ -31,141 +16,28 @@ interface ModalOptions {
 }
 
 export function useModal(opts?: ModalOptions) {
-    const currentInstance = assertValue(getCurrentInstance());
-    const virtualHistory = useVirtualHistory();
-
-    const localModals: ModalHandler<unknown>[] = [];
+    const modalService = useService(ModalService);
+    const localModals: Modal[] = [];
 
     const closeOnUnmounted = opts?.closeOnUnmounted ?? true;
-
     if (closeOnUnmounted) {
         onUnmounted(() => {
-            localModals.forEach(m => m.close());
+            localModals.forEach(m => m.handler.close());
         });
     }
 
     return {
-        async open<T extends ModalComponent>(options: OpenModalOptions<T>) {
-            const view = await unwrapModalComponent(options.modal);
-            const promise = createPromise<ModalResult<T>>();
-            const open = ref(true);
+        open<T extends ModalComponent>(options: OpenModalOptions<T>) {
+            const modal = modalService.open(options);
+            localModals.push(modal);
 
-            let modalResult: ModalResult<T> | undefined;
-            let modalDone = false;
+            // Remove modal from local ones when it is closed.
+            modal.finally(() => arrayRemove(localModals, modal));
 
-            const handler: ModalHandler<ModalResult<T>> = {
-                setResult(result: ModalResult<T>) {
-                    modalResult = result;
-                    modalDone = true;
-                },
-                done(result) {
-                    if (!open.value) {
-                        return;
-                    }
-
-                    modalResult = result;
-                    modalDone = true;
-                    void closeModal();
-                },
-                close() {
-                    if (!open.value) {
-                        return;
-                    }
-
-                    void closeModal();
-                },
-            };
-
-            localModals.push(handler);
-            allModals.push(handler);
-
-            const historyHandle = virtualHistory.pushState(handler.close);
-
-            const componentPromise = createPromise();
-            const component = defineComponent({
-                setup() {
-                    onUnmounted(() => {
-                        if (open.value) {
-                            // modal is still open, there is some v-if in the modal component
-                            return;
-                        }
-
-                        componentPromise.resolve();
-                    });
-
-                    return () => {
-                        if (!open.value) {
-                            return null;
-                        }
-
-                        const props: ModalHandlerProps<ModalResult<T>> = {
-                            modal: handler,
-                        };
-
-                        if (options.props) {
-                            Object.assign(props, options.props);
-                        }
-
-                        const node = h(view, props);
-
-                        return h(Suspense, null, node);
-                    };
-                },
-            });
-
-            const app = createApp(component);
-            Object.assign(app._context, currentInstance.appContext);
-
-            const host = document.createElement('div');
-            host.role = 'dialog';
-            document.body.appendChild(host);
-            app.mount(host);
-
-            // const vnode = createVNode(component);
-            // vnode.appContext = { ...currentInstance.appContext };
-            // render(vnode, document.body);
-
-            async function closeModal() {
-                open.value = false;
-
-                // remove it from modal queue
-                localModals.splice(localModals.indexOf(handler), 1);
-                allModals.splice(allModals.indexOf(handler), 1);
-
-                historyHandle.cancel();
-
-                await componentPromise.promise;
-
-                app.unmount();
-                host.remove();
-
-                if (modalDone) {
-                    promise.resolve(modalResult as ModalResult<T>);
-                } else {
-                    promise.reject(new CancelError());
-                }
-            }
-
-            return await promise.promise;
+            return modal;
         },
         closeAll() {
-            allModals.forEach(m => m.close());
+            modalService.closeAll();
         },
     };
-}
-
-async function unwrapModalComponent<T extends ModalComponent>(
-    modal: ModalComponentView<T>,
-): Promise<ModalComponent> {
-    if (modal instanceof Promise) {
-        const view = await modal;
-        return view.default;
-    }
-
-    if (modal instanceof Function) {
-        const view = await modal();
-        return view.default;
-    }
-
-    return modal;
 }

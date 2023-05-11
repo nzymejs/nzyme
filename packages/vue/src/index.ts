@@ -22,4 +22,6 @@ export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
 
 export * from './modal/useModal.js';
-export { ModalHost } from './modal/ModalHost.js';
+export * from './modal/ModalHost.js';
+export * from './modal/ModalService.js';
+export * from './modal/useModalProps';
