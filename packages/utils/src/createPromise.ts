@@ -17,3 +17,5 @@ export function createPromise<T = void>() {
         reject,
     };
 }
+
+export type PromiseWrapper<T> = ReturnType<typeof createPromise<T>>;

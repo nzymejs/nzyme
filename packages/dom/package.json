@@ -1,0 +1,20 @@
+{
+    "name": "@nzyme/dom",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "exports": {
+        ".": {
+            "source": "./src/index.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "types": "./src/index.ts",
+    "sideEffects": false,
+    "repository": "https://github.com/nzymejs/nzyme.git",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "dependencies": {
+        "@nzyme/types": "1.0.0",
+        "tslib": "^2.5.0"
+    }
+}

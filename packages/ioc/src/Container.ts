@@ -19,11 +19,11 @@ export type ResolveResult<TDeps extends ResolveDeps = Record<string, Injectable>
 }>;
 
 export class Container {
-    private instances = new Map<Injectable<unknown>, unknown>();
-    private resolvers = new Map<Injectable<unknown>, Resolvable>();
+    private instances = new Map<symbol, unknown>();
+    private resolvers = new Map<symbol, Resolvable>();
 
     public get<T>(injectable: Injectable<T>) {
-        const instance = this.instances.get(injectable);
+        const instance = this.instances.get(injectable.symbol);
         return instance as T | undefined;
     }
 
@@ -40,9 +40,9 @@ export class Container {
                 throw new Error(`Service ${serviceName} is not registered for ${injectableName}`);
             }
 
-            this.resolvers.set(injectable, instanceOrService);
+            this.resolvers.set(injectable.symbol, instanceOrService);
         } else {
-            this.instances.set(injectable, instanceOrService);
+            this.instances.set(injectable.symbol, instanceOrService);
         }
     }
 
@@ -56,35 +56,35 @@ export class Container {
     }
 
     private resolveInstance(injectable: Injectable, scope?: Injectable): unknown {
-        let instance = this.instances.get(injectable);
+        let instance = this.instances.get(injectable.symbol);
         if (instance) {
             return instance;
         }
 
         // Try to resolve as a registered service
-        const resolver = this.resolvers.get(injectable);
+        const resolver = this.resolvers.get(injectable.symbol);
         if (resolver) {
-            instance = this.instances.get(resolver);
+            instance = this.instances.get(resolver.symbol);
             if (instance) {
                 // Cache it for later
-                this.instances.set(injectable, instance);
+                this.instances.set(injectable.symbol, instance);
                 return instance;
             }
 
             instance = this.resolveResolvable(resolver, scope);
             if (resolver.cached) {
-                this.instances.set(injectable, instance);
-                this.instances.set(resolver, instance);
+                this.instances.set(injectable.symbol, instance);
+                this.instances.set(resolver.symbol, instance);
             }
 
             return instance;
         }
 
         if (injectable instanceof Resolvable) {
-            instance = this.resolveResolvable(injectable, scope);
+            instance = this.resolveResolvable(injectable as Resolvable, scope);
 
             if (instance && injectable.cached) {
-                this.instances.set(injectable, instance);
+                this.instances.set(injectable.symbol, instance);
             }
         }
 

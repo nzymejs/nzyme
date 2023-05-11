@@ -4,6 +4,7 @@ export class Injectable<T = unknown> {
     declare [s]: T;
 
     public readonly name?: string;
+    public readonly symbol = Symbol();
 
     constructor(options?: InjectableOptions) {
         this.name = options?.name;
