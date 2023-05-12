@@ -1,5 +1,4 @@
 import { DefineComponent, ExtractPropTypes, ComponentOptions } from 'vue';
-
 import { Flatten } from '@nzyme/types';
 
 export type ModalHandlerProps<TResult> = {
@@ -50,5 +49,5 @@ interface OpenModalOptionsWithProps<T extends ModalComponent> {
 export interface Modal<T extends ModalComponent = ModalComponent> extends Promise<ModalResult<T>> {
     readonly handler: ModalHandler<ModalResult<T>>;
     readonly props: ModalProps<T>;
-    readonly component: Promise<T>;
+    readonly component: ComponentOptions;
 }

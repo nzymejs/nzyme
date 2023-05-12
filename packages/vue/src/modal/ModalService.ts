@@ -1,5 +1,4 @@
-import { Ref, reactive, ref } from 'vue';
-
+import { Ref, Suspense, defineComponent, h, onUnmounted, reactive, ref } from 'vue';
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
 import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
@@ -11,14 +10,13 @@ import {
     ModalResult,
     ModalProps,
     ModalComponentView,
+    ModalHandlerProps,
 } from './ModalTypes';
 
 export const ModalService = defineService({
     name: 'ModalService',
     setup() {
         const modals = ref<Modal[]>([]);
-
-        modals.value[0].props;
 
         return reactive({
             open,
@@ -35,9 +33,7 @@ export const ModalService = defineService({
 
             const modal = result.promise as Writable<Modal<T>>;
 
-            modal.component = unwrapModalComponent(options.modal);
             modal.props = options.props as ModalProps<T>;
-
             modal.handler = {
                 setResult(result: ModalResult<T>) {
                     modalResult = result;
@@ -69,6 +65,26 @@ export const ModalService = defineService({
                     closeModal();
                 },
             };
+
+            modal.component = defineComponent({
+                async setup() {
+                    const props: ModalHandlerProps<ModalResult<T>> = {
+                        ...modal.props,
+                        modal: modal.handler,
+                    };
+
+                    const view = await unwrapModalComponent(options.modal);
+
+                    return () => {
+                        if (!open.value) {
+                            return null;
+                        }
+
+                        const node = h(view, props);
+                        return h(Suspense, null, node);
+                    };
+                },
+            });
 
             modals.value.push(modal as Modal);
 

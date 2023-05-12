@@ -25,3 +25,10 @@ export * from './modal/useModal.js';
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
 export * from './modal/useModalProps';
+export type {
+    Modal,
+    ModalHandler,
+    ModalComponent,
+    ModalProps,
+    ModalResult,
+} from './modal/ModalTypes.js';

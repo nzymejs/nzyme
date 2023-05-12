@@ -1,9 +1,4 @@
-import {
-    Transition,
-    TransitionProps as TransitionPropsVue,
-    SetupContext,
-    FunctionalComponent,
-} from 'vue';
+import { Transition, TransitionProps as TransitionPropsVue, FunctionalComponent } from 'vue';
 
 export type TransitionProps = Omit<TransitionPropsVue, 'name' | `${string}Class` | 'css'> & {
     duration?: number;

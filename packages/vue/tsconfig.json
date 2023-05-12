@@ -11,7 +11,7 @@
             }
         ]
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.scss"],
+    "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.json", "./src/**/*.scss"],
     "references": [
         {
             "path": "../dom/tsconfig.json"
