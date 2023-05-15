@@ -20,7 +20,7 @@
         "@nzyme/types": "1.0.0",
         "@nzyme/utils": "1.0.0",
         "lodash": "^4.17.21",
-        "vue": "^3.2.47"
+        "vue": "^3.3.1"
     },
     "devDependencies": {
         "sass": "1.62.0",
