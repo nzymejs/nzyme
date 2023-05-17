@@ -21,6 +21,7 @@ export * from './onWindowEvent.js';
 export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
 
+export * from './LazyHydrate.js';
 export * from './modal/useModal.js';
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
