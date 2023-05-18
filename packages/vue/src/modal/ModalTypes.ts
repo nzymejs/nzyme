@@ -1,11 +1,11 @@
-import { DefineComponent, ExtractPropTypes, ComponentOptions } from 'vue';
+import { ComponentOptions } from 'vue';
 import { Flatten } from '@nzyme/types';
+
+import { ComponentProps } from '../types';
 
 export type ModalHandlerProps<TResult> = {
     modal: ModalHandler<TResult>;
 };
-
-type ComponentProps<T> = T extends ComponentOptions<infer TProps, any, any, any> ? TProps : never;
 
 export type ModalComponent<TProps extends ModalHandlerProps<any> = any> = ComponentOptions<TProps>;
 
@@ -15,15 +15,16 @@ export type ModalComponentView<T extends ModalComponent> =
     | Promise<{ default: T }>;
 
 type ModalPropsWithoutHandler<T extends ModalComponent> = Flatten<Omit<ComponentProps<T>, 'modal'>>;
+
 export type ModalProps<T extends ModalComponent> = keyof ModalPropsWithoutHandler<T> extends never
     ? void
     : ModalPropsWithoutHandler<T>;
 
-export type ModalResult<T extends ModalComponent> = T extends ModalComponent<infer TProps>
-    ? TProps['modal'] extends ModalHandler<infer TResult>
-        ? TResult
-        : never
-    : never;
+export type ModalResult<T extends ModalComponent> = ComponentProps<T> extends ModalHandlerProps<
+    infer R
+>
+    ? R
+    : void;
 
 export interface ModalHandler<T> {
     setResult(this: void, result: T): void;
@@ -36,17 +37,25 @@ export type OpenModalOptions<T extends ModalComponent = ModalComponent> = ModalP
     ? OpenModalOptionsWithoutProps<T>
     : OpenModalOptionsWithProps<T>;
 
-interface OpenModalOptionsWithoutProps<T extends ModalComponent> {
+type OpenModalOptionsBase<T extends ModalComponent = ModalComponent> = {
+    /**
+     * Modal component to be opened.
+     * Supports asynchronous components loaded with `import(...)`.
+     */
     modal: ModalComponentView<T>;
+};
+
+interface OpenModalOptionsWithoutProps<T extends ModalComponent> extends OpenModalOptionsBase<T> {
     props?: void;
 }
 
-interface OpenModalOptionsWithProps<T extends ModalComponent> {
-    modal: ModalComponentView<T>;
+interface OpenModalOptionsWithProps<T extends ModalComponent> extends OpenModalOptionsBase<T> {
+    /** Props to pass to the modal. */
     props: ModalProps<T>;
 }
 
 export interface Modal<T extends ModalComponent = ModalComponent> extends Promise<ModalResult<T>> {
+    readonly id: symbol;
     readonly handler: ModalHandler<ModalResult<T>>;
     readonly props: ModalProps<T>;
     readonly component: ComponentOptions;

@@ -1,10 +1,22 @@
-import { Transition, TransitionProps as TransitionPropsVue, FunctionalComponent } from 'vue';
+import {
+    Transition,
+    TransitionProps as TransitionPropsVue,
+    FunctionalComponent,
+    TransitionGroup,
+    TransitionGroupProps as TransitionGroupPropsVue,
+} from 'vue';
 
 export type TransitionProps = Omit<TransitionPropsVue, 'name' | `${string}Class` | 'css'> & {
     duration?: number;
 };
-
 type TransitionDefProps = Pick<TransitionPropsVue, keyof TransitionPropsVue & `${string}Class`>;
+
+export type TransitionGroupProps = Omit<
+    TransitionGroupPropsVue,
+    'name' | `${string}Class` | 'css'
+> & {
+    duration?: number;
+};
 type Hook = (el: Element) => void;
 
 export function defineTransition(def: TransitionDefProps) {
@@ -20,6 +32,23 @@ export function defineTransition(def: TransitionDefProps) {
         >
             {ctx.slots.default?.()}
         </Transition>
+    );
+
+    return transition;
+}
+
+export function defineTransitionGroup(def: TransitionDefProps) {
+    const transition: FunctionalComponent<TransitionProps> = (props, ctx) => (
+        <TransitionGroup
+            {...props}
+            {...def}
+            onBeforeEnter={onBeforeEnter(props)}
+            onAfterEnter={onAfterEnter(props)}
+            onBeforeLeave={onBeforeLeave(props)}
+            onAfterLeave={onAfterLeave(props)}
+        >
+            {ctx.slots.default?.()}
+        </TransitionGroup>
     );
 
     return transition;

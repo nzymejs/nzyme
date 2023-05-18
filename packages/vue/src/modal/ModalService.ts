@@ -1,4 +1,4 @@
-import { Ref, Suspense, defineComponent, h, onUnmounted, reactive, ref } from 'vue';
+import { Ref, defineComponent, h, reactive, ref, ComponentInternalInstance } from 'vue';
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
 import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
@@ -13,6 +13,13 @@ import {
     ModalHandlerProps,
 } from './ModalTypes';
 
+interface ModalServiceOpenOptions {
+    /**
+     * To make context-based features like provide/inject work, you need to pass parent component instance
+     */
+    parent?: ComponentInternalInstance | null;
+}
+
 export const ModalService = defineService({
     name: 'ModalService',
     setup() {
@@ -24,7 +31,9 @@ export const ModalService = defineService({
             modals: modals as Readonly<Ref<readonly Modal[]>>,
         });
 
-        function open<T extends ModalComponent>(options: OpenModalOptions<T>): Modal<T> {
+        function open<T extends ModalComponent>(
+            options: OpenModalOptions<T> & ModalServiceOpenOptions,
+        ): Modal<T> {
             const open = ref(true);
             const result = createPromise<ModalResult<T>>();
 
@@ -33,6 +42,7 @@ export const ModalService = defineService({
 
             const modal = result.promise as Writable<Modal<T>>;
 
+            modal.id = Symbol('modal');
             modal.props = options.props as ModalProps<T>;
             modal.handler = {
                 setResult(result: ModalResult<T>) {
@@ -80,8 +90,12 @@ export const ModalService = defineService({
                             return null;
                         }
 
-                        const node = h(view, props);
-                        return h(Suspense, null, node);
+                        const vnode = h(view, props);
+                        if (options.parent) {
+                            vnode.appContext = { ...options.parent.appContext };
+                        }
+
+                        return vnode;
                     };
                 },
             });

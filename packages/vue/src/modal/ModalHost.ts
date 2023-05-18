@@ -1,17 +1,22 @@
-import { defineComponent, h, Suspense } from 'vue';
+import { defineComponent, h } from 'vue';
 
 import { useService } from '../useService';
 
 import { ModalService } from './ModalService';
-import { Modal, ModalComponent, ModalHandlerProps, ModalResult } from './ModalTypes';
 
 export const ModalHost = defineComponent({
     name: 'ModalHost',
-    setup() {
+    setup(props, ctx) {
         const modalService = useService(ModalService);
-        return () =>
-            modalService.modals.map(modal => {
-                return h(modal.component);
-            });
+
+        return () => {
+            const modals = modalService.modals;
+            const slot = ctx.slots.default;
+            if (slot) {
+                return slot(modals);
+            }
+
+            return modals.map(modal => h(modal.component));
+        };
     },
 });

@@ -1,5 +1,4 @@
-import { onUnmounted } from 'vue';
-
+import { getCurrentInstance, onUnmounted } from 'vue';
 import { arrayRemove } from '@nzyme/utils';
 
 import { useService } from '../useService';
@@ -16,6 +15,7 @@ interface ModalOptions {
 }
 
 export function useModal(opts?: ModalOptions) {
+    const instance = getCurrentInstance();
     const modalService = useService(ModalService);
     const localModals: Modal[] = [];
 
@@ -27,8 +27,16 @@ export function useModal(opts?: ModalOptions) {
     }
 
     return {
+        /**
+         * Opens a modal.
+         * @param options Options for modal.
+         * @returns Promise with modal result that resolves when modal is closed.
+         */
         open<T extends ModalComponent>(options: OpenModalOptions<T>) {
-            const modal = modalService.open(options);
+            const modal = modalService.open({
+                ...options,
+                parent: instance,
+            });
             localModals.push(modal);
 
             // Remove modal from local ones when it is closed.
