@@ -8,6 +8,7 @@ import {
     RenderFunction,
 } from 'vue';
 import { createPromise } from '@nzyme/utils';
+import { requestIdleCallback, cancelIdleCallback } from '@nzyme/dom';
 
 import { prop } from './prop';
 
@@ -18,7 +19,7 @@ const isBrowser = () => {
 export const LazyHydrate = defineComponent({
     name: 'LazyHydrate',
     props: {
-        whenIdle: Boolean,
+        whenIdle: prop<boolean | IdleRequestOptions>([Boolean, Object]).optional(),
         whenVisible: prop<boolean | IntersectionObserverInit>([Boolean, Object]).optional(),
         whenTriggered: Boolean,
     },
@@ -77,15 +78,12 @@ export const LazyHydrate = defineComponent({
                         return;
                     }
 
-                    if (typeof window.requestIdleCallback !== 'undefined') {
-                        const idleCallbackId = window.requestIdleCallback(hydrate, {
-                            timeout: 500,
-                        });
-                        onCleanup(() => window.cancelIdleCallback(idleCallbackId));
-                    } else {
-                        const id = setTimeout(hydrate, 2000);
-                        onCleanup(() => clearTimeout(id));
-                    }
+                    const idleCallbackId = requestIdleCallback(
+                        hydrate,
+                        whenIdle === true ? undefined : whenIdle,
+                    );
+
+                    onCleanup(() => cancelIdleCallback(idleCallbackId));
                 },
                 { immediate: true },
             ),
