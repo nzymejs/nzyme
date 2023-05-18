@@ -16,6 +16,7 @@
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "dependencies": {
+        "@nzyme/dom": "1.0.0",
         "@nzyme/ioc": "1.0.0",
         "@nzyme/types": "1.0.0",
         "@nzyme/utils": "1.0.0",

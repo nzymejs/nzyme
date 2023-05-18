@@ -15,10 +15,22 @@ export { useContainer } from './useContainer.js';
 export * from './useService.js';
 export { CommonPlugin } from './CommonPlugin.js';
 export * from './useVirtualHistory.js';
-export * from './useModal.js';
 export * from './transitions/TransitionFade.js';
 export * from './onHistoryBack.js';
 export * from './onWindowEvent.js';
 export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
+
 export * from './LazyHydrate.js';
+export * from './modal/useModal.js';
+export * from './modal/ModalHost.js';
+export * from './modal/ModalService.js';
+export * from './modal/useModalProps';
+export type {
+    Modal,
+    ModalHandler,
+    ModalComponent,
+    ModalProps,
+    ModalResult,
+} from './modal/ModalTypes.js';
+export type * from './types.js';
