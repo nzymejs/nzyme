@@ -1,2 +1,3 @@
-export * from './virtualHistory';
-export * from './requestIdleCallback';
+export * from './virtualHistory.js';
+export * from './requestIdleCallback.js';
+export * from './isBrowser.js';

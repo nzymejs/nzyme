@@ -8,13 +8,9 @@ import {
     RenderFunction,
 } from 'vue';
 import { createPromise } from '@nzyme/utils';
-import { requestIdleCallback, cancelIdleCallback } from '@nzyme/dom';
+import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@nzyme/dom';
 
-import { prop } from './prop';
-
-const isBrowser = () => {
-    return typeof window === 'object';
-};
+import { prop } from '../prop';
 
 export const LazyHydrate = defineComponent({
     name: 'LazyHydrate',

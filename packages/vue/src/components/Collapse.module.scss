@@ -1,0 +1,29 @@
+.collapse {
+    transition: height 0.2s ease-out, opacity 0.2s ease-out 0.1s;
+    box-sizing: content-box;
+}
+
+.enterActive,
+.leaveActive {
+    // forces hardware acceleration
+    will-change: height;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.enterFrom {
+    opacity: 0 !important;
+}
+
+.enterActive {
+    opacity: 1;
+}
+
+.leaveFrom {
+    opacity: 1;
+}
+
+.leaveActive {
+    opacity: 0 !important;
+}
