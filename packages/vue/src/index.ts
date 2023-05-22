@@ -37,3 +37,4 @@ export type * from './types.js';
 
 export * from './components/LazyHydrate.js';
 export * from './components/Collapse.jsx';
+export { default as Reveal } from './components/Reveal.vue';
