@@ -8,6 +8,7 @@ export * from './useAsync.js';
 export * from './useDataSource.js';
 export * from './useElement.js';
 export * from './useEmitAsync.js';
+export * from './useEventBus.js';
 export * from './useInstance.js';
 export * from './vmodel.js';
 export * from './Format.js';
@@ -36,5 +37,7 @@ export type {
 export type * from './types.js';
 
 export * from './components/LazyHydrate.js';
-export * from './components/Collapse.jsx';
 export { default as Reveal } from './components/Reveal.vue';
+// TODO: decide if we want TSX or VUE version
+export * from './components/Collapse.jsx';
+//export { default as Collapse } from './components/Collapse.vue';

@@ -5,6 +5,9 @@ import { prop } from '../prop';
 import css from './Collapse.module.scss';
 import { LazyHydrate } from './LazyHydrate';
 
+// Used to easily debug complex transition problems.
+const DEBUG = false;
+
 export const Collapse = defineComponent({
     name: 'Collapse',
     props: {
@@ -37,7 +40,7 @@ export const Collapse = defineComponent({
                     onAfterEnter={afterEnter}
                     onLeave={leave}
                     onAfterLeave={afterLeave}
-                    appear={true}
+                    appear={lazyHydrate}
                 >
                     <Inner />
                 </Transition>
@@ -51,20 +54,24 @@ export const Collapse = defineComponent({
         };
 
         function beforeEnter(el: Element) {
+            if (DEBUG) console.warn('beforeEnter', el);
             zeroHeight(el as HTMLElement);
         }
 
         function enter(el: Element) {
+            if (DEBUG) console.warn('enter', el);
             fixedHeight(el as HTMLElement);
             ctx.emit('heightChange', el.scrollHeight);
         }
 
         function afterEnter(el: Element) {
+            if (DEBUG) console.warn('afterEnter', el);
             autoHeight(el as HTMLElement);
             ctx.emit('afterEnter');
         }
 
         function leave(el: Element) {
+            if (DEBUG) console.warn('leave', el);
             fixedHeight(el as HTMLElement);
 
             requestAnimationFrame(() => {
@@ -74,23 +81,27 @@ export const Collapse = defineComponent({
         }
 
         function afterLeave(el: Element) {
+            if (DEBUG) console.warn('afterLeave', el);
             autoHeight(el as HTMLElement);
         }
 
         function fixedHeight(el: HTMLElement) {
             el.style.height = `${el.scrollHeight}px`;
             el.style.overflow = 'hidden';
+            if (DEBUG) console.warn('fixedHeight', el);
             forceRepaint(el);
         }
 
         function autoHeight(el: HTMLElement) {
             el.style.overflow = '';
             el.style.height = '';
+            if (DEBUG) console.warn('autoHeight', el);
             forceRepaint(el);
         }
 
         function zeroHeight(el: HTMLElement) {
             el.style.height = '0';
+            if (DEBUG) console.warn('zeroHeight', el);
             forceRepaint(el);
         }
 
@@ -98,7 +109,8 @@ export const Collapse = defineComponent({
             // Force repaint to make sure the
             // animation is triggered correctly.
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            getComputedStyle(el).height;
+            const height = getComputedStyle(el).height;
+            if (DEBUG) console.warn('forceRepaint', el, height);
         }
     },
 });
