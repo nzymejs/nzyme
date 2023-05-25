@@ -3,7 +3,6 @@ export * from './ArrayUtils.js';
 export * from './common.js';
 export * from './deepCopy.js';
 export * from './deepEquals.js';
-export * from './formatWith.js';
 export * from './sortBy.js';
 export * from './HttpError.js';
 export * from './ObjectUtils.js';
@@ -22,3 +21,6 @@ export * from './eventEmitter.js';
 export * from './CancelError.js';
 export * from './readonly.js';
 export * from './EsmUtils.js';
+
+export * from './string/formatWith';
+export * from './string/isDigit';
