@@ -24,8 +24,16 @@ export const Collapse = defineComponent({
             vm?.vnode.el != null;
 
         const Inner = () => {
-            const inner = <div class={css.collapse}>{ctx.slots.default?.()}</div>;
-            return withDirectives(inner, [[vShow, props.show]]);
+            if (lazyHydrate) {
+                const inner = <div class={css.collapse}>{ctx.slots.default?.()}</div>;
+                return withDirectives(inner, [[vShow, props.show]]);
+            }
+
+            if (props.show) {
+                return <div class={css.collapse}>{ctx.slots.default?.()}</div>;
+            }
+
+            return null;
         };
 
         return () => {
