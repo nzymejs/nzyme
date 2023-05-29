@@ -122,6 +122,7 @@ export class App extends cdk.App {
             if (diff.isEmpty) {
                 consola.success(`No changes detected for stack ${chalk.green(stack.stackName)}`);
             } else {
+                consola.info(`Changes for stack ${chalk.green(stack.stackName)}:\n`);
                 formatDifferences(process.stdout, diff);
             }
         }
