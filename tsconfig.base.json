@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-        "target": "ES2018",
+        "target": "ES2020",
         "module": "ESNext",
         "lib": ["esnext", "esnext.asynciterable"],
-        "moduleResolution": "node",
+        "moduleResolution": "nodenext",
         "composite": true,
         "strict": true,
         "noImplicitAny": true,

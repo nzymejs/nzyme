@@ -1,8 +1,8 @@
 import { defineComponent, h } from 'vue';
 
-import { useService } from '../useService';
+import { useService } from '../useService.js';
 
-import { ModalService } from './ModalService';
+import { ModalService } from './ModalService.js';
 
 export const ModalHost = defineComponent({
     name: 'ModalHost',

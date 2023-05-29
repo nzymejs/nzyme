@@ -19,8 +19,7 @@
         "eslint-plugin-vue": "^9.11.0"
     },
     "dependencies": {
-        "@types/eslint": "^8.37.0",
-        "tslib": "^2.5.0"
+        "@types/eslint": "^8.37.0"
     },
     "depcheck": {
         "ignoreDeps": [

@@ -5,6 +5,7 @@
         "rootDir": "./src",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "jsx": "preserve",
+        "composite": false,
         "plugins": [
             {
                 "name": "typescript-plugin-css-modules"

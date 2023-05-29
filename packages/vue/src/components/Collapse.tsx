@@ -1,9 +1,9 @@
 import { defineComponent, getCurrentInstance, Transition, withDirectives, vShow } from 'vue';
 
-import { prop } from '../prop';
+import { prop } from '../prop.js';
 
 import css from './Collapse.module.scss';
-import { LazyHydrate } from './LazyHydrate';
+import { LazyHydrate } from './LazyHydrate.js';
 
 // Used to easily debug complex transition problems.
 const DEBUG = false;

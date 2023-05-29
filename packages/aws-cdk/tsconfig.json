@@ -8,7 +8,10 @@
     "include": ["src"],
     "references": [
         {
-            "path": "../types/tsconfig.json"
+            "path": "../ioc/tsconfig.json"
+        },
+        {
+            "path": "../utils/tsconfig.json"
         }
     ]
 }

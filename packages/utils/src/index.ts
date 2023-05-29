@@ -22,5 +22,5 @@ export * from './CancelError.js';
 export * from './readonly.js';
 export * from './EsmUtils.js';
 
-export * from './string/formatWith';
-export * from './string/isDigit';
+export * from './string/formatWith.js';
+export * from './string/isDigit.js';

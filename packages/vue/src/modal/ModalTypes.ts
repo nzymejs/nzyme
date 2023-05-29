@@ -1,7 +1,8 @@
 import { ComponentOptions } from 'vue';
+
 import { Flatten } from '@nzyme/types';
 
-import { ComponentProps } from '../types';
+import { ComponentProps } from '../types.js';
 
 export type ModalHandlerProps<TResult> = {
     modal: ModalHandler<TResult>;
