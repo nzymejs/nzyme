@@ -1,0 +1,39 @@
+{
+    "name": "@nzyme/aws-cdk",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "exports": {
+        ".": {
+            "source": "./src/index.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "types": "./src/index.ts",
+    "sideEffects": false,
+    "repository": "https://github.com/nzymejs/nzyme.git",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "dependencies": {
+        "@aws-cdk/aws-apigatewayv2": "1.198.1",
+        "@aws-cdk/aws-apigatewayv2-integrations": "1.198.1",
+        "@aws-cdk/aws-dynamodb": "1.198.1",
+        "@aws-cdk/aws-events": "1.198.1",
+        "@aws-cdk/aws-iam": "1.198.1",
+        "@aws-cdk/aws-lambda": "1.198.1",
+        "@aws-cdk/aws-sns": "1.198.1",
+        "@aws-cdk/aws-sns-subscriptions": "^1.198.1",
+        "@aws-cdk/aws-sqs": "^1.198.1",
+        "@aws-cdk/cloudformation-diff": "^2.73.0",
+        "@aws-cdk/core": "1.198.1",
+        "@nzyme/types": "1.0.0",
+        "@types/lodash.isequal": "^4.5.6",
+        "aws-cdk": "2.73.0",
+        "lodash.isequal": "^4.5.0",
+        "tslib": "^2.5.0"
+    },
+    "depcheck": {
+        "ignoreFiles": [
+            "tests"
+        ]
+    }
+}
