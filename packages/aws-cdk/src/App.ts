@@ -2,7 +2,9 @@ import { diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff';
 import * as cdk from '@aws-cdk/core';
 import { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
 import { Bootstrapper } from 'aws-cdk/lib/api/bootstrap/index.js';
-import { CloudFormationDeployments } from 'aws-cdk/lib/api/cloudformation-deployments.js';
+import { AssetManifestArtifact, CloudFormationStackArtifact } from '@aws-cdk/cx-api';
+import { Deployments } from 'aws-cdk/lib/api/deployments.js';
+import { WorkGraphBuilder } from 'aws-cdk/lib/util/work-graph-builder.js';
 import chalk from 'chalk';
 import consola from 'consola';
 
@@ -16,12 +18,12 @@ export interface AppOptions {
 
 export class App extends cdk.App {
     private readonly sdkProvider: SdkProvider;
-    private readonly cloudFormation: CloudFormationDeployments;
+    private readonly deployments: Deployments;
 
     constructor(options: AppOptions) {
         super();
         this.sdkProvider = options.sdkProvider;
-        this.cloudFormation = new CloudFormationDeployments({ sdkProvider: this.sdkProvider });
+        this.deployments = new Deployments({ sdkProvider: this.sdkProvider });
     }
 
     public get stacks() {
@@ -62,27 +64,24 @@ export class App extends cdk.App {
         await this.build();
 
         const cloudAssembly = this.synth();
+        const stacks = this.stacks;
 
-        for (const stack of this.stacks) {
-            if (!stack.node.children.length) {
-                // Don't deploy the stack if it's empty
-                continue;
+        for (const artifact of cloudAssembly.artifacts) {
+            if (artifact instanceof CloudFormationStackArtifact) {
+                const stack = stacks.find(stack => stack.stackName === artifact.stackName);
+                const stackName = artifact.stackName;
+
+                consola.info(`Deploying stack ${chalk.green(stackName)}`);
+                stack?.$.emit('deploy:start');
+
+                const deployment = await this.deployments.deployStack({
+                    stack: artifact,
+                    deployName: artifact.stackName,
+                });
+
+                consola.success(`Successfully deployed stack ${chalk.green(stackName)}`);
+                stack?.$.emit('deploy:finished', deployment);
             }
-
-            const stackName = stack.stackName;
-            const region = stack.region ?? this.sdkProvider.defaultRegion;
-
-            consola.info(`Deploying stack ${chalk.green(stackName)} to ${chalk.green(region)}`);
-            stack.$.emit('deploy:start');
-
-            const deployment = await this.cloudFormation.deployStack({
-                stack: cloudAssembly.getStackByName(stackName),
-            });
-
-            consola.success(`Successfully deployed stack ${chalk.green(stackName)}`);
-            stack.$.emit('deploy:finished', deployment);
-
-            return deployment;
         }
     }
 
@@ -97,7 +96,7 @@ export class App extends cdk.App {
             consola.info(`Destroying stack ${chalk.green(stackName)} in ${chalk.green(region)}`);
             stack.$.emit('destroy:start');
 
-            await this.cloudFormation.destroyStack({
+            await this.deployments.destroyStack({
                 stack: cloudAssembly.getStackByName(stackName),
             });
 
@@ -113,7 +112,7 @@ export class App extends cdk.App {
 
         for (const stack of this.stacks) {
             const stackArtifact = cloudAssembly.getStackByName(stack.stackName);
-            const currentTemplate = await this.cloudFormation.readCurrentTemplateWithNestedStacks(
+            const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
                 stackArtifact,
             );
 
