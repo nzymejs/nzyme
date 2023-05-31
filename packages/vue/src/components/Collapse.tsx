@@ -1,5 +1,7 @@
-import { defineComponent, getCurrentInstance, Transition, withDirectives, vShow } from 'vue';
+import { defineComponent, getCurrentInstance, Transition, withDirectives } from 'vue';
+import { isBrowser } from '@nzyme/dom';
 
+import { vShow } from '../directives/vShow';
 import { prop } from '../prop';
 
 import css from './Collapse.module.scss';
@@ -20,8 +22,8 @@ export const Collapse = defineComponent({
             props.lazy &&
             // There is no need to lazy load if it's shown from the start.
             !props.show &&
-            // Check if we are during hydration process.
-            vm?.vnode.el != null;
+            // Check if we are on SSR or hydration process.
+            (vm?.vnode.el != null || !isBrowser());
 
         const Inner = () => {
             if (lazyHydrate) {

@@ -41,3 +41,5 @@ export { default as Reveal } from './components/Reveal.vue';
 // TODO: decide if we want TSX or VUE version
 export * from './components/Collapse.jsx';
 //export { default as Collapse } from './components/Collapse.vue';
+
+export * from './directives/vShow.js';
