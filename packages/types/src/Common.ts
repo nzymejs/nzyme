@@ -56,10 +56,6 @@ export type Item<T> = T extends any[] ? T[0] : T[keyof T];
 
 export type PromiseValue<T extends Promise<unknown>> = T extends Promise<infer V> ? V : never;
 
-export type Dictionary<TKey extends string | number, TValue> = {
-    [P in TKey]+?: TValue;
-};
-
 export type Writable<T> = { -readonly [P in keyof T]: T[P] };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
