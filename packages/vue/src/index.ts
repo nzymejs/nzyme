@@ -36,8 +36,9 @@ export type {
 
 export type * from './types.js';
 
-export * from './components/LazyHydrate.js';
-export { default as Reveal } from './components/Reveal.vue';
+export { LazyHydrate } from './components/LazyHydrate.js';
+//export { default as Reveal } from './components/Reveal.vue';
+export { Reveal } from './components/Reveal.js';
 // TODO: decide if we want TSX or VUE version
 export * from './components/Collapse.jsx';
 //export { default as Collapse } from './components/Collapse.vue';
