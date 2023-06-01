@@ -21,6 +21,7 @@ export * from './eventEmitter.js';
 export * from './CancelError.js';
 export * from './readonly.js';
 export * from './EsmUtils.js';
+export * from './timeout.js';
 
 export * from './string/formatWith';
 export * from './string/isDigit';
