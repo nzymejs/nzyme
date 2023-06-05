@@ -17,7 +17,7 @@
         "@nzyme/types": "1.0.0",
         "@types/lodash.isequal": "^4.5.6",
         "lodash.isequal": "^4.5.0",
-        "tslib": "^2.5.2"
+        "tslib": "^2.5.3"
     },
     "depcheck": {
         "ignoreFiles": [
