@@ -30,7 +30,7 @@
         "typescript": "^5.0.4"
     },
     "resolutions": {
-        "**/tslib": "2.5.0"
+        "**/tslib": "2.5.3"
     },
     "depcheck": {
         "ignoreDeps": [

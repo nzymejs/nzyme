@@ -3,13 +3,16 @@
     "version": "1.0.0",
     "type": "module",
     "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "source": "./src/index.ts",
-            "import": "./dist/index.js"
+            "default": "./dist/index.js",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
         }
     },
-    "types": "./src/index.ts",
     "sideEffects": false,
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",

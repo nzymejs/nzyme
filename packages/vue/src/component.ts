@@ -32,5 +32,5 @@ interface ClassComponent<Props, Slots, Emits extends EmitsOptions> {
 }
 
 export type Component<Props, Slots = {}, Emits extends EmitsOptions = {}> = {
-    new (...args: any[]): ClassComponent<Props, Slots, Emits>;
+    new (): ClassComponent<Props, Slots, Emits>;
 };

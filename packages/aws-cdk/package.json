@@ -3,13 +3,16 @@
     "version": "1.0.0",
     "type": "module",
     "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "source": "./src/index.ts",
-            "import": "./dist/index.js"
+            "default": "./dist/index.js",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
         }
     },
-    "types": "./src/index.ts",
     "sideEffects": false,
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
@@ -17,9 +20,9 @@
         "@aws-cdk/cloudformation-diff": "^2.73.0",
         "@aws-cdk/core": "1.202.0",
         "@babel/preset-env": "^7.22.4",
-        "@nzyme/ioc": "1.0.0",
         "@nzyme/utils": "1.0.0",
-        "aws-cdk": "2.81.0",
+        "aws-cdk": "^2.82.0",
+        "aws-sdk": "^2.1390.0",
         "cdk-assets": "^2.60.0",
         "chalk": "^5.2.0",
         "consola": "^3.1.0",

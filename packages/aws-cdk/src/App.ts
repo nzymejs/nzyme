@@ -1,10 +1,9 @@
 import { diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff';
 import * as cdk from '@aws-cdk/core';
+import { CloudFormationStackArtifact } from '@aws-cdk/cx-api';
 import { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
 import { Bootstrapper } from 'aws-cdk/lib/api/bootstrap/index.js';
-import { AssetManifestArtifact, CloudFormationStackArtifact } from '@aws-cdk/cx-api';
 import { Deployments } from 'aws-cdk/lib/api/deployments.js';
-import { WorkGraphBuilder } from 'aws-cdk/lib/util/work-graph-builder.js';
 import chalk from 'chalk';
 import consola from 'consola';
 
@@ -87,21 +86,25 @@ export class App extends cdk.App {
 
     public async destroy() {
         const cloudAssembly = this.synth();
+        const stacks = this.stacks;
 
         // Destroy stacks in reverse order.
-        for (const stack of arrayReverse(this.stacks)) {
-            const stackName = stack.stackName;
-            const region = stack.region ?? this.sdkProvider.defaultRegion;
+        for (const artifact of arrayReverse(cloudAssembly.artifacts)) {
+            if (artifact instanceof CloudFormationStackArtifact) {
+                const stack = stacks.find(stack => stack.stackName === artifact.stackName);
+                const stackName = artifact.stackName;
 
-            consola.info(`Destroying stack ${chalk.green(stackName)} in ${chalk.green(region)}`);
-            stack.$.emit('destroy:start');
+                consola.info(`Destroying stack ${chalk.green(stackName)}`);
+                stack?.$.emit('destroy:start');
 
-            await this.deployments.destroyStack({
-                stack: cloudAssembly.getStackByName(stackName),
-            });
+                await this.deployments.destroyStack({
+                    stack: artifact,
+                    deployName: artifact.stackName,
+                });
 
-            consola.success(`Successfully destroyed stack ${chalk.green(stackName)}`);
-            stack.$.emit('destroy:finished');
+                consola.success(`Successfully destroyed stack ${chalk.green(stackName)}`);
+                stack?.$.emit('destroy:finished');
+            }
         }
     }
 
@@ -109,7 +112,6 @@ export class App extends cdk.App {
         await this.build();
 
         const cloudAssembly = this.synth();
-        const stacks = this.stacks;
 
         for (const artifact of cloudAssembly.artifacts) {
             if (artifact instanceof CloudFormationStackArtifact) {
