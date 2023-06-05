@@ -5,7 +5,7 @@ import { vShow } from '../directives/vShow';
 import { prop } from '../prop';
 
 import css from './Collapse.module.scss';
-import { LazyHydrate } from './LazyHydrate';
+import { LazyHydrate } from './LazyHydrate.js';
 
 // Used to easily debug complex transition problems.
 const DEBUG = false;

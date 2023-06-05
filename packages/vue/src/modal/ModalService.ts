@@ -1,4 +1,5 @@
 import { Ref, defineComponent, h, reactive, ref, ComponentInternalInstance } from 'vue';
+
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
 import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
@@ -11,7 +12,7 @@ import {
     ModalProps,
     ModalComponentView,
     ModalHandlerProps,
-} from './ModalTypes';
+} from './ModalTypes.js';
 
 interface ModalServiceOpenOptions {
     /**

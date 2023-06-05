@@ -1,6 +1,6 @@
-import { capitalize } from '@vue/runtime-core';
+import { capitalize } from 'vue';
 
-import { useInstance } from './useInstance';
+import { useInstance } from './useInstance.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useEmitAsync<T extends EmitFn<any, any[]>>(emit: T): EmitFnToAsync<T>;

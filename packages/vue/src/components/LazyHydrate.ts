@@ -7,10 +7,11 @@ import {
     onBeforeUnmount,
     RenderFunction,
 } from 'vue';
-import { createPromise } from '@nzyme/utils';
-import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@nzyme/dom';
 
-import { prop } from '../prop';
+import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@nzyme/dom';
+import { createPromise } from '@nzyme/utils';
+
+import { prop } from '../prop.js';
 
 export const LazyHydrate = defineComponent({
     name: 'LazyHydrate',

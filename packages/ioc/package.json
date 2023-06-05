@@ -14,8 +14,7 @@
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "dependencies": {
-        "@nzyme/types": "1.0.0",
-        "tslib": "^2.5.3"
+        "@nzyme/types": "1.0.0"
     },
     "depcheck": {
         "ignoreFiles": [

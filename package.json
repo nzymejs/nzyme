@@ -8,6 +8,10 @@
     "workspaces": [
         "packages/*"
     ],
+    "scripts": {
+        "build": "tsc --build",
+        "watch": "tsc --build --watch"
+    },
     "devDependencies": {
         "@types/jest": "^29.5.1",
         "babel-jest": "^29.5.0",

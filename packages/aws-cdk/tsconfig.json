@@ -3,11 +3,13 @@
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "./dist",
-        "rootDir": "./src",
-        "lib": ["DOM", "DOM.Iterable", "ESNext"]
+        "rootDir": "./src"
     },
     "include": ["src"],
     "references": [
+        {
+            "path": "../ioc/tsconfig.json"
+        },
         {
             "path": "../utils/tsconfig.json"
         }
