@@ -109,20 +109,24 @@ export class App extends cdk.App {
         await this.build();
 
         const cloudAssembly = this.synth();
+        const stacks = this.stacks;
 
-        for (const stack of this.stacks) {
-            const stackArtifact = cloudAssembly.getStackByName(stack.stackName);
-            const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
-                stackArtifact,
-            );
+        for (const artifact of cloudAssembly.artifacts) {
+            if (artifact instanceof CloudFormationStackArtifact) {
+                const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
+                    artifact,
+                );
 
-            const diff = diffTemplate(currentTemplate, stackArtifact.template);
+                const diff = diffTemplate(currentTemplate, artifact.template);
 
-            if (diff.isEmpty) {
-                consola.success(`No changes detected for stack ${chalk.green(stack.stackName)}`);
-            } else {
-                consola.info(`Changes for stack ${chalk.green(stack.stackName)}:\n`);
-                formatDifferences(process.stdout, diff);
+                if (diff.isEmpty) {
+                    consola.success(
+                        `No changes detected for stack ${chalk.green(artifact.stackName)}`,
+                    );
+                } else {
+                    consola.info(`Changes for stack ${chalk.green(artifact.stackName)}:\n`);
+                    formatDifferences(process.stdout, diff);
+                }
             }
         }
     }
