@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "ESNext",
+        "lib": ["esnext", "esnext.asynciterable"],
+        "moduleResolution": "nodenext",
+        "composite": false,
+        "noEmit": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noImplicitReturns": false,
+        "noImplicitOverride": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "declaration": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "declarationMap": true,
+        "resolveJsonModule": true,
+        "incremental": true,
+        "types": ["node", "@nzyme/types"]
+    },
+    "esm": true,
+    "exclude": ["node_modules"],
+    "references": []
+}
