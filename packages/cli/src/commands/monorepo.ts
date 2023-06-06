@@ -43,7 +43,10 @@ async function run() {
             cjs: true,
         });
 
-        tsconfig.config.references = [...referencesEsm, ...referencesCjs];
+        const references = [...referencesEsm, ...referencesCjs];
+        references.sort((a, b) => a.path.localeCompare(b.path));
+
+        tsconfig.config.references = references;
         await saveTsConfig(tsconfig);
     }
 
