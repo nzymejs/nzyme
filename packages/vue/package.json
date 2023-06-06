@@ -2,6 +2,9 @@
     "name": "@nzyme/vue",
     "version": "1.0.0",
     "type": "module",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./src/index.ts",
     "exports": {
         ".": {
             "source": "./src/index.ts",
@@ -11,7 +14,6 @@
             "types": "./src/types.d.ts"
         }
     },
-    "types": "./src/index.ts",
     "sideEffects": false,
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
