@@ -4,7 +4,9 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "jsx": "preserve",
+        "jsx": "react",
+        "jsxFactory": "h",
+        "jsxImportSource": "vue",
         "composite": false,
         "plugins": [
             {
