@@ -46,8 +46,26 @@ export class Container {
         }
     }
 
-    public resolve<T>(injectable: Injectable<T>): T {
-        return this.resolveInstance(injectable) as T;
+    /**
+     * Resolves a single injectable.
+     * @param injectable Injectable to be resolved.
+     * @returns Resolved value of the injectable.
+     */
+    public resolve<T>(injectable: Injectable<T>): T;
+    /**
+     * Resolves multiple injectables.
+     * @param injectables Injectables to be resolved.
+     * @returns Resolved value of the injectable.
+     */
+    public resolve<T extends Injectable[]>(
+        injectables: T,
+    ): T[number] extends Injectable<infer U> ? [U] : [];
+    public resolve(injectable: Injectable | Injectable[]) {
+        if (Array.isArray(injectable)) {
+            return injectable.map(i => this.resolveInstance(i));
+        }
+
+        return this.resolveInstance(injectable);
     }
 
     public execute<T, TDeps extends ResolveDeps>(executable: Executable<T, TDeps>) {
