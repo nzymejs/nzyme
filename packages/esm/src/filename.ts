@@ -2,8 +2,8 @@ import { fileURLToPath } from 'url';
 
 /**
  * Replacement for __filename in ESM context.
- * @example const __filename = filename(import.meta);
+ * @example const __filename = filename(import.meta.url);
  */
-export function filename(meta: ImportMeta) {
-    return fileURLToPath(meta.url);
+export function filename(url: string) {
+    return fileURLToPath(url);
 }
