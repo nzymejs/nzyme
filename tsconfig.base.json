@@ -25,8 +25,7 @@
         "resolveJsonModule": true,
         "incremental": true,
         "importHelpers": true,
-        "preserveSymlinks": true,
-        "types": ["node", "@types/jest"]
+        "preserveSymlinks": true
     },
     "exclude": ["node_modules"]
 }
