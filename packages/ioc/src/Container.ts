@@ -27,11 +27,11 @@ export class Container {
         return instance as T | undefined;
     }
 
+    public set<T>(injectable: Injectable<T>, instance: T): void;
     public set<T, TDeps extends ResolveDeps>(
         injectable: Injectable<T>,
         service: Resolvable<T, TDeps> | Factory<T, TDeps>,
     ): void;
-    public set<T>(injectable: Injectable<T>, instance: T): void;
     public set<T>(injectable: Injectable<T>, instanceOrService: T | Service<T>): void {
         if (instanceOrService instanceof Resolvable) {
             if (instanceOrService.for !== injectable) {
