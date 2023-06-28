@@ -17,6 +17,7 @@ export * from './useService.js';
 export { CommonPlugin } from './CommonPlugin.js';
 export * from './useVirtualHistory.js';
 export * from './transitions/TransitionFade.js';
+export * from './onMountedSafe.js';
 export * from './onHistoryBack.js';
 export * from './onWindowEvent.js';
 export * from './onWindowResize.js';
