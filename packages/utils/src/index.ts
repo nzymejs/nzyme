@@ -24,3 +24,4 @@ export * from './timeout.js';
 
 export * from './string/formatWith.js';
 export * from './string/isDigit.js';
+export * from './removeUndefinedProps.js';
