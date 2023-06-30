@@ -1,8 +1,8 @@
 import { Ref, defineComponent, h, reactive, ref, ComponentInternalInstance } from 'vue';
-
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
 import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
+import { virtualHistory } from '@nzyme/dom';
 
 import {
     ModalComponent,
@@ -42,6 +42,7 @@ export const ModalService = defineService({
             let modalDone = false;
 
             const modal = result.promise as Writable<Modal<T>>;
+            const historyHandle = virtualHistory.pushState(() => modal.handler.cancel());
 
             modal.id = Symbol('modal');
             modal.props = options.props as ModalProps<T>;
@@ -108,6 +109,7 @@ export const ModalService = defineService({
             function closeModal() {
                 open.value = false;
                 arrayRemove(modals.value, modal as Modal);
+                historyHandle.cancel();
 
                 if (modalDone) {
                     result.resolve(assertValue(modalResult));
