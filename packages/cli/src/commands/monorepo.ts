@@ -4,6 +4,7 @@ import path from 'path';
 import { Package } from '@lerna/package';
 import { getPackages } from '@lerna/project';
 import { Command } from '@oclif/core';
+import * as json from 'comment-json';
 import merge from 'lodash.merge';
 import prettier from 'prettier';
 
@@ -163,9 +164,9 @@ async function loadTsConfigCore(filePath: string) {
     }
 
     try {
-        const json = await fs.promises.readFile(filePath, { encoding: 'utf8' });
-        const config = JSON.parse(json);
-        let resolved = JSON.parse(json);
+        const configJson = await fs.promises.readFile(filePath, { encoding: 'utf8' });
+        const config = json.parse(configJson) as Record<string, any>;
+        let resolved = json.parse(configJson) as Record<string, any>;
         let resolvedPath = filePath;
 
         while (resolved.extends) {
@@ -173,7 +174,7 @@ async function loadTsConfigCore(filePath: string) {
             const extendsJson = await fs.promises.readFile(extendsPath, {
                 encoding: 'utf8',
             });
-            const extendsObj = JSON.parse(extendsJson);
+            const extendsObj = json.parse(extendsJson);
 
             delete resolved.extends;
 
@@ -199,13 +200,13 @@ async function saveTsConfig(tsconfig: TsConfig) {
         prettierConfig = (await prettier.resolveConfig(process.cwd())) || {};
     }
 
-    let json = JSON.stringify(tsconfig.config, undefined, 2);
-    json = prettier.format(json, {
+    let configJson = json.stringify(tsconfig.config, undefined, 2);
+    configJson = prettier.format(configJson, {
         ...prettierConfig,
         parser: 'json',
     });
 
-    await fs.promises.writeFile(tsconfig.path, json, {
+    await fs.promises.writeFile(tsconfig.path, configJson, {
         encoding: 'utf8',
     });
 }

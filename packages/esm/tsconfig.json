@@ -7,9 +7,5 @@
         "types": ["node", "@types/jest"]
     },
     "include": ["src"],
-    "references": [
-        {
-            "path": "../types/tsconfig.json"
-        }
-    ]
+    "references": []
 }
