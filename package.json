@@ -15,7 +15,7 @@
     "devDependencies": {
         "@types/jest": "^29.5.1",
         "babel-jest": "^29.5.0",
-        "eslint": "8.41.0",
+        "eslint": "8.43.0",
         "eslint-config-prettier": "8.8.0",
         "eslint-plugin-import": "2.27.5",
         "eslint-plugin-jsdoc": "46.1.0",
