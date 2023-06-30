@@ -23,7 +23,7 @@
         "declarationMap": true,
         "resolveJsonModule": true,
         "incremental": true,
-        "types": ["node", "@nzyme/types"]
+        "types": ["node"]
     },
     "esm": true,
     "exclude": ["node_modules"],

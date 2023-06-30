@@ -15,6 +15,6 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "sideEffects": false,
     "dependencies": {
-        "type-fest": "^3.11.1"
+        "type-fest": "^3.12.0"
     }
 }

@@ -16,7 +16,6 @@ export * from './cachedProp.js';
 export * from './cachedGetter.js';
 export * from './random.js';
 export * from './Nullable.js';
-export * from './configClass.js';
 export * from './eventEmitter.js';
 export * from './CancelError.js';
 export * from './readonly.js';

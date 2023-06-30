@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node --esm
+#!/usr/bin/env ts-node-esm
 
 import path from 'path';
 import v8 from 'v8';
