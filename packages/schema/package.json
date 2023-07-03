@@ -1,0 +1,31 @@
+{
+    "name": "@nzyme/schema",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./src/index.ts",
+    "module": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./*": "./src/*"
+    },
+    "sideEffects": false,
+    "repository": "https://github.com/kedrzu/lesscms.git",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "private": true,
+    "dependencies": {
+        "@nzyme/i18n": "1.0.0",
+        "@nzyme/validation": "1.0.0",
+        "@nzyme/ioc": "1.0.0",
+        "@nzyme/types": "1.0.0",
+        "@nzyme/utils": "1.0.0",
+        "graphql": "^16.6.0",
+        "graphql-scalars": "^1.22.2",
+        "tslib": "^2.5.3"
+    },
+    "depcheck": {
+        "ignoreFiles": [
+            "tests"
+        ]
+    }
+}

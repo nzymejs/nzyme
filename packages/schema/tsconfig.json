@@ -1,0 +1,26 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": ["src/**/*.ts", "src/**/*.json"],
+    "references": [
+        {
+            "path": "../i18n/tsconfig.json"
+        },
+        {
+            "path": "../validation/tsconfig.json"
+        },
+        {
+            "path": "../ioc/tsconfig.json"
+        },
+        {
+            "path": "../types/tsconfig.json"
+        },
+        {
+            "path": "../utils/tsconfig.json"
+        }
+    ]
+}
