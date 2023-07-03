@@ -4,9 +4,9 @@ export function noop(...args: any[]) {
     //
 }
 
-export function assert<T>(value: T | undefined | null): asserts value is T {
+export function assert<T>(value: T | undefined | null, message?: string): asserts value is T {
     if (value == null) {
-        throw new Error('Value is not provided.');
+        throw new Error(message ?? 'Value is not provided.');
     }
 }
 
