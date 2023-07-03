@@ -1,4 +1,5 @@
 import { defineComponent, VNodeChild } from 'vue';
+
 import { prop } from './prop.js';
 
 const regex = /\{\s*(\w*)\s*\}/gm;

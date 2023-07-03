@@ -1,8 +1,9 @@
 import { Ref, defineComponent, h, reactive, ref, ComponentInternalInstance } from 'vue';
+
+import { virtualHistory } from '@nzyme/dom';
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
 import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
-import { virtualHistory } from '@nzyme/dom';
 
 import {
     ModalComponent,

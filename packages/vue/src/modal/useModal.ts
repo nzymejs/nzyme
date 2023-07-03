@@ -2,10 +2,9 @@ import { getCurrentInstance, onUnmounted } from 'vue';
 
 import { arrayRemove } from '@nzyme/utils';
 
-import { useService } from '../useService.js';
-
 import { ModalService } from './ModalService.js';
 import { Modal, ModalComponent, OpenModalOptions } from './ModalTypes.js';
+import { useService } from '../useService.js';
 
 interface ModalOptions {
     /**
