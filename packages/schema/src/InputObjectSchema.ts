@@ -263,6 +263,17 @@ export abstract class InputObjectSchema<
         return this.descriptor.validate(value, ctx);
     }
 
+    public create(value?: Partial<InputObjectValue<TProps>>): InputObjectValue<TProps> {
+        if (value != null) {
+            const result = this.coerceNonNull(value);
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return this.defaultValue() ?? this.descriptor.defaultValue();
+    }
+
     protected coerceNonNull(
         value: Partial<InputObjectValue<TProps>>,
     ): InputObjectValue<TProps> | null {
@@ -316,7 +327,7 @@ export interface InputObjectSchemaStatic<TSchema extends InputObjectSchemaAny> {
     readonly descriptor: TSchema['descriptor'];
     readonly props: TSchema['props'];
 
-    coerce(value: Maybe<Partial<SchemaValue<TSchema>>>): SchemaValue<TSchema>;
+    coerce(value?: Maybe<Partial<SchemaValue<TSchema>>>): SchemaValue<TSchema>;
     is(value: unknown): value is SchemaValue<TSchema>;
 }
 

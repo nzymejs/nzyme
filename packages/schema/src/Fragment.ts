@@ -10,7 +10,7 @@ import type { ObjectDescriptor, ObjectDescriptorAny, ObjectSchema } from './obje
 type FragmentSpreadKey = '...' | `...${string}`;
 
 // Used for type inference.
-declare const valueSymbol: unique symbol;
+const valueSymbol: unique symbol = Symbol();
 
 export type FragmentValue<F extends FragmentAny> = F[typeof valueSymbol];
 

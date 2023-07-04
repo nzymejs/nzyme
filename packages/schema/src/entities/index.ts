@@ -1,13 +1,13 @@
 export { EntityApiSymbols } from './EntityApi.js';
 export * from './Entity.js';
-export { EntityApi, EntityApiBasic } from './EntityApi.js';
+export type { EntityApi, EntityApiBasic } from './EntityApi.js';
 export * from './EntityProvider.js';
 export * from './EntityDescriptor.js';
 export * from './EntityConfig.js';
-export {
+export { EntitySchema } from './EntitySchema.js';
+export type {
     EntityDefinition,
     EntityDefinitionAny,
-    EntitySchema,
     EntitySchemaAny,
     EntityQuery,
     EntityValue,
@@ -20,5 +20,5 @@ export {
 export * from './EntityUtils.js';
 export * from './EntityRef.js';
 export * from './EntityProto.js';
-export { EntitySortKey, EntitySortType } from './EntitySortKeys.js';
+export type { EntitySortKey, EntitySortType } from './EntitySortKeys.js';
 export * from './EntityView.js';

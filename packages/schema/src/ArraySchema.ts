@@ -81,6 +81,14 @@ export class ArraySchema<TSchema extends SchemaAny = SchemaAny> extends Schema<
         return mapNotNull(value, v => this.itemSchema.coerce(v));
     }
 
+    public create(value?: SchemaValue<TSchema>[]): SchemaValue<TSchema>[] {
+        if (!value) {
+            return [];
+        }
+
+        return value.map(v => this.itemSchema.coerce(v));
+    }
+
     public override async validate(value: unknown, ctx: ValidationContext = {}) {
         if (!Array.isArray(value)) {
             return singleError({
@@ -111,10 +119,6 @@ export class ArraySchema<TSchema extends SchemaAny = SchemaAny> extends Schema<
         }
 
         return super.validate(value, ctx);
-    }
-
-    public create(value: SchemaValue<TSchema>): SchemaValue<TSchema> {
-        return value;
     }
 
     public override serialize(

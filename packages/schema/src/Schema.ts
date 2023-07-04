@@ -35,8 +35,8 @@ export interface SchemaDeserializeOptions<TGraphql extends boolean = boolean> {
 
 export type SchemaAny = Schema<any>;
 
-declare const valueSymbol: unique symbol;
-declare const querySymbol: unique symbol;
+const valueSymbol: unique symbol = Symbol();
+const querySymbol: unique symbol = Symbol();
 
 export abstract class Schema<T = unknown, TQuery = T> extends Validable<Strict<T>> {
     public readonly symbol = Symbol('schema');

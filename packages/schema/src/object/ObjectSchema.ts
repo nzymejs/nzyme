@@ -565,9 +565,15 @@ export abstract class ObjectSchema<
         return this.descriptor.validate(value, ctx);
     }
 
-    public create(value: ObjectPropsValue<T['props']>): ObjectValue<T> {
-        const obj = makeTyped<ObjectValue<T>>(this.typename);
-        return Object.assign(obj, value);
+    public create(value?: Partial<ObjectValue<T>>): ObjectValue<T> {
+        if (value != null) {
+            const result = this.coerceNonNull(value);
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return this.defaultValue() ?? this.descriptor.defaultValue();
     }
 
     protected coerceNonNull(value: Partial<ObjectValue<T>>): ObjectValue<T> | null {

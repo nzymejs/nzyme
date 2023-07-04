@@ -34,7 +34,7 @@ export abstract class NullableSchema<
 
     protected abstract isNonNull(value: unknown): value is TValue;
 
-    public coerce(value: Maybe<Partial<TValue>>): Nullable<TValue, TNullable> {
+    public coerce(value?: Maybe<Partial<TValue>>): Nullable<TValue, TNullable> {
         if (value == null) {
             return this.defaultValueOrNull();
         }
