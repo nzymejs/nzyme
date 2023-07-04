@@ -1,4 +1,4 @@
-import translations from '../translations/index.js';
+import translations from './translations.js';
 import { CommonErrors } from '../types.js';
 import { createError } from '../utils.js';
 import { Validator } from '../validator.js';
@@ -8,7 +8,7 @@ export interface MinValidatorOptions {
     exclusive?: boolean;
 }
 
-export function min(options: MinValidatorOptions): Validator<number> {
+export function minValidator(options: MinValidatorOptions): Validator<number> {
     const minValue = options.minValue;
     const exclusive = options.exclusive;
 

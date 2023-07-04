@@ -36,7 +36,7 @@ import { SchemaError } from '../SchemaError.js';
 import { assertTypeName, getTypeName, makeTyped, wrapWithType } from '../SchemaUtils.js';
 import { Typed, TypedAny } from '../Typed.js';
 import { DEBUG, GRAPHQL } from '../env.js';
-import translations from '../translations/index.js';
+import translations from '../translations.js';
 
 export interface ObjectSchemaOptions<
     TProps extends ObjectProps = ObjectProps,

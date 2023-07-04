@@ -13,7 +13,6 @@ export interface StringSchemaConfig<TNullable extends boolean>
     nonEmpty?: boolean;
     // TODO add validation
     multiline?: boolean;
-    regex?: RegExp;
 }
 
 export class StringSchema<TNullable extends boolean = false>
@@ -43,10 +42,6 @@ export class StringSchema<TNullable extends boolean = false>
                     return requiredError();
                 }
             });
-        }
-
-        if (config.regex) {
-            this.addValidator(regexValidator(config.regex));
         }
     }
 

@@ -2,7 +2,7 @@ import { DateTimeSchema } from '../DateTimeSchema.js';
 import { SchemaQuery, SchemaValue } from '../Schema.js';
 import { StringSchema } from '../StringSchema.js';
 import { ObjectProps, ObjectSchema } from '../object/index.js';
-import translations from '../translations/index.js';
+import translations from '../translations.js';
 
 export const EntityProps = {
     id: new StringSchema({

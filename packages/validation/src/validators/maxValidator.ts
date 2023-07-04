@@ -1,4 +1,4 @@
-import translations from '../translations/index.js';
+import translations from './translations.js';
 import { CommonErrors } from '../types.js';
 import { createError } from '../utils.js';
 import { Validator } from '../validator.js';
@@ -8,7 +8,7 @@ export interface MaxValidatorOptions {
     exclusive?: boolean;
 }
 
-export function max(options: MaxValidatorOptions): Validator<number> {
+export function maxValidator(options: MaxValidatorOptions): Validator<number> {
     const maxValue = options.maxValue;
     const exclusive = options.exclusive;
 

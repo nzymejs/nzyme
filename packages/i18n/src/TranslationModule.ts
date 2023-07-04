@@ -1,8 +1,8 @@
 import { Translatable } from './Translatable.js';
 
 export type TranslationModuleConfig<TKeys extends string> = Record<
-    string,
-    Record<TKeys, string | undefined> | undefined
+    TKeys,
+    Record<string, string | undefined>
 >;
 
 const DEFAULT_LANG = 'en';
@@ -25,8 +25,8 @@ export class TranslationModule<TKey extends string> {
             lang = DEFAULT_LANG;
         }
 
-        const translations = this.translations[lang] ?? this.translations[DEFAULT_LANG];
-        return translations?.[key] || '';
+        const translations = this.translations[key];
+        return translations[lang] ?? translations[DEFAULT_LANG] ?? '';
     }
 }
 

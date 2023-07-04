@@ -1,6 +1,0 @@
-{
-    "Required": "Pole jest wymagane",
-    "MinValue": "Minimalna wartość to {minValue}",
-    "MaxValue": "Maksymalna wartość to {maxValue}",
-    "InvalidFormat": "Wartość ma nieprawidłowy format"
-}

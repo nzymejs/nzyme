@@ -1,4 +1,4 @@
-import translations from '../translations/index.js';
+import translations from './translations.js';
 import { CommonErrors } from '../types.js';
 import { createError } from '../utils.js';
 

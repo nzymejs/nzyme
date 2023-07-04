@@ -1,7 +1,7 @@
 import { GraphQLFloat } from 'graphql';
 
 import { Nullable } from '@nzyme/utils';
-import { max, min } from '@nzyme/validation';
+import { maxValidator, minValidator } from '@nzyme/validation';
 
 import { SchemaComparable } from './SchemaComparable.js';
 import { GenericDescriptor } from './SchemaDescriptor.js';
@@ -34,12 +34,12 @@ export class NumberSchema<TNullable extends boolean = false>
 
         if (config.min) {
             this.min = config.min;
-            this.addValidator(min({ minValue: config.min }));
+            this.addValidator(minValidator({ minValue: config.min }));
         }
 
         if (config.max) {
             this.max = config.max;
-            this.addValidator(max({ maxValue: config.max }));
+            this.addValidator(maxValidator({ maxValue: config.max }));
         }
     }
 

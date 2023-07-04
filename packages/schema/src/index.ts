@@ -11,10 +11,6 @@ export * from './NullableSchema.js';
 export * from './SchemaDescriptor.js';
 export * from './VoidSchema.js';
 
-export * from './various/UrlSchema.js';
-export * from './various/FileNameSchema.js';
-export * from './various/EmailSchema.js';
-
 export * from './resolveObjectType.js';
 export * from './object/index.js';
 
