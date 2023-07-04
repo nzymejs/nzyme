@@ -20,7 +20,7 @@ export function useModal(opts?: ModalOptions) {
     const localModals: Modal[] = [];
 
     const closeOnUnmounted = opts?.closeOnUnmounted ?? true;
-    if (closeOnUnmounted) {
+    if (closeOnUnmounted && instance) {
         onUnmounted(() => {
             localModals.forEach(m => m.handler.close());
         });
