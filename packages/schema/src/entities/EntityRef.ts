@@ -4,14 +4,13 @@ import { Maybe, Simplify } from '@nzyme/types';
 import { Nullable, nullable } from '@nzyme/utils';
 import { CommonErrors, singleError, ValidationContext, ValidationErrors } from '@nzyme/validation';
 
+import { EntityDefinition, EntityDefinitionAny } from './EntitySchema.js';
+import { isEntity } from './EntityUtils.js';
 import { NullableSchema, NullableSchemaConfig } from '../NullableSchema.js';
 import { SchemaDeserializeOptions, SchemaSerializeOptions, SchemaQuery } from '../Schema.js';
 import { GenericDescriptor } from '../SchemaDescriptor.js';
 import { Typed } from '../Typed.js';
 import { GRAPHQL } from '../env.js';
-
-import { EntityDefinition, EntityDefinitionAny } from './EntitySchema.js';
-import { isEntity } from './EntityUtils.js';
 
 export interface EntityRefConfig<TEntity extends EntityDefinitionAny, TNullable extends boolean>
     extends NullableSchemaConfig<EntityRefOf<TEntity>, TNullable> {
@@ -93,12 +92,12 @@ export class EntityRefSchema<
         };
     }
 
-    public override validate(value: unknown, ctx: ValidationContext): ValidationErrors | null {
+    public override async validate(value: unknown, ctx: ValidationContext) {
         if (!value) {
             return null;
         }
 
-        const errors = super.validate(value, ctx);
+        const errors = await super.validate(value, ctx);
         if (errors) {
             return errors;
         }

@@ -81,7 +81,7 @@ export class ArraySchema<TSchema extends SchemaAny = SchemaAny> extends Schema<
         return mapNotNull(value, v => this.itemSchema.coerce(v));
     }
 
-    public override validate(value: unknown, ctx: ValidationContext = {}) {
+    public override async validate(value: unknown, ctx: ValidationContext = {}) {
         if (!Array.isArray(value)) {
             return singleError({
                 code: CommonErrors.WrongType,
@@ -89,21 +89,22 @@ export class ArraySchema<TSchema extends SchemaAny = SchemaAny> extends Schema<
         }
 
         let errors: ValidationErrorsMap | undefined;
-        for (let i = 0; i < value.length; i++) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const item = value[i];
-            if (item == null) {
-                (errors || (errors = {}))[i] = createError({
-                    code: CommonErrors.Required,
-                });
-                continue;
-            }
 
-            const validation = this.itemSchema.validate(item, ctx);
-            if (validation) {
-                (errors || (errors = {}))[i] = validation;
-            }
-        }
+        await Promise.all(
+            value.map(async (item, i) => {
+                if (item == null) {
+                    (errors || (errors = {}))[i] = createError({
+                        code: CommonErrors.Required,
+                    });
+                    return;
+                }
+
+                const validation = await this.itemSchema.validate(item, ctx);
+                if (validation) {
+                    (errors || (errors = {}))[i] = validation;
+                }
+            }),
+        );
 
         if (errors) {
             return errors;

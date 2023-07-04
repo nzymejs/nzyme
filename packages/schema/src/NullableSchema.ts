@@ -48,12 +48,12 @@ export abstract class NullableSchema<
         return this.nullable ? nullable() : this.defaultValue();
     }
 
-    public override validate(value: unknown, ctx: ValidationContext = {}) {
+    public override async validate(value: unknown, ctx: ValidationContext = {}) {
         if (value == null) {
             return this.nullable ? null : requiredError();
         }
 
-        return super.validate(value, ctx);
+        return await super.validate(value, ctx);
     }
 
     public override get graphqlType(): GraphQLType | undefined {

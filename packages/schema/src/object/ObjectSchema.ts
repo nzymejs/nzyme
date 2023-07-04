@@ -15,6 +15,13 @@ import {
     Validator,
 } from '@nzyme/validation';
 
+import { ObjectConfig, ObjectConfigDefault } from './ObjectConfig.js';
+import {
+    ObjectProps,
+    ObjectPropsQuery,
+    ObjectPropsValue,
+    ObjectPropsValueTyped,
+} from './ObjectProps.js';
 import { createFragment, FragmentFrom, FragmentInput, FragmentProps } from '../Fragment.js';
 import { JsonObjectSchema } from '../JsonObjectSchema.js';
 import { NullableSchema, NullableSchemaConfig } from '../NullableSchema.js';
@@ -30,14 +37,6 @@ import { assertTypeName, getTypeName, makeTyped, wrapWithType } from '../SchemaU
 import { Typed, TypedAny } from '../Typed.js';
 import { DEBUG, GRAPHQL } from '../env.js';
 import translations from '../translations/index.js';
-
-import { ObjectConfig, ObjectConfigDefault } from './ObjectConfig.js';
-import {
-    ObjectProps,
-    ObjectPropsQuery,
-    ObjectPropsValue,
-    ObjectPropsValueTyped,
-} from './ObjectProps.js';
 
 export interface ObjectSchemaOptions<
     TProps extends ObjectProps = ObjectProps,
@@ -253,7 +252,7 @@ export class ObjectDescriptor<T extends ObjectConfig = ObjectConfig> extends Sch
         return schema.coerce(value as any) as unknown as ObjectValue<T>;
     }
 
-    public validate<TValue>(value: TValue, ctx: ValidationContext = {}) {
+    public async validate<TValue>(value: TValue, ctx: ValidationContext = {}) {
         // Check if proper type
         const type = getTypeName(value);
         if (!type) {
@@ -271,7 +270,7 @@ export class ObjectDescriptor<T extends ObjectConfig = ObjectConfig> extends Sch
                 });
             }
 
-            return derived.validateCore(value as ObjectValue<T>, ctx);
+            return await derived.validateCore(value as ObjectValue<T>, ctx);
         }
 
         if (type !== this.typename) {
@@ -280,53 +279,51 @@ export class ObjectDescriptor<T extends ObjectConfig = ObjectConfig> extends Sch
             });
         }
 
-        return this.validateCore(value as ObjectValue<T>, ctx);
+        return await this.validateCore(value as ObjectValue<T>, ctx);
     }
 
-    private validateCore(value: ObjectValue<T>, ctx: ValidationContext) {
+    private async validateCore(value: ObjectValue<T>, ctx: ValidationContext) {
         return (
-            this.validateProps(value, ctx) ??
+            (await this.validateProps(value, ctx)) ??
             // Run custom validation only if properties are valid
-            validateWithMany(value, this.validators, ctx)
+            (await validateWithMany(value, this.validators, ctx))
         );
     }
 
-    private validateProps(value: ObjectValue<T>, ctx: ValidationContext) {
+    private async validateProps(value: ObjectValue<T>, ctx: ValidationContext) {
         let errors: ValidationErrorsMap | undefined;
         for (const key in this.props) {
             const prop = this.props[key];
             const propValue = value[key as keyof typeof value];
-            const propErrors = prop.validate(propValue, ctx);
+            const propErrors = await prop.validate(propValue, ctx);
 
             if (propErrors) {
                 (errors || (errors = {}))[key] = propErrors;
             }
         }
 
-        // check unknown props
-        if (!ctx.skipUnknown) {
-            for (const prop of Object.keys(value)) {
-                // already checked at the beginning of validation
-                if (prop === '__typename') {
-                    continue;
-                }
-
-                // is not unknown prop
-                if (this.props[prop as keyof T['props']]) {
-                    continue;
-                }
-
-                (errors || (errors = {}))[prop] = createError({
-                    code: CommonErrors.UnknownProperty,
-                });
+        // Check for unknown properties
+        for (const prop of Object.keys(value)) {
+            // already checked at the beginning of validation
+            if (prop === '__typename') {
+                continue;
             }
+
+            // is not unknown prop
+            if (this.props[prop as keyof T['props']]) {
+                continue;
+            }
+
+            (errors || (errors = {}))[prop] = createError({
+                code: CommonErrors.UnknownProperty,
+            });
         }
 
         return errors;
     }
 
-    public validateAndThrow(value: unknown, ctx: ValidationContext = {}): void {
-        const validation = this.validate(value, ctx);
+    public async validateAndThrow(value: unknown, ctx: ValidationContext = {}) {
+        const validation = await this.validate(value, ctx);
         if (validation) {
             throw new ValidationException(validation);
         }

@@ -2,7 +2,7 @@ import { asArray } from '@nzyme/utils';
 
 import { ValidationErrors, ValidationException } from './types.js';
 import { validateWithMany } from './utils.js';
-import { ValidationContext, Validator } from './validator.js';
+import { ValidationContext, Validator,ValidatorResult  } from './validator.js';
 
 export interface ValidableConfig<T> {
     validate?: Validator<T> | readonly Validator<T>[];
@@ -16,13 +16,17 @@ export abstract class Validable<T> {
         this.validators = asArray(config.validate || []);
     }
 
-    public validate(value: unknown, ctx: ValidationContext = {}): ValidationErrors | null {
-        return (
-            this.preValidate(value, ctx) ??
-            this.runValidators(value as T, ctx) ??
-            this.postValidate(value as T, ctx) ??
-            null
+    public async validate(
+        value: unknown,
+        ctx: ValidationContext = {},
+    ): Promise<ValidationErrors | null> {
+        const result = (
+            (await this.preValidate(value, ctx)) ??
+            (await this.runValidators(value as T, ctx)) ??
+            (await this.postValidate(value as T, ctx))
         );
+
+        return result || null;
     }
 
     protected preValidate(
@@ -30,12 +34,15 @@ export abstract class Validable<T> {
         value: unknown,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         ctx: ValidationContext,
-    ): ValidationErrors | null | undefined {
+    ): Promise<ValidatorResult> | ValidatorResult {
         return null;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected postValidate(value: T, ctx: ValidationContext): ValidationErrors | null | undefined {
+    protected postValidate(
+        value: T,
+        ctx: ValidationContext,
+    ): Promise<ValidatorResult> | ValidatorResult {
         return null;
     }
 
@@ -47,8 +54,8 @@ export abstract class Validable<T> {
         this.validators.push(validator);
     }
 
-    public validateAndThrow(value: unknown, ctx: ValidationContext): asserts value is T {
-        const validation = this.validate(value, ctx);
+    public async validateAndThrow(value: unknown, ctx?: ValidationContext): Promise<void> {
+        const validation = await this.validate(value, ctx);
         if (validation) {
             throw new ValidationException(validation);
         }

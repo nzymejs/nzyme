@@ -4,13 +4,13 @@ import { Maybe } from '@nzyme/types';
 import { ValidationErrors, ValidationError } from './types.js';
 import { ValidationContext, Validator } from './validator.js';
 
-export function validateWithMany<T>(
+export async function validateWithMany<T>(
     value: T,
     validators: readonly Validator<T>[],
     ctx: ValidationContext,
 ) {
     for (const validator of validators) {
-        const errors = validator(value, ctx);
+        const errors = await validator(value, ctx);
         if (errors) {
             return errors;
         }

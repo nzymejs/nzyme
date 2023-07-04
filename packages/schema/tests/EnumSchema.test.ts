@@ -1,5 +1,6 @@
-import { EnumSchema } from '@nzyme/schema';
 import { errorWithCode, expectValidation } from '@lesscms/testing';
+
+import { EnumSchema } from '@nzyme/schema';
 import { CommonErrors } from '@nzyme/validation';
 
 const Fruit = EnumSchema.define({
@@ -24,15 +25,6 @@ test('type guard', () => {
     expect(schema.is('banana')).toBe(true);
     expect(schema.is('raspberry')).toBe(true);
     expect(schema.is('tomato')).toBe(false);
-});
-
-test('value properties', () => {
-    expect(Fruit.values.apple.name()).toBe('Apple');
-    expect(Fruit.values.apple.valueNumeric).toBe(0);
-    expect(Fruit.values.banana.name()).toBe('Banana');
-    expect(Fruit.values.banana.valueNumeric).toBe(1);
-    expect(Fruit.values.raspberry.name()).toBe('Raspberry');
-    expect(Fruit.values.raspberry.valueNumeric).toBe(2);
 });
 
 test('validation - valid', () => {

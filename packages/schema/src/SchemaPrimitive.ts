@@ -1,6 +1,5 @@
 import { Maybe, Primitive } from '@nzyme/types';
 import { Nullable, nullable } from '@nzyme/utils';
-
 import { createError, CommonErrors, ValidationContext } from '@nzyme/validation';
 
 import { NullableSchema, NullableSchemaConfig } from './NullableSchema.js';
@@ -48,8 +47,6 @@ export abstract class SchemaPrimitive<
                 code: CommonErrors.WrongType,
             });
         }
-
-        return super.preValidate(value, ctx);
     }
 
     public serialize(value: Nullable<T, TNullable>, opts?: SchemaSerializeOptions<false>): unknown;

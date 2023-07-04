@@ -108,7 +108,7 @@ export class InputObjectDescriptor<
         return result;
     }
 
-    public validate<TValue>(value: TValue, ctx: ValidationContext) {
+    public async validate<TValue>(value: TValue, ctx: ValidationContext) {
         // Check if proper type
         if (!this.is(value)) {
             return singleError({
@@ -116,11 +116,11 @@ export class InputObjectDescriptor<
             });
         }
 
-        return this.validateCore(value as InputObjectValue<TProps>, ctx);
+        return await this.validateCore(value as InputObjectValue<TProps>, ctx);
     }
 
-    private validateCore(value: InputObjectValue<TProps>, ctx: ValidationContext) {
-        const errors = this.validateProps(value, ctx);
+    private async validateCore(value: InputObjectValue<TProps>, ctx: ValidationContext) {
+        const errors = await this.validateProps(value, ctx);
         if (errors) {
             return errors;
         }
@@ -129,35 +129,33 @@ export class InputObjectDescriptor<
         return validateWithMany(value, this.validators, ctx);
     }
 
-    private validateProps(value: InputObjectValue<TProps>, ctx: ValidationContext) {
+    private async validateProps(value: InputObjectValue<TProps>, ctx: ValidationContext) {
         let errors: ValidationErrorsMap | undefined;
         for (const key in this.props) {
             const prop = this.props[key];
             const propValue = value[key as keyof typeof value];
-            const propErrors = prop.validate(propValue, ctx);
+            const propErrors = await prop.validate(propValue, ctx);
 
             if (propErrors) {
                 (errors || (errors = {}))[key] = propErrors;
             }
         }
 
-        // check unknown props
-        if (!ctx.skipUnknown) {
-            for (const prop of Object.keys(value)) {
-                // already checked at the beginning of validation
-                if (prop === '__typename') {
-                    continue;
-                }
-
-                // is not unknown prop
-                if (this.props[prop as keyof TProps]) {
-                    continue;
-                }
-
-                (errors || (errors = {}))[prop] = createError({
-                    code: CommonErrors.UnknownProperty,
-                });
+        // Check for unknown properties
+        for (const prop of Object.keys(value)) {
+            // already checked at the beginning of validation
+            if (prop === '__typename') {
+                continue;
             }
+
+            // is not unknown prop
+            if (this.props[prop as keyof TProps]) {
+                continue;
+            }
+
+            (errors || (errors = {}))[prop] = createError({
+                code: CommonErrors.UnknownProperty,
+            });
         }
 
         return errors;
