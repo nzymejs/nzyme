@@ -4,6 +4,7 @@ export * from './component.js';
 export * from './localStorageRef.js';
 export * from './prop.js';
 export * from './makeRef.js';
+export * from './context.js';
 export * from './useAsync.js';
 export * from './useDataSource.js';
 export * from './useElement.js';
