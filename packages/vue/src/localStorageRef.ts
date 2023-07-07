@@ -1,22 +1,20 @@
 import { Ref, ref, watch } from 'vue';
 
-export function localStorageRef<T>(key: string): Ref<T>;
-export function localStorageRef<T>(key: string, defaultValue: T): Ref<T>;
-export function localStorageRef<T>(key: string, defaultValue: T | null): Ref<T | null>;
-export function localStorageRef<T>(key: string, defaultValue: T | undefined): Ref<T | undefined>;
-export function localStorageRef<T>(key: string, defaultValue?: T | null | undefined) {
-    const json = localStorage.getItem(key);
-    const init = json ? JSON.parse(json) : defaultValue;
-    const variable = ref<T>(init);
+import { localStorageGetJson, localStorageSetJson } from '@nzyme/dom';
 
-    watch(
-        variable,
-        value => {
-            const json = JSON.stringify(value);
-            localStorage.setItem(key, json);
-        },
-        { deep: true },
-    );
+export interface LocalStorageRef<T> extends Ref<T | null> {
+    reload(): void;
+}
+
+export function localStorageRef<T>(key: string) {
+    const variable = ref<T | null>(localStorageGetJson<T>(key)) as LocalStorageRef<T>;
+    watch(variable, value => localStorageSetJson(key, value), { deep: true });
+
+    variable.reload = reload;
 
     return variable;
+
+    function reload(): T | null {
+        return (variable.value = localStorageGetJson<T>(key));
+    }
 }
