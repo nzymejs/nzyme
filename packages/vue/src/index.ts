@@ -5,7 +5,6 @@ export * from './localStorageRef.js';
 export * from './prop.js';
 export * from './makeRef.js';
 export * from './context.js';
-export * from './useAsync.js';
 export * from './useDataSource.js';
 export * from './useElement.js';
 export * from './useEmitAsync.js';
@@ -23,6 +22,7 @@ export * from './onHistoryBack.js';
 export * from './onWindowEvent.js';
 export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
+export * from './refAsync.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
