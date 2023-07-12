@@ -2,6 +2,7 @@ export * from './Array.js';
 export * from './Common.js';
 export * from './Config.js';
 export * from './Constructors.js';
+export * from './Date.js';
 export * from './Decorators.js';
 export * from './Dictionary.js';
 export * from './EmptyObject.js';
