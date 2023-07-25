@@ -3,11 +3,14 @@ module.exports = {
         browser: true,
         node: true,
     },
-    extends: ['./typescript.js', 'plugin:vue/vue3-recommended'],
+    extends: ['plugin:vue/vue3-recommended', './typescript.js'],
     parser: 'vue-eslint-parser',
     parserOptions: {
         parser: '@typescript-eslint/parser',
+        extraFileExtensions: ['.vue'],
     },
     plugins: [],
-    rules: {},
+    rules: {
+        'vue/multi-word-component-names': 'off',
+    },
 };
