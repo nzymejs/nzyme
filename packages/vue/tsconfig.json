@@ -5,13 +5,15 @@
         "rootDir": "./src",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "jsx": "react",
+        "jsxImportSource": "vue",
         "jsxFactory": "h",
         "composite": false,
         "plugins": [
             {
                 "name": "typescript-plugin-css-modules"
             }
-        ]
+        ],
+        "types": ["node", "vite/client"]
     },
     "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.json", "./src/**/*.scss"],
     "references": [

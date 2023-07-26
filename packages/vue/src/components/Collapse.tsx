@@ -1,11 +1,11 @@
 import { defineComponent, getCurrentInstance, Transition, withDirectives } from 'vue';
-import { isBrowser } from '@nzyme/dom';
 
-import { vShow } from '../directives/vShow';
-import { prop } from '../prop';
+import { isBrowser } from '@nzyme/dom';
 
 import css from './Collapse.module.scss';
 import { LazyHydrate } from './LazyHydrate.js';
+import { vShow } from '../directives/vShow.js';
+import { prop } from '../prop.js';
 
 // Used to easily debug complex transition problems.
 const DEBUG = false;
@@ -15,6 +15,11 @@ export const Collapse = defineComponent({
     props: {
         lazy: prop(Boolean).optional(),
         show: prop(Boolean).optional(),
+    },
+    emits: {
+        heightChange: (height: number) => void 0,
+        afterEnter: () => void 0,
+        afterLeave: () => void 0,
     },
     setup(props, ctx) {
         const vm = getCurrentInstance();
@@ -64,24 +69,32 @@ export const Collapse = defineComponent({
         };
 
         function beforeEnter(el: Element) {
-            if (DEBUG) console.warn('beforeEnter', el);
+            if (DEBUG) {
+                console.warn('beforeEnter', el);
+            }
             zeroHeight(el as HTMLElement);
         }
 
         function enter(el: Element) {
-            if (DEBUG) console.warn('enter', el);
+            if (DEBUG) {
+                console.warn('enter', el);
+            }
             fixedHeight(el as HTMLElement);
             ctx.emit('heightChange', el.scrollHeight);
         }
 
         function afterEnter(el: Element) {
-            if (DEBUG) console.warn('afterEnter', el);
+            if (DEBUG) {
+                console.warn('afterEnter', el);
+            }
             autoHeight(el as HTMLElement);
             ctx.emit('afterEnter');
         }
 
         function leave(el: Element) {
-            if (DEBUG) console.warn('leave', el);
+            if (DEBUG) {
+                console.warn('leave', el);
+            }
             fixedHeight(el as HTMLElement);
 
             requestAnimationFrame(() => {
@@ -91,27 +104,36 @@ export const Collapse = defineComponent({
         }
 
         function afterLeave(el: Element) {
-            if (DEBUG) console.warn('afterLeave', el);
+            if (DEBUG) {
+                console.warn('afterLeave', el);
+            }
             autoHeight(el as HTMLElement);
+            ctx.emit('afterLeave');
         }
 
         function fixedHeight(el: HTMLElement) {
             el.style.height = `${el.scrollHeight}px`;
             el.style.overflow = 'hidden';
-            if (DEBUG) console.warn('fixedHeight', el);
+            if (DEBUG) {
+                console.warn('fixedHeight', el);
+            }
             forceRepaint(el);
         }
 
         function autoHeight(el: HTMLElement) {
             el.style.overflow = '';
             el.style.height = '';
-            if (DEBUG) console.warn('autoHeight', el);
+            if (DEBUG) {
+                console.warn('autoHeight', el);
+            }
             forceRepaint(el);
         }
 
         function zeroHeight(el: HTMLElement) {
             el.style.height = '0';
-            if (DEBUG) console.warn('zeroHeight', el);
+            if (DEBUG) {
+                console.warn('zeroHeight', el);
+            }
             forceRepaint(el);
         }
 
@@ -120,7 +142,9 @@ export const Collapse = defineComponent({
             // animation is triggered correctly.
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             const height = getComputedStyle(el).height;
-            if (DEBUG) console.warn('forceRepaint', el, height);
+            if (DEBUG) {
+                console.warn('forceRepaint', el, height);
+            }
         }
     },
 });
