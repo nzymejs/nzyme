@@ -12,5 +12,7 @@ module.exports = {
     plugins: [],
     rules: {
         'vue/multi-word-component-names': 'off',
+        // Not needed in vue 3
+        'vue/require-v-for-key': 'off',
     },
 };
