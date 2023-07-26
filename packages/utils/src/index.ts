@@ -20,6 +20,7 @@ export * from './eventEmitter.js';
 export * from './CancelError.js';
 export * from './readonly.js';
 export * from './timeout.js';
+export * from './createMemo.js';
 
 export * from './string/formatWith.js';
 export * from './string/isDigit.js';

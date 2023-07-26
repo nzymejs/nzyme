@@ -10,8 +10,8 @@ export function assert<T>(value: T | undefined | null, message?: string): assert
     }
 }
 
-export function assertValue<T>(value: T | undefined | null): T {
-    assert(value);
+export function assertValue<T>(value: T | undefined | null, message?: string): T {
+    assert(value, message);
     return value;
 }
 
