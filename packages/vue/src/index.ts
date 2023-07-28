@@ -8,6 +8,7 @@ export * from './context.js';
 export * from './useDataSource.js';
 export * from './useElement.js';
 export * from './useEmitAsync.js';
+export * from './constRef.js';
 export * from './useEventBus.js';
 export * from './useInstance.js';
 export * from './vmodel.js';
