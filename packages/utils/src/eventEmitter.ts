@@ -1,6 +1,6 @@
 import { IfLiteral, NonVoidPropKeys, VoidPropKeys } from '@nzyme/types';
 
-import { arrayRemove } from './ArrayUtils.js';
+import { arrayRemove } from './array/arrayRemove.js';
 
 export type EventCallback<TEvents, E extends keyof TEvents> = TEvents[E] extends void
     ? () => void | Promise<void>
@@ -42,8 +42,8 @@ export function eventEmitter<TEvents>() {
             listeners.set(event, callbacks);
         }
 
-        callbacks.push(callback as Callback);   
-     }
+        callbacks.push(callback as Callback);
+    }
 
     function off<E extends keyof PredefinedEvents<TEvents>>(
         event: E,

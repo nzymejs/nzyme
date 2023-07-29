@@ -9,7 +9,8 @@ const regex = /{\s*(\w*)\s*}/gi;
  */
 export function formatWith(template: string, params: Record<string, unknown>) {
     return template.replace(regex, (match, key: string) => {
-        if (params.hasOwnProperty(key)) {
+        const value = params[key];
+        if (value !== undefined) {
             return String(params[key]);
         }
 

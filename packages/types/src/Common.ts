@@ -69,3 +69,5 @@ export type Writable<T> = { -readonly [P in keyof T]: T[P] };
 export type SomeObject = {};
 
 export type Getter<T> = () => T;
+
+export type ValueOf<T> = Exclude<T[keyof T], undefined>;
