@@ -43,6 +43,13 @@ export type Merge<T1, T2> = Exclude<
     undefined
 >;
 
+export type Merge3<T1, T2, T3> = Exclude<
+    {
+        [K in keyof (T1 & T2 & T3)]: (T1 & T2 & T3)[K];
+    },
+    undefined
+>;
+
 export type Override<T1, T2> = Exclude<
     {
         [K in keyof (T1 & T2)]: K extends keyof T2 ? T2[K] : K extends keyof T1 ? T1[K] : never;

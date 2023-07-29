@@ -9,12 +9,13 @@ import {
     openBlock,
     createElementBlock,
 } from 'vue';
+
 import { getOuterHeight } from '@nzyme/dom';
 
-import { useElement } from '../useElement';
+import css from './Reveal.module.scss';
+import { useElement } from '../useElement.js';
 
 const fallbackKey = Symbol('fallback');
-import css from './Reveal.module.scss';
 
 export const Reveal = defineComponent({
     name: 'Reveal',

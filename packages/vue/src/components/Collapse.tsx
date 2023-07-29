@@ -1,4 +1,4 @@
-import { defineComponent, getCurrentInstance, Transition, withDirectives } from 'vue';
+import { defineComponent, getCurrentInstance, h, Transition, withDirectives } from 'vue';
 
 import { isBrowser } from '@nzyme/dom';
 

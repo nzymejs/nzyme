@@ -4,6 +4,7 @@ import {
     FunctionalComponent,
     TransitionGroup,
     TransitionGroupProps as TransitionGroupPropsVue,
+    h,
 } from 'vue';
 
 export type TransitionProps = Omit<TransitionPropsVue, 'name' | `${string}Class` | 'css'> & {

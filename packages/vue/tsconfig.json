@@ -5,8 +5,8 @@
         "rootDir": "./src",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "jsx": "react",
-        "jsxImportSource": "vue",
         "jsxFactory": "h",
+        "jsxFragmentFactory": "h",
         "composite": false,
         "plugins": [
             {
