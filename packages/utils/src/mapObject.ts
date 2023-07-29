@@ -1,4 +1,4 @@
-import { ValueOf } from './ObjectUtils.js';
+import { ValueOf } from '@nzyme/types';
 
 export function mapObject<T, TTo>(
     obj: T,
