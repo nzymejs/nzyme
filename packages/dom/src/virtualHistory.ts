@@ -11,7 +11,7 @@ interface VirtualHistoryData {
 
 export interface VirtualHistoryHandle {
     readonly index: number;
-    cancel(): void;
+    cancel(this: void): void;
 }
 
 type Callback = () => void;
@@ -21,7 +21,7 @@ const callbacks = new Map<number, Callback | null>();
 const uid = guid();
 
 export const virtualHistory = {
-    pushState(callback: Callback) {
+    pushState(callback: Callback): VirtualHistoryHandle {
         initialize();
 
         history.pushState(history.state, document.title, null);
