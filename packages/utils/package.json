@@ -14,7 +14,7 @@
         "lodash.isequal": "^4.5.0"
     },
     "devDependencies": {
-        "@types/jest": "^29.5.2"
+        "@types/jest": "^29.5.3"
     },
     "depcheck": {
         "ignoreFiles": [

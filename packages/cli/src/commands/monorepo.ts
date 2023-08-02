@@ -201,7 +201,7 @@ async function saveTsConfig(tsconfig: TsConfig) {
     }
 
     let configJson = json.stringify(tsconfig.config, undefined, 2);
-    configJson = prettier.format(configJson, {
+    configJson = await prettier.format(configJson, {
         ...prettierConfig,
         parser: 'json',
     });

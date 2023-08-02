@@ -12,7 +12,7 @@
         "@nzyme/types": "1.0.0"
     },
     "devDependencies": {
-        "@types/jest": "^29.5.2"
+        "@types/jest": "^29.5.3"
     },
     "depcheck": {
         "ignoreFiles": [

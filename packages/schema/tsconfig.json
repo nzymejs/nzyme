@@ -11,9 +11,6 @@
             "path": "../i18n/tsconfig.json"
         },
         {
-            "path": "../validation/tsconfig.json"
-        },
-        {
             "path": "../ioc/tsconfig.json"
         },
         {
@@ -21,6 +18,9 @@
         },
         {
             "path": "../utils/tsconfig.json"
+        },
+        {
+            "path": "../validation/tsconfig.json"
         }
     ]
 }

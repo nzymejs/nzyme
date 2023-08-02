@@ -15,13 +15,13 @@
     "private": true,
     "dependencies": {
         "@nzyme/i18n": "1.0.0",
-        "@nzyme/validation": "1.0.0",
         "@nzyme/ioc": "1.0.0",
         "@nzyme/types": "1.0.0",
         "@nzyme/utils": "1.0.0",
+        "@nzyme/validation": "1.0.0",
         "graphql": "^16.6.0",
         "graphql-scalars": "^1.22.2",
-        "tslib": "^2.5.3"
+        "tslib": "^2.6.1"
     },
     "depcheck": {
         "ignoreFiles": [

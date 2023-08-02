@@ -4,7 +4,7 @@ module.exports = {
         browser: true,
     },
     // Do not check eslint config files, because they collide with typecsript config.
-    ignorePatterns: ['.eslintrc.cjs'],
+    ignorePatterns: ['.eslintrc.cjs', 'dist/**/*', 'node_modules/**/*'],
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint'],
     extends: [
