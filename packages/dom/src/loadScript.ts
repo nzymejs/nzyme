@@ -4,20 +4,21 @@ const scripts: { [key: string]: Promise<void> | undefined } = {};
  * Loads a given script into the page.
  * If script was already loaded, it won't load it again
  */
-export function loadScript(url: string) {
+export function loadScript(url: string, options?: { document?: Document }) {
     if (scripts[url]) {
         return scripts[url];
     }
 
-    const scriptTag = document.createElement('script');
+    const doc = options?.document ?? document;
+    const scriptTag = doc.createElement('script');
 
     return new Promise<void>((resolve, reject) => {
         scriptTag.src = url;
         scriptTag.onload = () => resolve();
         scriptTag.onerror = () => {
-            document.body.removeChild(scriptTag);
+            doc.body.removeChild(scriptTag);
             reject();
         };
-        document.body.appendChild(scriptTag);
+        doc.body.appendChild(scriptTag);
     });
 }
