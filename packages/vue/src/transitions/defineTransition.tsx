@@ -39,7 +39,7 @@ export function defineTransition(def: TransitionDefProps) {
 }
 
 export function defineTransitionGroup(def: TransitionDefProps) {
-    const transition: FunctionalComponent<TransitionProps> = (props, ctx) => (
+    const transition: FunctionalComponent<TransitionGroupProps> = (props, ctx) => (
         <TransitionGroup
             {...props}
             {...def}
