@@ -6,7 +6,8 @@ export type EventCallback<TEvents, E extends keyof TEvents> = TEvents[E] extends
     ? () => void | Promise<void>
     : (event: TEvents[E]) => void | Promise<void>;
 
-export type EventEmitter<TEvents> = ReturnType<typeof eventEmitter<TEvents>>;
+export type EventEmitterPrivate<TEvents> = ReturnType<typeof createEventEmitter<TEvents>>;
+export type EventEmitterPublic<TEvents> = Pick<EventEmitterPrivate<TEvents>, 'on' | 'off'>;
 
 type PredefinedEvents<TEvents> = {
     [E in keyof TEvents as IfLiteral<E, E, never>]: TEvents[E];
@@ -16,7 +17,7 @@ type GenericEvents<TEvents> = {
     [E in keyof TEvents as IfLiteral<E, never, E>]: TEvents[E];
 };
 
-export function eventEmitter<TEvents>() {
+export function createEventEmitter<TEvents>() {
     type Callback = EventCallback<TEvents, keyof TEvents>;
     const listeners = new Map<keyof TEvents, Callback[]>();
 

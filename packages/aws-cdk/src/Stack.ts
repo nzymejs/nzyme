@@ -2,7 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import { CfnOutput } from '@aws-cdk/core';
 import { DeployStackResult } from 'aws-cdk/lib/api';
 
-import { eventEmitter } from '@nzyme/utils';
+import { createEventEmitter } from '@nzyme/utils';
 
 import { App } from './App.js';
 
@@ -21,7 +21,7 @@ export interface StackEvents {
 export type StackHandler = () => Promise<void>;
 
 export class Stack extends cdk.Stack {
-    private readonly eventEmitter = eventEmitter<StackEvents>();
+    private readonly eventEmitter = createEventEmitter<StackEvents>();
     private readonly tasks: StackHandler[] = [];
 
     private deployResult: DeployStackResult | undefined;
