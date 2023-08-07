@@ -112,7 +112,7 @@ async function getTsReferences(params: {
             !depTsConfig ||
             !depTsConfig.resolved.compilerOptions ||
             !depTsConfig.resolved.compilerOptions.composite ||
-            !(dep.get('main') || dep.get('exports'));
+            !(dep.get('main') || dep.get('exports') || dep.get('bin'));
 
         if (disable) {
             continue;
