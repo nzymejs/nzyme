@@ -6,7 +6,7 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "sideEffects": false,
-    "repository": "https://github.com/kedrzu/lesscms.git",
+    "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "private": true,
     "dependencies": {
