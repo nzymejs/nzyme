@@ -3,5 +3,5 @@ module.exports = {
     env: {
         node: true,
     },
-    extends: [require.resolve('@nzyme/eslint/vue')],
+    extends: [require.resolve('@nzyme/eslint/typescript')],
 };

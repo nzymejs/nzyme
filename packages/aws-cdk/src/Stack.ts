@@ -26,7 +26,10 @@ export class Stack extends cdk.Stack {
 
     private deployResult: DeployStackResult | undefined;
 
-    constructor(app: App, public readonly options: StackOptions) {
+    constructor(
+        app: App,
+        public readonly options: StackOptions,
+    ) {
         super(app, options.name, { env: options.env });
 
         this.on('deploy:start', () => {

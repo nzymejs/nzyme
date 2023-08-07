@@ -15,6 +15,10 @@ export interface AppOptions {
     readonly sdkProvider: SdkProvider;
 }
 
+export interface AppStackParams {
+    stacks?: cdk.Stack[] | ((stack: cdk.Stack) => boolean);
+}
+
 export class App extends cdk.App {
     private readonly sdkProvider: SdkProvider;
     private readonly deployments: Deployments;
@@ -53,22 +57,29 @@ export class App extends cdk.App {
         );
     }
 
-    public async build() {
+    public async build(params: AppStackParams = {}) {
         for (const stack of this.stacks) {
+            if (!stackMatches(stack, params)) {
+                continue;
+            }
+
             await stack.$.execute();
         }
     }
 
-    public async deploy() {
-        await this.build();
+    public async deploy(params: AppStackParams = {}) {
+        await this.build(params);
 
         const cloudAssembly = this.synth();
-        const stacks = this.stacks;
 
         for (const artifact of cloudAssembly.artifacts) {
             if (artifact instanceof CloudFormationStackArtifact) {
-                const stack = stacks.find(stack => stack.stackName === artifact.stackName);
                 const stackName = artifact.stackName;
+                const stack = this.stacks.find(stack => stack.stackName === stackName);
+
+                if (stack && !stackMatches(stack, params)) {
+                    continue;
+                }
 
                 consola.info(`Deploying stack ${chalk.green(stackName)}`);
                 stack?.$.emit('deploy:start');
@@ -84,15 +95,18 @@ export class App extends cdk.App {
         }
     }
 
-    public async destroy() {
+    public async destroy(params: AppStackParams = {}) {
         const cloudAssembly = this.synth();
-        const stacks = this.stacks;
 
         // Destroy stacks in reverse order.
         for (const artifact of arrayReverse(cloudAssembly.artifacts)) {
             if (artifact instanceof CloudFormationStackArtifact) {
-                const stack = stacks.find(stack => stack.stackName === artifact.stackName);
                 const stackName = artifact.stackName;
+                const stack = this.stacks.find(stack => stack.stackName === stackName);
+
+                if (stack && !stackMatches(stack, params)) {
+                    continue;
+                }
 
                 consola.info(`Destroying stack ${chalk.green(stackName)}`);
                 stack?.$.emit('destroy:start');
@@ -108,13 +122,20 @@ export class App extends cdk.App {
         }
     }
 
-    public async diff() {
+    public async diff(params: AppStackParams = {}) {
         await this.build();
 
         const cloudAssembly = this.synth();
 
         for (const artifact of cloudAssembly.artifacts) {
             if (artifact instanceof CloudFormationStackArtifact) {
+                const stackName = artifact.stackName;
+                const stack = this.stacks.find(stack => stack.stackName === stackName);
+
+                if (stack && !stackMatches(stack, params)) {
+                    continue;
+                }
+
                 const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
                     artifact,
                 );
@@ -132,4 +153,16 @@ export class App extends cdk.App {
             }
         }
     }
+}
+
+function stackMatches(stack: cdk.Stack, params: AppStackParams) {
+    if (!params.stacks) {
+        return true;
+    }
+
+    if (Array.isArray(params.stacks)) {
+        return params.stacks.includes(stack);
+    }
+
+    return params.stacks(stack);
 }
