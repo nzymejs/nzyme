@@ -1,9 +1,11 @@
+import { EmptyObject } from '@nzyme/types';
+
 import { ResolveDeps, ResolveResult } from './Container.js';
-import { Injectable, InjectableOptions } from './Injectable.js';
-import { Resolvable } from './Resolvable.js';
+import { Injectable } from './Injectable.js';
+import { Resolvable, ResolvableOptions } from './Resolvable.js';
 
 export class Factory<T, TDeps extends ResolveDeps = ResolveDeps> extends Resolvable<T, TDeps> {
-    constructor(private readonly def: FactoryDefinition<T, TDeps>) {
+    constructor(private readonly def: FactoryOptions<T, TDeps>) {
         super(def);
     }
 
@@ -20,14 +22,13 @@ export class Factory<T, TDeps extends ResolveDeps = ResolveDeps> extends Resolva
     }
 }
 
-export interface FactoryDefinition<T, TDeps extends ResolveDeps = {}> extends InjectableOptions {
-    readonly deps?: TDeps;
-    readonly for?: Injectable<T>;
+export interface FactoryOptions<T, TDeps extends ResolveDeps = EmptyObject>
+    extends ResolvableOptions<T, TDeps> {
     readonly setup: (deps: ResolveResult<TDeps>, scope?: Injectable) => T;
 }
 
-export function defineFactory<T, TDeps extends ResolveDeps = {}>(
-    definition: FactoryDefinition<T, TDeps>,
+export function defineFactory<T, TDeps extends ResolveDeps = EmptyObject>(
+    definition: FactoryOptions<T, TDeps>,
 ): Factory<T, TDeps> {
     return new Factory(definition);
 }

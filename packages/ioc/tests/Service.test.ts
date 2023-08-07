@@ -87,8 +87,8 @@ test('resolve service with deps', () => {
     expect(service3Count).toBe(1);
 });
 
-test('register service as injectable', () => {
-    const injectable = defineInjectable<string>({
+test('register service as injectable - resolve injectable first', () => {
+    const injectable = defineInjectable<{ foo: string }>({
         name: 'foobar',
     });
     let serviceCount = 0;
@@ -96,9 +96,11 @@ test('register service as injectable', () => {
     const service = defineService({
         for: injectable,
         name: 'service',
-        setup({}) {
+        setup() {
             serviceCount++;
-            return 'service';
+            return {
+                foo: 'bar',
+            };
         },
     });
 
@@ -110,9 +112,41 @@ test('register service as injectable', () => {
     const serviceInstance1 = container.resolve(service);
     const serviceInstance2 = container.resolve(service);
 
-    expect(injectableInstance1).toBe('service');
-    expect(injectableInstance2).toBe('service');
-    expect(serviceInstance1).toBe('service');
-    expect(serviceInstance2).toBe('service');
+    expect(injectableInstance1.foo).toBe('bar');
+    expect(injectableInstance2).toBe(injectableInstance1);
+    expect(serviceInstance1).toBe(injectableInstance1);
+    expect(serviceInstance2).toBe(injectableInstance1);
+    expect(serviceCount).toBe(1);
+});
+
+test('register service as injectable - resolve service first', () => {
+    const injectable = defineInjectable<{ foo: string }>({
+        name: 'foobar',
+    });
+    let serviceCount = 0;
+
+    const service = defineService({
+        for: injectable,
+        name: 'service',
+        setup() {
+            serviceCount++;
+            return {
+                foo: 'bar',
+            };
+        },
+    });
+
+    const container = new Container();
+
+    container.set(injectable, service);
+    const serviceInstance1 = container.resolve(service);
+    const serviceInstance2 = container.resolve(service);
+    const injectableInstance1 = container.resolve(injectable);
+    const injectableInstance2 = container.resolve(injectable);
+
+    expect(injectableInstance1.foo).toBe('bar');
+    expect(injectableInstance2).toBe(injectableInstance1);
+    expect(serviceInstance1).toBe(injectableInstance1);
+    expect(serviceInstance2).toBe(injectableInstance1);
     expect(serviceCount).toBe(1);
 });

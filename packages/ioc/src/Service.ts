@@ -1,8 +1,7 @@
 import { EmptyObject } from '@nzyme/types';
 
 import { ResolveDeps, ResolveResult } from './Container.js';
-import { Injectable, InjectableOptions } from './Injectable.js';
-import { Resolvable } from './Resolvable.js';
+import { Resolvable, ResolvableOptions } from './Resolvable.js';
 
 export class Service<T, TDeps extends ResolveDeps = ResolveDeps> extends Resolvable<T, TDeps> {
     constructor(private readonly def: ServiceOptions<T, TDeps>) {
@@ -23,9 +22,7 @@ export class Service<T, TDeps extends ResolveDeps = ResolveDeps> extends Resolva
 }
 
 export interface ServiceOptions<T, TDeps extends ResolveDeps = EmptyObject>
-    extends InjectableOptions {
-    readonly deps?: TDeps;
-    readonly for?: Injectable<T>;
+    extends ResolvableOptions<T, TDeps> {
     readonly setup: (deps: ResolveResult<TDeps>) => T;
 }
 
