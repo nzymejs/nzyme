@@ -1,4 +1,3 @@
-import { MEASURE } from '@lesscms/env';
 import { defineFactory } from '@nzyme/ioc';
 
 import { Logger, LoggerArgs } from './Logger.js';
@@ -58,11 +57,9 @@ export class ConsoleLogger implements Logger {
     }
 
     public measure(start: number, message: string) {
-        if (MEASURE) {
-            const time = perf.format(start);
-            const formatted = `${message}: ${time}`;
-            this.info(formatted);
-        }
+        const time = perf.format(start);
+        const formatted = `${message}: ${time}`;
+        this.info(formatted);
     }
 
     private format(message: string) {
