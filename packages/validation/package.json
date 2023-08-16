@@ -10,8 +10,8 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "private": true,
     "dependencies": {
-        "@nzyme/i18n": "1.0.0",
-        "@nzyme/types": "1.0.0",
-        "@nzyme/utils": "1.0.0"
+        "@nzyme/i18n": "*",
+        "@nzyme/types": "*",
+        "@nzyme/utils": "*"
     }
 }

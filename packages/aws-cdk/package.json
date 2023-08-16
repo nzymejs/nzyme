@@ -12,7 +12,7 @@
         "@aws-cdk/cloudformation-diff": "^2.89.0",
         "@aws-cdk/core": "1.204.0",
         "@babel/preset-env": "^7.22.9",
-        "@nzyme/utils": "1.0.0",
+        "@nzyme/utils": "*",
         "aws-cdk": "^2.89.0",
         "aws-sdk": "^2.1427.0",
         "cdk-assets": "^2.89.0",

@@ -9,7 +9,7 @@
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "dependencies": {
-        "@nzyme/utils": "1.0.0",
+        "@nzyme/utils": "*",
         "lodash.debounce": "^4.0.8"
     },
     "devDependencies": {

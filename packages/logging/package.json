@@ -10,7 +10,7 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "private": true,
     "dependencies": {
-        "@nzyme/ioc": "1.0.0",
+        "@nzyme/ioc": "*",
         "chalk": "^5.2.0",
         "consola": "^3.1.0"
     }
