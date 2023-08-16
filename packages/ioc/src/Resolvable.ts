@@ -1,27 +1,18 @@
-import { EmptyObject } from '@nzyme/types';
-
-import { ResolveDeps } from './Container.js';
+import { Container } from './Container.js';
 import { Injectable, InjectableOptions } from './Injectable.js';
 
-export abstract class Resolvable<
-    T = unknown,
-    TDeps extends ResolveDeps = ResolveDeps,
-> extends Injectable<T> {
+export abstract class Resolvable<T = unknown> extends Injectable<T> {
     public readonly for?: Injectable<T>;
-    public readonly deps: TDeps;
 
-    constructor(def: ResolvableOptions<T, TDeps>) {
+    constructor(def: ResolvableOptions<T>) {
         super(def);
         this.for = def.for;
-        this.deps = def.deps ?? ({} as TDeps);
     }
 
     public abstract get cached(): boolean;
-    public abstract resolve(deps: TDeps, scope?: Injectable): T | undefined;
+    public abstract resolve(container: Container, scope?: Injectable): T | undefined;
 }
 
-export interface ResolvableOptions<T, TDeps extends ResolveDeps = EmptyObject>
-    extends InjectableOptions {
-    readonly deps?: TDeps;
+export interface ResolvableOptions<T> extends InjectableOptions {
     readonly for?: Injectable<T>;
 }

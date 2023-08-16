@@ -1,10 +1,9 @@
-import { EmptyObject } from '@nzyme/types';
-
-import { ResolveDeps, ResolveResult } from './Container.js';
+import { Container } from './Container.js';
+import { Injectable } from './Injectable.js';
 import { Resolvable, ResolvableOptions } from './Resolvable.js';
 
-export class Service<T, TDeps extends ResolveDeps = ResolveDeps> extends Resolvable<T, TDeps> {
-    constructor(private readonly def: ServiceOptions<T, TDeps>) {
+export class Service<T> extends Resolvable<T> {
+    constructor(private readonly def: ServiceOptions<T>) {
         super(def);
     }
 
@@ -12,22 +11,23 @@ export class Service<T, TDeps extends ResolveDeps = ResolveDeps> extends Resolva
         return true;
     }
 
-    override resolve(deps: ResolveResult): T {
-        return this.def.setup(deps as ResolveResult<TDeps>);
-    }
-
-    public create(deps: ResolveResult<TDeps>): T {
-        return this.def.setup(deps);
+    public override resolve(container: Container) {
+        return this.def.setup({
+            container,
+            inject: injectable => container.resolve(injectable),
+        });
     }
 }
 
-export interface ServiceOptions<T, TDeps extends ResolveDeps = EmptyObject>
-    extends ResolvableOptions<T, TDeps> {
-    readonly setup: (deps: ResolveResult<TDeps>) => T;
+export interface ServiceContext {
+    readonly container: Container;
+    readonly inject: <T>(injectable: Injectable<T>) => T;
 }
 
-export function defineService<T, TDeps extends ResolveDeps = EmptyObject>(
-    definition: ServiceOptions<T, TDeps>,
-): Service<T, TDeps> {
+export interface ServiceOptions<T> extends ResolvableOptions<T> {
+    readonly setup: (ctx: ServiceContext) => T;
+}
+
+export function defineService<T>(definition: ServiceOptions<T>): Service<T> {
     return new Service(definition);
 }

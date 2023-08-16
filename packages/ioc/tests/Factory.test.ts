@@ -6,8 +6,7 @@ test('resolve factory with no deps', () => {
     let count = 0;
 
     const factory = defineFactory({
-        deps: {},
-        setup({}) {
+        setup() {
             count++;
             return 'foo';
         },
@@ -35,7 +34,7 @@ test('resolve factory registered as injectable', () => {
 
     const factory = defineFactory({
         for: injectable,
-        setup({}) {
+        setup() {
             count++;
             return 'foo';
         },
@@ -62,19 +61,15 @@ test('resolve service with factory dep', () => {
     let count = 0;
 
     const factory = defineFactory({
-        deps: {},
-        setup({}) {
+        setup() {
             count++;
             return 'foo';
         },
     });
 
     const service = defineService({
-        deps: {
-            factory,
-        },
-        setup({ factory }) {
-            return factory + 'bar';
+        setup({ inject }) {
+            return inject(factory) + 'bar';
         },
     });
 

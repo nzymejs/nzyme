@@ -1,22 +1,6 @@
-import { Constructor, Flatten } from '@nzyme/types';
-
 import { Executable } from './Executable.js';
-import { Factory } from './Factory.js';
 import { Injectable } from './Injectable.js';
 import { Resolvable } from './Resolvable.js';
-import { Service } from './Service.js';
-
-export type ResolveDeps = {
-    [key: string]: Injectable<unknown> | Constructor<Container>;
-};
-
-export type ResolveResult<TDeps extends ResolveDeps = Record<string, Injectable>> = Flatten<{
-    [K in keyof TDeps]: TDeps[K] extends Injectable<infer T>
-        ? T
-        : TDeps[K] extends Constructor<Container>
-        ? Container
-        : never;
-}>;
 
 export class Container {
     private instances = new Map<symbol, unknown>();
@@ -28,11 +12,8 @@ export class Container {
     }
 
     public set<T>(injectable: Injectable<T>, instance: T): void;
-    public set<T, TDeps extends ResolveDeps>(
-        injectable: Injectable<T>,
-        service: Resolvable<T, TDeps> | Factory<T, TDeps>,
-    ): void;
-    public set<T>(injectable: Injectable<T>, instanceOrService: T | Service<T>): void {
+    public set<T>(injectable: Injectable<T>, service: Resolvable<T>): void;
+    public set<T>(injectable: Injectable<T>, instanceOrService: T | Resolvable<T>): void {
         if (instanceOrService instanceof Resolvable) {
             if (instanceOrService.for !== injectable) {
                 const injectableName = injectable.name ?? '';
@@ -68,9 +49,8 @@ export class Container {
         return this.resolveInstance(injectable);
     }
 
-    public execute<T, TDeps extends ResolveDeps>(executable: Executable<T, TDeps>) {
-        const deps = this.resolveDeps(executable.deps);
-        return executable.execute(deps);
+    public execute<T>(executable: Executable<T>) {
+        return this.resolve(executable)();
     }
 
     private resolveInstance(injectable: Injectable, scope?: Injectable): unknown {
@@ -89,7 +69,7 @@ export class Container {
                 return instance;
             }
 
-            instance = this.resolveResolvable(resolver, scope);
+            instance = resolver.resolve(this, scope);
             if (resolver.cached) {
                 this.instances.set(injectable.symbol, instance);
                 this.instances.set(resolver.symbol, instance);
@@ -99,7 +79,7 @@ export class Container {
         }
 
         if (injectable instanceof Resolvable) {
-            instance = this.resolveResolvable(injectable as Resolvable, scope);
+            instance = injectable.resolve(this, scope);
 
             if (instance && injectable.cached) {
                 this.instances.set(injectable.symbol, instance);
@@ -111,29 +91,5 @@ export class Container {
         }
 
         return instance;
-    }
-
-    private resolveResolvable(resolvable: Resolvable, scope?: Injectable) {
-        const deps = resolvable.deps ? this.resolveDeps(resolvable.deps) : {};
-        return resolvable.resolve(deps, scope);
-    }
-
-    private resolveDeps<TDeps extends ResolveDeps>(
-        config: TDeps,
-        scope?: Injectable,
-    ): ResolveResult<TDeps> {
-        const result = {} as ResolveResult<TDeps>;
-
-        for (const key in config) {
-            const injectable = config[key];
-            if (injectable === Container) {
-                result[key as keyof TDeps] = this as ResolveResult<TDeps>[keyof TDeps];
-            } else {
-                const value = this.resolveInstance(injectable as Injectable, scope);
-                result[key as keyof TDeps] = value as ResolveResult<TDeps>[keyof TDeps];
-            }
-        }
-
-        return result;
     }
 }

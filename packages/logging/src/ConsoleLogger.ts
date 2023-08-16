@@ -70,7 +70,7 @@ export class ConsoleLogger implements Logger {
 export const ConsoleLoggerFactory = defineFactory({
     name: 'ConsoleLogger',
     for: Logger,
-    setup(deps, scope) {
+    setup({ scope }) {
         return new ConsoleLogger(scope?.name);
     },
 });

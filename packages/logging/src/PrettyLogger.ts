@@ -76,7 +76,7 @@ export class PrettyLogger implements Logger {
 export const PrettyLoggerFactory = defineFactory({
     name: 'PrettyLogger',
     for: Logger,
-    setup(deps, scope) {
+    setup({ scope }) {
         return new PrettyLogger(scope?.name);
     },
 });

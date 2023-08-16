@@ -6,8 +6,7 @@ test('resolve service with no deps', () => {
     let count = 0;
 
     const service = defineService({
-        deps: {},
-        setup({}) {
+        setup() {
             count++;
             return 'foo';
         },
@@ -28,20 +27,19 @@ test('resolve service with deps', () => {
     let service2Count = 0;
     let service3Count = 0;
 
-    const service1 = defineService({
+    const Service1 = defineService({
         name: 'service1',
-        setup({}) {
+        setup() {
             service1Count++;
             return 'service1';
         },
     });
 
-    const service2 = defineService({
+    const Service2 = defineService({
         name: 'service2',
-        deps: {
-            service1,
-        },
-        setup({ service1 }) {
+
+        setup({ inject }) {
+            const service1 = inject(Service1);
             service2Count++;
             expect(service1).toBe('service1');
             return 'service2';
@@ -50,11 +48,10 @@ test('resolve service with deps', () => {
 
     const service3 = defineService({
         name: 'service3',
-        deps: {
-            service1,
-            service2,
-        },
-        setup({ service1, service2 }) {
+
+        setup({ inject }) {
+            const service1 = inject(Service1);
+            const service2 = inject(Service2);
             service3Count++;
             expect(service1).toBe('service1');
             expect(service2).toBe('service2');
@@ -68,7 +65,7 @@ test('resolve service with deps', () => {
     expect(service2Count).toBe(0);
     expect(service3Count).toBe(0);
 
-    const service2Resolved = container.resolve(service2);
+    const service2Resolved = container.resolve(Service2);
     expect(service2Resolved).toBe('service2');
     expect(service1Count).toBe(1);
     expect(service2Count).toBe(1);
@@ -80,7 +77,7 @@ test('resolve service with deps', () => {
     expect(service2Count).toBe(1);
     expect(service3Count).toBe(1);
 
-    const service1Resolved = container.resolve(service1);
+    const service1Resolved = container.resolve(Service1);
     expect(service1Resolved).toBe('service1');
     expect(service1Count).toBe(1);
     expect(service2Count).toBe(1);
@@ -120,13 +117,13 @@ test('register service as injectable - resolve injectable first', () => {
 });
 
 test('register service as injectable - resolve service first', () => {
-    const injectable = defineInjectable<{ foo: string }>({
+    const Injectable = defineInjectable<{ foo: string }>({
         name: 'foobar',
     });
     let serviceCount = 0;
 
-    const service = defineService({
-        for: injectable,
+    const Service = defineService({
+        for: Injectable,
         name: 'service',
         setup() {
             serviceCount++;
@@ -138,11 +135,11 @@ test('register service as injectable - resolve service first', () => {
 
     const container = new Container();
 
-    container.set(injectable, service);
-    const serviceInstance1 = container.resolve(service);
-    const serviceInstance2 = container.resolve(service);
-    const injectableInstance1 = container.resolve(injectable);
-    const injectableInstance2 = container.resolve(injectable);
+    container.set(Injectable, Service);
+    const serviceInstance1 = container.resolve(Service);
+    const serviceInstance2 = container.resolve(Service);
+    const injectableInstance1 = container.resolve(Injectable);
+    const injectableInstance2 = container.resolve(Injectable);
 
     expect(injectableInstance1.foo).toBe('bar');
     expect(injectableInstance2).toBe(injectableInstance1);

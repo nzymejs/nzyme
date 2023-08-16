@@ -1,9 +1,9 @@
-import { ResolveDeps, ResolveResult } from './Container.js';
-import { InjectableOptions } from './Injectable.js';
+import { Container } from './Container.js';
+import { Injectable, InjectableOptions } from './Injectable.js';
 import { Resolvable } from './Resolvable.js';
 
-export class Executable<T, TDeps extends ResolveDeps> extends Resolvable<() => T, TDeps> {
-    constructor(private readonly def: ExecutableDefinition<T, TDeps>) {
+export class Executable<T> extends Resolvable<() => T> {
+    constructor(private readonly def: ExecutableDefinition<T>) {
         super(def);
     }
 
@@ -11,23 +11,24 @@ export class Executable<T, TDeps extends ResolveDeps> extends Resolvable<() => T
         return true;
     }
 
-    override resolve(deps: ResolveResult): () => T {
-        return () => this.def.setup(deps as ResolveResult<TDeps>);
-    }
-
-    public execute(deps: ResolveResult<TDeps>): void {
-        this.def.setup(deps);
+    public override resolve(container: Container) {
+        return () =>
+            this.def.setup({
+                container,
+                inject: injectable => container.resolve(injectable),
+            });
     }
 }
 
-export interface ExecutableDefinition<T, TDeps extends ResolveDeps = ResolveDeps>
-    extends InjectableOptions {
-    readonly deps: TDeps;
-    readonly setup: (deps: ResolveResult<TDeps>) => T;
+export interface ExecutableContext {
+    readonly container: Container;
+    readonly inject: <T>(injectable: Injectable<T>) => T;
 }
 
-export function defineExecutable<T, TDeps extends ResolveDeps>(
-    definition: ExecutableDefinition<T, TDeps>,
-): Executable<T, TDeps> {
+export interface ExecutableDefinition<T> extends InjectableOptions {
+    readonly setup: (ctx: ExecutableContext) => T;
+}
+
+export function defineExecutable<T>(definition: ExecutableDefinition<T>): Executable<T> {
     return new Executable(definition);
 }
