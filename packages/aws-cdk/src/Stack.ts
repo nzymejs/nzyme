@@ -8,6 +8,7 @@ import { App } from './App.js';
 
 export interface StackOptions {
     readonly name: string;
+    readonly description?: string;
     readonly env?: cdk.Environment;
 }
 
@@ -30,7 +31,10 @@ export class Stack extends cdk.Stack {
         app: App,
         public readonly options: StackOptions,
     ) {
-        super(app, options.name, { env: options.env });
+        super(app, options.name, {
+            env: options.env,
+            description: options.description,
+        });
 
         this.on('deploy:start', () => {
             this.deployResult = undefined;
