@@ -34,8 +34,18 @@ async function run(flags: CommandFlags) {
         if (pkg.dependencies) {
             for (const dep in pkg.dependencies) {
                 const version = pkg.dependencies[dep];
-                if (!deps[dep] || compareVersions(version, deps[dep])) {
+                if (!deps[dep]) {
                     deps[dep] = version;
+                    continue;
+                }
+
+                if (version === '*') {
+                    continue;
+                }
+
+                if (compareVersions(version, deps[dep])) {
+                    deps[dep] = version;
+                    continue;
                 }
             }
         }
