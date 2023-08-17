@@ -37,3 +37,4 @@ export * from './removeUndefinedProps.js';
 export * from './sortBy.js';
 export * from './timeout.js';
 export * from './writable.js';
+export * from './promiseAll.js';
