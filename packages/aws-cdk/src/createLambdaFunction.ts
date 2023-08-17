@@ -17,6 +17,7 @@ export interface LambdaFunctionOptions {
     name: string;
     file: string;
     dist: string;
+    options?: Omit<lambda.FunctionProps, 'runtime' | 'handler' | 'code'>;
 }
 
 export async function createLambdaFunction(scope: cdk.Construct, options: LambdaFunctionOptions) {
@@ -66,6 +67,7 @@ export async function createLambdaFunction(scope: cdk.Construct, options: Lambda
     });
 
     return new lambda.Function(scope, name, {
+        ...options.options,
         // TODO: no typings for node 18 runtime yet
         runtime: new lambda.Runtime('nodejs18.x', lambda.RuntimeFamily.NODEJS),
         handler: `index.default`,
