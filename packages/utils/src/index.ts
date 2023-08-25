@@ -14,6 +14,10 @@ export * from './array/forEachParalell.js';
 export * from './string/formatWith.js';
 export * from './string/isDigit.js';
 
+export * from './url/stringifyQuery.js';
+export * from './url/parseQuery.js';
+export * from './url/queryTypes.js';
+
 export * from './assert.js';
 export * from './cachedGetter.js';
 export * from './cachedProp.js';
@@ -40,4 +44,3 @@ export * from './timeout.js';
 export * from './writable.js';
 export * from './promiseAll.js';
 export * from './getTopLevelDomain.js';
-export * from './stringifyQuery.js';

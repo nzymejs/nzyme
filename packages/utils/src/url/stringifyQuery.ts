@@ -1,6 +1,4 @@
-type QueryParamValue = string | null;
-export type QueryParam = QueryParamValue | QueryParamValue[];
-export type QueryParams = Record<string, QueryParam | undefined>;
+import { QueryParams } from './queryTypes.js';
 
 export function stringifyQuery(params: QueryParams) {
     let qs = '';
