@@ -19,6 +19,7 @@ export interface LambdaFunctionOptions {
     dist: string;
     options?: Omit<lambda.FunctionProps, 'runtime' | 'handler' | 'code'>;
     minify?: boolean;
+    define?: Record<string, string>;
 }
 
 export async function createLambdaFunction(scope: cdk.Construct, options: LambdaFunctionOptions) {
@@ -46,6 +47,7 @@ export async function createLambdaFunction(scope: cdk.Construct, options: Lambda
             unwrapCjsDefaultImport(json)(),
             unwrapCjsDefaultImport(esbuild)({
                 sourceMap: true,
+                define: options.define,
             }),
             sourcemaps(),
             babel({
