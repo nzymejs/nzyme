@@ -39,7 +39,7 @@ async function run(flags: CommandFlags) {
                     continue;
                 }
 
-                if (version === '*') {
+                if (version === '*' || deps[dep] === '*') {
                     continue;
                 }
 
@@ -51,6 +51,7 @@ async function run(flags: CommandFlags) {
         }
     }
 
+    packages.sort((a, b) => a.name.localeCompare(b.name));
     const promises = packages.map(p => processPackage(p, flags, deps));
     await Promise.all(promises);
 }
