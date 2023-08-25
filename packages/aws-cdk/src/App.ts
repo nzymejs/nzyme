@@ -19,6 +19,10 @@ export interface AppStackParams {
     stacks?: cdk.Stack[] | ((stack: cdk.Stack) => boolean);
 }
 
+export interface AppBootstrapOptions {
+    region?: string;
+}
+
 export class App extends cdk.App {
     private readonly sdkProvider: SdkProvider;
     private readonly deployments: Deployments;
@@ -36,12 +40,12 @@ export class App extends cdk.App {
     /**
      * Bootstrapping environment is required for stacks using cross-region resources, like CloudFront.
      */
-    public async bootstrap() {
+    public async bootstrap(options: AppBootstrapOptions = {}) {
         const bootstrapper = new Bootstrapper({
             source: 'default',
         });
 
-        const region = this.sdkProvider.defaultRegion;
+        const region = options.region ?? this.sdkProvider.defaultRegion;
         const account = (await this.sdkProvider.defaultAccount())?.accountId;
         if (!account) {
             throw new Error('No AWS account detected.');
@@ -136,9 +140,8 @@ export class App extends cdk.App {
                     continue;
                 }
 
-                const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
-                    artifact,
-                );
+                const currentTemplate =
+                    await this.deployments.readCurrentTemplateWithNestedStacks(artifact);
 
                 const diff = diffTemplate(currentTemplate, artifact.template);
 

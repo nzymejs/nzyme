@@ -18,6 +18,7 @@ export interface LambdaFunctionOptions {
     file: string;
     dist: string;
     options?: Omit<lambda.FunctionProps, 'runtime' | 'handler' | 'code'>;
+    minify?: boolean;
 }
 
 export async function createLambdaFunction(scope: cdk.Construct, options: LambdaFunctionOptions) {
@@ -53,9 +54,10 @@ export async function createLambdaFunction(scope: cdk.Construct, options: Lambda
                 presets: [['@babel/preset-env', { targets: { node: 18 } }]],
                 sourceMaps: true,
             }),
-            terser({
-                mangle: true,
-            }),
+            options.minify &&
+                terser({
+                    mangle: true,
+                }),
         ],
     });
 
@@ -72,5 +74,6 @@ export async function createLambdaFunction(scope: cdk.Construct, options: Lambda
         runtime: new lambda.Runtime('nodejs18.x', lambda.RuntimeFamily.NODEJS),
         handler: `index.default`,
         code: lambda.Code.fromAsset(outputDir),
+        timeout: cdk.Duration.seconds(15 * 60),
     });
 }
