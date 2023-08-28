@@ -62,7 +62,7 @@ export class Stack extends cdk.Stack {
     }
 
     public createExport(name: string, value: string) {
-        if (!/\w+/.test(name)) {
+        if (!/^\w+$/.test(name)) {
             throw new Error('Export name can only contain letters and numbers.');
         }
 
