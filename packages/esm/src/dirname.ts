@@ -7,3 +7,5 @@ import { fileURLToPath } from 'url';
 export function dirname(url: string): string {
     return fileURLToPath(new URL('.', url));
 }
+
+export { dirname as getDirname };

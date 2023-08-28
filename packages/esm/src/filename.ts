@@ -7,3 +7,5 @@ import { fileURLToPath } from 'url';
 export function filename(url: string) {
     return fileURLToPath(url);
 }
+
+export { filename as getFilename };
