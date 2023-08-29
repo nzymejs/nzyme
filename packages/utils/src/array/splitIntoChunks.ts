@@ -1,4 +1,4 @@
-export function splitIntoChunks<T>(array: T[], chunkSize: number) {
+export function splitIntoChunks<T>(array: readonly T[], chunkSize: number) {
     if (chunkSize < 1) {
         throw new Error('Chunk must be greater than 0');
     }
