@@ -1,34 +1,36 @@
 import { Ref, onMounted, onUnmounted, ref, watch } from 'vue';
 
-export interface LocalStorageRef<T> extends Ref<T | null> {
+export interface StorageRef<T> extends Ref<T | null> {
     reload(): void;
     startSync(): void;
     stopSync(): void;
 }
 
-export interface LocalStorageRefOptions<T> {
+export interface StorageRefOptions<T> {
+    key: string;
     serialize?: (value: T) => string;
     deserialize?: (value: string) => T;
     deep?: boolean;
-    sync?: boolean | 'when-mounted';
+    sync?: 'when-mounted' | 'always';
     storage?: 'local' | 'session';
 }
 
 const skipWrite = Symbol();
 type StorageValue<T> = T & { [skipWrite]?: true };
 
-export function storageRef<T>(key: string, options: LocalStorageRefOptions<T> = {}) {
+export function storageRef<T>(options: StorageRefOptions<T>) {
+    const key = options.key;
     const serialize = options.serialize ?? (JSON.stringify as (value: T) => string);
     const deserialize = options.deserialize ?? (JSON.parse as (value: string) => T);
     const storage = getStorage(options.storage);
 
-    const variable = ref<T | null>(read()) as LocalStorageRef<T>;
+    const variable = ref<T | null>(read()) as StorageRef<T>;
     watch(variable, write, { deep: options.deep });
 
     variable.reload = reload;
 
     if (options.sync && storage) {
-        if (options.sync === true) {
+        if (options.sync === 'always') {
             startSync();
         } else if (options.sync === 'when-mounted') {
             onMounted(startSync);
@@ -72,11 +74,11 @@ export function storageRef<T>(key: string, options: LocalStorageRefOptions<T> = 
         }
 
         if (value == null) {
-            localStorage.removeItem(key);
+            storage.removeItem(key);
         } else if ((value as StorageValue<T>)[skipWrite]) {
             delete (value as StorageValue<T>)[skipWrite];
         } else {
-            localStorage.setItem(key, serialize(value));
+            storage.setItem(key, serialize(value));
         }
     }
 
