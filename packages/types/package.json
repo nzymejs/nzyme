@@ -8,6 +8,6 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "sideEffects": false,
     "dependencies": {
-        "type-fest": "^4.1.0"
+        "type-fest": "^4.3.1"
     }
 }
