@@ -28,7 +28,7 @@ export function provideContext<TParams extends unknown[], TContext extends objec
     context: ContextDefinition<TParams, TContext>,
     ...params: TParams
 ) {
-    const instance = reactive(context.constructor.apply(undefined, params));
+    const instance = context.constructor.apply(undefined, params);
     provide(context.symbol, instance);
     return instance;
 }

@@ -1,7 +1,5 @@
 import { Ref, onMounted, onUnmounted, ref, watch } from 'vue';
 
-import { isBrowser } from '@nzyme/dom';
-
 export interface LocalStorageRef<T> extends Ref<T | null> {
     reload(): void;
     startSync(): void;
@@ -13,21 +11,23 @@ export interface LocalStorageRefOptions<T> {
     deserialize?: (value: string) => T;
     deep?: boolean;
     sync?: boolean | 'when-mounted';
+    storage?: 'local' | 'session';
 }
 
 const skipWrite = Symbol();
 type StorageValue<T> = T & { [skipWrite]?: true };
 
-export function localStorageRef<T>(key: string, options: LocalStorageRefOptions<T> = {}) {
+export function storageRef<T>(key: string, options: LocalStorageRefOptions<T> = {}) {
     const serialize = options.serialize ?? (JSON.stringify as (value: T) => string);
     const deserialize = options.deserialize ?? (JSON.parse as (value: string) => T);
+    const storage = getStorage(options.storage);
 
     const variable = ref<T | null>(read()) as LocalStorageRef<T>;
     watch(variable, write, { deep: options.deep });
 
     variable.reload = reload;
 
-    if (options.sync && isBrowser()) {
+    if (options.sync && storage) {
         if (options.sync === true) {
             startSync();
         } else if (options.sync === 'when-mounted') {
@@ -45,11 +45,11 @@ export function localStorageRef<T>(key: string, options: LocalStorageRefOptions<
     }
 
     function read() {
-        if (typeof localStorage === 'undefined') {
+        if (!storage) {
             return null;
         }
 
-        const item = localStorage.getItem(key);
+        const item = storage.getItem(key);
         if (!item) {
             return null;
         }
@@ -67,7 +67,7 @@ export function localStorageRef<T>(key: string, options: LocalStorageRefOptions<
     }
 
     function write(value: T | null) {
-        if (typeof localStorage === 'undefined') {
+        if (!storage) {
             return;
         }
 
@@ -89,9 +89,19 @@ export function localStorageRef<T>(key: string, options: LocalStorageRefOptions<
     }
 
     function sync(event: StorageEvent) {
-        if (event.key === key) {
+        if (event.storageArea === storage && event.key === key) {
             const value = event.newValue ? deserialize(event.newValue) : null;
             updateNoWrite(value);
         }
     }
+}
+
+function getStorage(storage: 'local' | 'session' | undefined) {
+    if (storage === 'session' && typeof sessionStorage !== 'undefined') {
+        return sessionStorage;
+    } else if (typeof localStorage !== 'undefined') {
+        return localStorage;
+    }
+
+    return null;
 }
