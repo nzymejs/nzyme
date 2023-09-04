@@ -18,6 +18,9 @@ export * from './url/stringifyQuery.js';
 export * from './url/parseQuery.js';
 export * from './url/queryTypes.js';
 
+export * from './functions/identity.js';
+export * from './functions/noop.js';
+
 export * from './assert.js';
 export * from './cachedGetter.js';
 export * from './cachedProp.js';
