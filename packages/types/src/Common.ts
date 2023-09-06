@@ -71,3 +71,5 @@ export type SomeObject = {};
 export type Getter<T> = () => T;
 
 export type ValueOf<T> = Exclude<T[keyof T], undefined>;
+
+export type RecordToUnion<T extends Record<string, any>> = T[keyof T];

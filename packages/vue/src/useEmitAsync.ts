@@ -1,16 +1,21 @@
 import { capitalize } from 'vue';
 
+import { RecordToUnion, UnionToIntersection } from '@nzyme/types';
+
 import { useInstance } from './useInstance.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useEmitAsync<T extends EmitFn<any, any[]>>(emit: T): EmitFnToAsync<T>;
-export function useEmitAsync(): EmitFnToAsync<EmitFn>;
-export function useEmitAsync<T extends EmitFn>(emit?: T): EmitFnToAsync<T> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useEmitAsync<E extends Record<string, any[]>>(): ShortEmits<E>;
+export function useEmitAsync() {
     const instance = useInstance();
 
-    const emitAsync: EmitFnToAsync<EmitFn> = async (event, ...args) => {
+    const emitAsync: EmitFnToAsync<EmitFn<string, unknown[]>> = async (event, ...args) => {
         const attrName = 'on' + capitalize(event);
-        const listeners = instance.vnode.props?.[attrName];
+
+        type Listener = (...args: unknown[]) => unknown;
+        const listeners = instance.vnode.props?.[attrName] as Listener[] | Listener | undefined;
 
         if (!listeners) {
             return;
@@ -32,14 +37,27 @@ export function useEmitAsync<T extends EmitFn>(emit?: T): EmitFnToAsync<T> {
         }
     };
 
-    return emitAsync as EmitFnToAsync<T>;
+    return emitAsync;
 }
 
-type EmitFn<TEvent extends string = string, TArgs extends unknown[] = unknown[]> = (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ShortEmits<T extends Record<string, any>> = UnionToIntersection<
+    RecordToUnion<{
+        [K in keyof T]: (evt: K, ...args: T[K]) => void;
+    }>
+>;
+
+type EmitFn<TEvent extends string, TArgs extends unknown[] = unknown[]> = (
     event: TEvent,
     ...args: TArgs
 ) => unknown;
 
-type EmitFnToAsync<T extends EmitFn> = T extends EmitFn<infer TEvent, infer TArgs>
-    ? (event: TEvent, ...args: TArgs) => Promise<void>
+type EmitFnAsync<TEvent extends string, TArgs extends unknown[] = unknown[]> = (
+    event: TEvent,
+    ...args: TArgs
+) => Promise<void>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type EmitFnToAsync<T extends EmitFn<any, any>> = T extends EmitFn<infer TEvent, infer TArgs>
+    ? EmitFnAsync<TEvent, TArgs>
     : never;
