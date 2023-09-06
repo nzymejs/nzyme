@@ -5,6 +5,7 @@ import {
     TransitionGroup,
     TransitionGroupProps as TransitionGroupPropsVue,
     h,
+    HtmlHTMLAttributes,
 } from 'vue';
 
 export type TransitionProps = Omit<TransitionPropsVue, 'name' | `${string}Class` | 'css'> & {
@@ -39,7 +40,10 @@ export function defineTransition(def: TransitionDefProps) {
 }
 
 export function defineTransitionGroup(def: TransitionDefProps) {
-    const transition: FunctionalComponent<TransitionGroupProps> = (props, ctx) => (
+    const transition: FunctionalComponent<TransitionGroupProps & HtmlHTMLAttributes> = (
+        props,
+        ctx,
+    ) => (
         <TransitionGroup
             {...props}
             {...def}
