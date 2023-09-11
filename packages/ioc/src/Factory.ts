@@ -15,7 +15,7 @@ export class Factory<T> extends Resolvable<T> {
         return this.def.setup({
             container,
             scope,
-            inject: injectable => container.resolve(injectable),
+            inject: injectable => container.resolve(injectable, this),
         });
     }
 }

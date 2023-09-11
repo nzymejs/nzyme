@@ -9,7 +9,7 @@ import { perf } from './perf.js';
 export class PrettyLogger implements Logger {
     private readonly name: string;
     constructor(name: string = '') {
-        this.name = chalk.yellow(name);
+        this.name = name ? chalk.yellow(name) : null;
     }
 
     public error(error: unknown, args?: LoggerArgs): void;

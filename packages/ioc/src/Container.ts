@@ -32,7 +32,7 @@ export class Container {
      * @param injectable Injectable to be resolved.
      * @returns Resolved value of the injectable.
      */
-    public resolve<T>(injectable: Injectable<T>): T;
+    public resolve<T>(injectable: Injectable<T>, scope?: Injectable): T;
     /**
      * Resolves multiple injectables.
      * @param injectables Injectables to be resolved.
@@ -40,13 +40,14 @@ export class Container {
      */
     public resolve<T extends Injectable[]>(
         injectables: T,
+        scope?: Injectable,
     ): T[number] extends Injectable<infer U> ? [U] : [];
-    public resolve(injectable: Injectable | Injectable[]) {
+    public resolve(injectable: Injectable | Injectable[], scope?: Injectable) {
         if (Array.isArray(injectable)) {
-            return injectable.map(i => this.resolveInstance(i));
+            return injectable.map(i => this.resolveInstance(i, scope));
         }
 
-        return this.resolveInstance(injectable);
+        return this.resolveInstance(injectable, scope);
     }
 
     public execute<T>(executable: Executable<T>) {

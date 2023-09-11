@@ -14,7 +14,7 @@ export class Service<T> extends Resolvable<T> {
     public override resolve(container: Container) {
         return this.def.setup({
             container,
-            inject: injectable => container.resolve(injectable),
+            inject: injectable => container.resolve(injectable, this),
         });
     }
 }
