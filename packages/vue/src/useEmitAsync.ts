@@ -43,7 +43,7 @@ export function useEmitAsync() {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ShortEmits<T extends Record<string, any>> = UnionToIntersection<
     RecordToUnion<{
-        [K in keyof T]: (evt: K, ...args: T[K]) => void;
+        [K in keyof T]: (evt: K, ...args: T[K]) => Promise<void>;
     }>
 >;
 

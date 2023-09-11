@@ -1,14 +1,11 @@
 export * from './App.js';
 export * from './asyncImport.js';
 export * from './component.js';
-export * from './storageRef.js';
 export * from './prop.js';
-export * from './makeRef.js';
 export * from './context.js';
 export * from './useDataSource.js';
 export * from './useElement.js';
 export * from './useEmitAsync.js';
-export * from './constRef.js';
 export * from './useEventBus.js';
 export * from './useInstance.js';
 export * from './vmodel.js';
@@ -23,7 +20,6 @@ export * from './onHistoryBack.js';
 export * from './onWindowEvent.js';
 export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
-export * from './refAsync.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
@@ -48,3 +44,9 @@ export * from './components/Collapse.jsx';
 
 export * from './directives/vShow.js';
 export * from './directives/vMounted.js';
+
+export * from './reactivity/storageRef.js';
+export * from './reactivity/refAsync.js';
+export * from './reactivity/promiseRef.js';
+export * from './reactivity/constRef.js';
+export * from './reactivity/makeRef.js';

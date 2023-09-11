@@ -3,7 +3,7 @@ import { isRef, reactive, ref, watch, Ref } from 'vue';
 
 import { CancelablePromise, isCancelablePromise } from '@nzyme/utils';
 
-import { makeRef, RefParam, unref } from './makeRef.js';
+import { makeRef, RefParam, unref } from './reactivity/makeRef.js';
 
 export interface DataSourceOptions<T, TResult> {
     /**
