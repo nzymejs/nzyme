@@ -7,7 +7,7 @@ import { Logger, LoggerArgs } from './Logger.js';
 import { perf } from './perf.js';
 
 export class PrettyLogger implements Logger {
-    private readonly name: string;
+    private readonly name: string | null;
     constructor(name: string = '') {
         this.name = name ? chalk.yellow(name) : null;
     }
