@@ -4,9 +4,14 @@ export type LoggerArgs = {
     [key: string]: unknown;
 };
 
+export type LoggerErrorArgs = {
+    error?: unknown;
+    [key: string]: unknown;
+};
+
 export interface Logger {
     error(error: unknown, args?: LoggerArgs): void;
-    error(message: string, args?: LoggerArgs): void;
+    error(message: string, args?: LoggerErrorArgs): void;
     warn(message: string, args?: LoggerArgs): void;
     info(message: string, args?: LoggerArgs): void;
     success(message: string, args?: LoggerArgs): void;

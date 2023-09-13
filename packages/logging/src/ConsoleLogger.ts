@@ -1,13 +1,13 @@
 import { defineFactory } from '@nzyme/ioc';
 
-import { Logger, LoggerArgs } from './Logger.js';
+import { Logger, LoggerArgs, LoggerErrorArgs } from './Logger.js';
 import { perf } from './perf.js';
 
 export class ConsoleLogger implements Logger {
-    constructor(private readonly name: string = '') {}
+    constructor(public readonly name: string = '') {}
 
     public error(error: unknown, args?: LoggerArgs): void;
-    public error(message: string, args?: LoggerArgs): void;
+    public error(message: string, args?: LoggerErrorArgs): void;
     public error(message: string | unknown, args?: LoggerArgs): void {
         if (typeof message === 'string') {
             console.error(this.format(message), args);
@@ -62,7 +62,7 @@ export class ConsoleLogger implements Logger {
         this.info(formatted);
     }
 
-    private format(message: string) {
+    protected format(message: string) {
         return this.name ? `${this.name}: ${message}` : message;
     }
 }
