@@ -68,7 +68,6 @@ export class Stack extends cdk.Stack {
 
         const output = new CfnOutput(this, name, {
             value,
-            exportName: name,
         });
 
         return () => {
