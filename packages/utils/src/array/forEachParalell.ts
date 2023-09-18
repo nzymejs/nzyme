@@ -42,7 +42,6 @@ export function forEachParalell<T>(array: readonly T[], params: ForEachParalellP
                     if(result === false) {
                         // When the callback returns false, we stop the loop.
                         index = array.length;
-                        return;
                     }
                 } catch (e) {
                     done = true;
