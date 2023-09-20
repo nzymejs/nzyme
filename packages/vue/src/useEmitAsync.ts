@@ -1,17 +1,17 @@
-import { capitalize } from 'vue';
+import { EmitsOptions, ObjectEmitsOptions, capitalize } from 'vue';
 
 import { RecordToUnion, UnionToIntersection } from '@nzyme/types';
 
 import { useInstance } from './useInstance.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useEmitAsync<T extends EmitFn<any, any[]>>(emit: T): EmitFnToAsync<T>;
+export function useEmitAsync<E extends EmitsOptions>(options: E): EmitFnAsync<E>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useEmitAsync<E extends Record<string, any[]>>(): ShortEmits<E>;
 export function useEmitAsync() {
     const instance = useInstance();
 
-    const emitAsync: EmitFnToAsync<EmitFn<string, unknown[]>> = async (event, ...args) => {
+    return async (event: string, ...args: unknown[]) => {
         const attrName = 'on' + capitalize(event);
 
         type Listener = (...args: unknown[]) => unknown;
@@ -36,8 +36,6 @@ export function useEmitAsync() {
             await listeners(...args);
         }
     };
-
-    return emitAsync;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,17 +45,21 @@ type ShortEmits<T extends Record<string, any>> = UnionToIntersection<
     }>
 >;
 
-type EmitFn<TEvent extends string, TArgs extends unknown[] = unknown[]> = (
-    event: TEvent,
-    ...args: TArgs
-) => unknown;
-
-type EmitFnAsync<TEvent extends string, TArgs extends unknown[] = unknown[]> = (
-    event: TEvent,
-    ...args: TArgs
-) => Promise<void>;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type EmitFnToAsync<T extends EmitFn<any, any>> = T extends EmitFn<infer TEvent, infer TArgs>
-    ? EmitFnAsync<TEvent, TArgs>
-    : never;
+type EmitFnAsync<
+    Options = ObjectEmitsOptions,
+    Event extends keyof Options = keyof Options,
+> = Options extends Array<infer V>
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (event: V, ...args: any[]) => void
+    : {} extends Options
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (event: string, ...args: any[]) => void
+    : UnionToIntersection<
+          {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              [key in Event]: Options[key] extends (...args: infer Args) => any
+                  ? (event: key, ...args: Args) => Promise<void>
+                  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (event: key, ...args: any[]) => Promise<void>;
+          }[Event]
+      >;
