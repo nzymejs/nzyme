@@ -11,7 +11,7 @@ export function useEmitAsync<E extends Record<string, any[]>>(): ShortEmits<E>;
 export function useEmitAsync() {
     const instance = useInstance();
 
-    return async (event: string, ...args: unknown[]) => {
+    return  (event: string, ...args: unknown[]) => {
         const attrName = 'on' + capitalize(event);
 
         type Listener = (...args: unknown[]) => unknown;
@@ -30,10 +30,10 @@ export function useEmitAsync() {
             }
 
             // there are many listeners for this event
-            await Promise.all(promises);
+            return Promise.all(promises);
         } else if (typeof listeners === 'function') {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            await listeners(...args);
+            return listeners(...args);
         }
     };
 }
@@ -58,8 +58,8 @@ type EmitFnAsync<
           {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               [key in Event]: Options[key] extends (...args: infer Args) => any
-                  ? (event: key, ...args: Args) => Promise<void>
+                  ? (event: key, ...args: Args) => Promise<void> | void
                   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (event: key, ...args: any[]) => Promise<void>;
+                    (event: key, ...args: any[]) => Promise<void> | void;
           }[Event]
       >;

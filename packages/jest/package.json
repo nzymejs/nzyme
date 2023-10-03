@@ -1,7 +1,6 @@
 {
     "name": "@nzyme/jest",
     "version": "1.0.0",
-    "repository": "https://github.com/kedrzu/lesscms.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "license": "MIT",
     "main": "./dist/index.js",

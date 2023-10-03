@@ -11,6 +11,14 @@ export abstract class Resolvable<T = unknown> extends Injectable<T> {
 
     public abstract get cached(): boolean;
     public abstract resolve(container: Container, scope?: Injectable): T | undefined;
+
+    public setup(container: Container) {
+        if (this.for) {
+            container.set(this.for, this);
+        } else {
+            container.set(this, this);
+        }
+    }
 }
 
 export interface ResolvableOptions<T> extends InjectableOptions {

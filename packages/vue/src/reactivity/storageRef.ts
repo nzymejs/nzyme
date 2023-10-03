@@ -2,10 +2,11 @@ import { Ref, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { identity } from '@nzyme/utils';
 
-export interface StorageRef<T> extends Ref<T | null> {
+export interface StorageRef<T> extends Ref<T> {
     reload(): void;
     startSync(): void;
     stopSync(): void;
+    save(): void;
 }
 
 type StorageRefOptions = {
@@ -13,6 +14,10 @@ type StorageRefOptions = {
     sync?: 'when-mounted' | 'always';
     storage?: 'local' | 'session';
     deep?: boolean;
+};
+
+type StorageRefDefault<T> = {
+    default: () => T;
 };
 
 type StorageRefOptionsRaw = StorageRefOptions & {
@@ -37,12 +42,20 @@ type StorageRefOptionsJson = StorageRefOptions & {
 const skipWrite = Symbol();
 type StorageValue<T> = T & { [skipWrite]?: true };
 
-export function storageRef(options: StorageRefOptionsRaw): StorageRef<string>;
-export function storageRef<T>(options: StorageRefOptionsJson): StorageRef<T>;
-export function storageRef<T>(options: StorageRefOptionsCustom<T>): StorageRef<T>;
+export function storageRef(options: StorageRefOptionsRaw): StorageRef<string | null>;
+export function storageRef(
+    options: StorageRefOptionsRaw & StorageRefDefault<string>,
+): StorageRef<string>;
+export function storageRef<T>(options: StorageRefOptionsJson): StorageRef<T | null>;
+export function storageRef<T>(options: StorageRefOptionsJson & StorageRefDefault<T>): StorageRef<T>;
+export function storageRef<T>(options: StorageRefOptionsCustom<T>): StorageRef<T | null>;
 export function storageRef<T>(
-    options: StorageRefOptionsRaw | StorageRefOptionsJson | StorageRefOptionsCustom<T>,
-): StorageRef<T> {
+    options: StorageRefOptionsCustom<T> & StorageRefDefault<T>,
+): StorageRef<T>;
+export function storageRef<T>(
+    options: (StorageRefOptionsRaw | StorageRefOptionsJson | StorageRefOptionsCustom<T>) &
+        Partial<StorageRefDefault<T>>,
+): StorageRef<T | null> {
     const key = options.key;
     const serialize =
         options.serialize ?? (options.json ? JSON.stringify : (identity as (value: T) => string));
@@ -54,6 +67,9 @@ export function storageRef<T>(
     watch(variable, write, { deep: options.deep });
 
     variable.reload = reload;
+    variable.startSync = startSync;
+    variable.stopSync = stopSync;
+    variable.save = save;
 
     if (options.sync && storage) {
         if (options.sync === 'always') {
@@ -66,7 +82,7 @@ export function storageRef<T>(
 
     return variable;
 
-    function reload(): T | null {
+    function reload(): T {
         const value = read();
         updateNoWrite(value);
         return value;
@@ -74,18 +90,18 @@ export function storageRef<T>(
 
     function read() {
         if (!storage) {
-            return null;
+            return null as T;
         }
 
         const item = storage.getItem(key);
         if (!item) {
-            return null;
+            return getDefault();
         }
 
         return deserialize(item);
     }
 
-    function updateNoWrite(value: T | null) {
+    function updateNoWrite(value: T) {
         if (value != null && typeof value === 'object') {
             // Prevent writing back to localStorage
             (value as StorageValue<T>)[skipWrite] = true;
@@ -118,9 +134,21 @@ export function storageRef<T>(
 
     function sync(event: StorageEvent) {
         if (event.storageArea === storage && event.key === key) {
-            const value = event.newValue ? deserialize(event.newValue) : null;
+            const value = event.newValue ? deserialize(event.newValue) : getDefault();
             updateNoWrite(value);
         }
+    }
+
+    function getDefault() {
+        if (options.default) {
+            return options.default();
+        }
+
+        return null as T;
+    }
+
+    function save() {
+        write(variable.value);
     }
 }
 
