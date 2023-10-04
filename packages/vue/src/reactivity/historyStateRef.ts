@@ -54,8 +54,6 @@ export function historyStateRef<T>(
     function read() {
         const state = history.getState();
 
-        console.warn('read', state);
-
         if (!state) {
             return getDefault();
         }
@@ -70,7 +68,6 @@ export function historyStateRef<T>(
 
         const state = history.getState() ?? {};
         state[key] = toRaw(value);
-        console.warn('write', state);
         history.setState(state);
     }
 
@@ -98,14 +95,12 @@ function initializeHistory() {
         history = window.history;
 
         window.addEventListener('popstate', event => {
-            console.warn('popstate', event);
             emitter.emit('popState', { state: normalizeState(event.state) });
         });
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
         pushState = history.pushState;
         history.pushState = (state, title, url) => {
-            console.warn('pushState', { state, title, url });
             pushState.call(history, state, title, url);
             emitter.emit('pushState', { state: normalizeState(state) });
         };
@@ -113,7 +108,6 @@ function initializeHistory() {
         // eslint-disable-next-line @typescript-eslint/unbound-method
         replaceState = window.history.replaceState;
         history.replaceState = (state, title, url) => {
-            console.warn('replaceState', { state, title, url });
             replaceState.call(history, state, title, url);
             emitter.emit('replaceState', { state: normalizeState(state) });
         };
