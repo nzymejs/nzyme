@@ -18,7 +18,7 @@ export const Collapse = defineComponent({
     },
     emits: {
         heightChange: (height: number) => true,
-        afterEnter: () => void true,
+        afterEnter: () => true,
         afterLeave: () => true,
     },
     setup(props, ctx) {
