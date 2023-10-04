@@ -17,9 +17,9 @@ export const Collapse = defineComponent({
         show: prop(Boolean).optional(),
     },
     emits: {
-        heightChange: (height: number) => void 0,
-        afterEnter: () => void 0,
-        afterLeave: () => void 0,
+        heightChange: (height: number) => true,
+        afterEnter: () => void true,
+        afterLeave: () => true,
     },
     setup(props, ctx) {
         const vm = getCurrentInstance();
