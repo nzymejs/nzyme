@@ -45,6 +45,7 @@ export * from './components/Collapse.jsx';
 export * from './directives/vShow.js';
 export * from './directives/vMounted.js';
 
+export * from './reactivity/historyStateRef.js';
 export * from './reactivity/storageRef.js';
 export * from './reactivity/refAsync.js';
 export * from './reactivity/promiseRef.js';

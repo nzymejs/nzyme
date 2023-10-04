@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import debounce from 'lodash.debounce';
 import { isRef, reactive, ref, watch, Ref } from 'vue';
 
 import { CancelablePromise, isCancelablePromise } from '@nzyme/utils';

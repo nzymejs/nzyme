@@ -29,7 +29,6 @@ type StorageRefOptionsRaw = StorageRefOptions & {
 type StorageRefOptionsCustom<T> = StorageRefOptions & {
     serialize: (value: T) => string;
     deserialize: (value: string) => T;
-    deep?: boolean;
     json?: false;
 };
 
@@ -90,7 +89,7 @@ export function storageRef<T>(
 
     function read() {
         if (!storage) {
-            return null as T;
+            return getDefault();
         }
 
         const item = storage.getItem(key);
