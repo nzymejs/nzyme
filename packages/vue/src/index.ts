@@ -7,6 +7,7 @@ export * from './useDataSource.js';
 export * from './useElement.js';
 export * from './useEmitAsync.js';
 export * from './useEventBus.js';
+export * from './classProp.js';
 export * from './useInstance.js';
 export * from './vmodel.js';
 export * from './Format.js';
@@ -44,6 +45,7 @@ export * from './components/Collapse.jsx';
 
 export * from './directives/vShow.js';
 export * from './directives/vMounted.js';
+export * from './directives/vUid.js';
 
 export * from './reactivity/historyStateRef.js';
 export * from './reactivity/storageRef.js';
