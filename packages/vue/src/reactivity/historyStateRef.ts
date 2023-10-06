@@ -13,6 +13,10 @@ type HistoryStateRefOptions = {
     debounce?: number;
 };
 
+type HistoryStateRefNoDefault = {
+    default?: never;
+};
+
 type HistoryStateRefDefault<T> = {
     default: () => T;
 };
@@ -27,10 +31,12 @@ type HistoryEvents = {
 
 const history = initializeHistory();
 
-export function historyStateRef<T>(options: HistoryStateRefOptions): HistoryStateRef<T | null>;
 export function historyStateRef<T>(
     options: HistoryStateRefOptions & HistoryStateRefDefault<T>,
 ): HistoryStateRef<T>;
+export function historyStateRef<T>(
+    options: HistoryStateRefOptions & HistoryStateRefNoDefault,
+): HistoryStateRef<T | null>;
 
 export function historyStateRef<T>(
     options: HistoryStateRefOptions & Partial<HistoryStateRefDefault<T>>,
