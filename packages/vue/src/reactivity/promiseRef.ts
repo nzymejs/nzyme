@@ -11,7 +11,7 @@ export function promiseRef<T>(promise?: Promise<T | undefined>) {
         promise = Promise.resolve(undefined);
     }
 
-    const promiseRef = ref(promise);
+    const promiseRef = ref(wrapPromise(promise));
     const valueRef = ref<T>() as PromiseRef<T | undefined>;
 
     let runWatch = true;
@@ -19,14 +19,7 @@ export function promiseRef<T>(promise?: Promise<T | undefined>) {
     Object.defineProperty(valueRef, 'promise', {
         get: () => promiseRef.value,
         set: (value: Promise<T>) => {
-            promiseRef.value = value;
-            void value.then(result => {
-                if (promiseRef.value === value) {
-                    runWatch = false;
-                    valueRef.value = result;
-                    runWatch = true;
-                }
-            });
+            promiseRef.value = wrapPromise(value);
         },
     });
 
@@ -37,4 +30,16 @@ export function promiseRef<T>(promise?: Promise<T | undefined>) {
     });
 
     return valueRef;
+
+    function wrapPromise(promise: Promise<T | undefined>) {
+        void promise.then(result => {
+            if (promiseRef.value === promise) {
+                runWatch = false;
+                valueRef.value = result;
+                runWatch = true;
+            }
+        });
+
+        return promise;
+    }
 }
