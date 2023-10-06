@@ -21,6 +21,7 @@ export * from './onHistoryBack.js';
 export * from './onWindowEvent.js';
 export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
+export * from './useScrollLock.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';

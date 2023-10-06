@@ -6,3 +6,4 @@ export * from './loadScript.js';
 export * from './loadStyles.js';
 export * from './getOuterHeight.js';
 export * from './scrollToTopElement.js';
+export * from './getScrollBarWidth.js';
