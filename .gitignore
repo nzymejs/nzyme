@@ -4,9 +4,15 @@ node_modules/
 dist/
 .DS_Store
 
-
 # TypeScript cache
 *.tsbuildinfo
 
 # Yarn logs
 yarn-error.log
+
+# yarn berry files
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

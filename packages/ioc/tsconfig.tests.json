@@ -2,7 +2,8 @@
     "extends": "../../tsconfig.tests.json",
     "compilerOptions": {
         "baseUrl": ".",
-        "rootDir": "."
+        "rootDir": ".",
+        "types": ["@types/jest"]
     },
     "include": ["./tests/**/*.ts", "./jest.config.ts"]
 }

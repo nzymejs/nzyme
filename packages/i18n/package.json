@@ -11,6 +11,7 @@
     "private": true,
     "dependencies": {
         "@nzyme/ioc": "*",
+        "@nzyme/types": "*",
         "@nzyme/utils": "*"
     }
 }

@@ -26,9 +26,9 @@
         "vue": "^3.3.4"
     },
     "devDependencies": {
-        "sass": "1.66.1",
-        "typescript-plugin-css-modules": "5.0.1",
-        "@types/lodash.debounce": "^4.0.7"
+        "@types/lodash.debounce": "^4.0.7",
+        "sass": "1.69.0",
+        "typescript-plugin-css-modules": "5.0.1"
     },
     "depcheck": {
         "ignoreDeps": [

@@ -1,7 +1,6 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "composite": false,
-        "types": ["node", "jest"]
+        "composite": false
     }
 }
