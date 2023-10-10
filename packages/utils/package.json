@@ -15,7 +15,8 @@
     },
     "devDependencies": {
         "@nzyme/jest": "*",
-        "@types/jest": "^29.5.5"
+        "@types/jest": "^29.5.5",
+        "@types/node": "^20.8.3"
     },
     "depcheck": {
         "ignoreFiles": [
