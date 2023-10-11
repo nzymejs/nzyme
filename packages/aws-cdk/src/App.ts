@@ -1,9 +1,10 @@
 import { diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff';
-import * as cdk from '@aws-cdk/core';
-import { CloudFormationStackArtifact, CloudArtifact, CloudAssembly } from '@aws-cdk/cx-api';
+import { CloudFormationStackArtifact as CloudFormationStackArtifactLegacy } from '@aws-cdk/cx-api';
 import { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
 import { Bootstrapper } from 'aws-cdk/lib/api/bootstrap/index.js';
 import { Deployments } from 'aws-cdk/lib/api/deployments.js';
+import * as cdk from 'aws-cdk-lib/core';
+import { CloudFormationStackArtifact, CloudArtifact, CloudAssembly } from 'aws-cdk-lib/cx-api';
 import chalk from 'chalk';
 import consola from 'consola';
 
@@ -86,7 +87,7 @@ export class App extends cdk.App {
                 stack?.$.emit('deploy:start');
 
                 const deployment = await this.deployments.deployStack({
-                    stack: artifact,
+                    stack: artifact as unknown as CloudFormationStackArtifactLegacy,
                     deployName: artifact.stackName,
                 });
 
@@ -110,7 +111,7 @@ export class App extends cdk.App {
                 stack?.$.emit('destroy:start');
 
                 await this.deployments.destroyStack({
-                    stack: artifact,
+                    stack: artifact as unknown as CloudFormationStackArtifactLegacy,
                     deployName: artifact.stackName,
                 });
 
@@ -128,8 +129,9 @@ export class App extends cdk.App {
 
         for (const artifact of artifacts) {
             if (artifact instanceof CloudFormationStackArtifact) {
-                const currentTemplate =
-                    await this.deployments.readCurrentTemplateWithNestedStacks(artifact);
+                const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
+                    artifact as unknown as CloudFormationStackArtifactLegacy,
+                );
 
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 const diff = diffTemplate(currentTemplate, artifact.template);

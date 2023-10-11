@@ -1,6 +1,6 @@
-import * as cdk from '@aws-cdk/core';
-import { CfnOutput } from '@aws-cdk/core';
 import { DeployStackResult } from 'aws-cdk/lib/api';
+import * as cdk from 'aws-cdk-lib/core';
+import { CfnOutput } from 'aws-cdk-lib/core';
 
 import { createEventEmitter } from '@nzyme/utils';
 
@@ -18,6 +18,10 @@ export interface StackEvents {
     'destroy:start': void;
     'destroy:finished': void;
 }
+
+export type StackOutputs = {
+    [stackName: string]: Record<string, string | undefined>;
+};
 
 export type StackHandler = () => Promise<void>;
 
@@ -66,16 +70,12 @@ export class Stack extends cdk.Stack {
             throw new Error('Export name can only contain letters and numbers.');
         }
 
-        const output = new CfnOutput(this, name, {
+        new CfnOutput(this, name, {
             value,
         });
 
-        return () => {
-            if (this.deployResult) {
-                return this.deployResult.outputs[name];
-            }
-
-            return cdk.Fn.importValue(output.importValue);
+        return (outputs: StackOutputs) => {
+            return outputs[this.stackName][name];
         };
     }
 }
