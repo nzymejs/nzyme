@@ -23,6 +23,7 @@ export * from './onWindowResize.js';
 export * from './onWindowScroll.js';
 export * from './useScrollLock.js';
 export * from './useIntersectionObserver.js';
+export * from './useHistory.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';

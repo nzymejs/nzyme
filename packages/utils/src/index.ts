@@ -11,6 +11,7 @@ export * from './array/mapIterable.js';
 export * from './array/mapNotNull.js';
 export * from './array/splitIntoChunks.js';
 export * from './array/countWhere.js';
+export * from './array/sumOver.js';
 export * from './array/forEachParalell.js';
 
 export * from './string/formatWith.js';
