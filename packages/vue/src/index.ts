@@ -15,7 +15,6 @@ export { useContainer } from './useContainer.js';
 export * from './useService.js';
 export { CommonPlugin } from './CommonPlugin.js';
 export * from './useVirtualHistory.js';
-export * from './transitions/TransitionFade.js';
 export * from './onMountedSafe.js';
 export * from './onHistoryBack.js';
 export * from './onWindowEvent.js';
@@ -24,6 +23,9 @@ export * from './onWindowScroll.js';
 export * from './useScrollLock.js';
 export * from './useIntersectionObserver.js';
 export * from './useHistory.js';
+
+export * from './defineEmits.js';
+export * from './defineProps.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
@@ -37,7 +39,10 @@ export type {
     ModalResult,
 } from './modal/ModalTypes.js';
 
-export type * from './types.js';
+export type * from './types/ComponentProps.js';
+export type * from './types/PropsDefinition.js';
+export type * from './types/Slots.js';
+export type * from './types/VModel.js';
 
 export { LazyHydrate } from './components/LazyHydrate.js';
 //export { default as Reveal } from './components/Reveal.vue';
@@ -57,3 +62,6 @@ export * from './reactivity/promiseRef.js';
 export * from './reactivity/constRef.js';
 export * from './reactivity/makeRef.js';
 export * from './reactivity/reactive.js';
+export * from './reactivity/defineVModel.js';
+
+export * from './transitions/TransitionFade.jsx';

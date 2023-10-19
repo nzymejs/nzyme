@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, VNodeProps, AllowedComponentProps, Ref } from 'vue';
+import { ComponentPublicInstance, VNodeProps, AllowedComponentProps } from 'vue';
 
 import { Constructor } from '@nzyme/types';
 
