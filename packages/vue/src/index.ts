@@ -56,3 +56,4 @@ export * from './reactivity/refAsync.js';
 export * from './reactivity/promiseRef.js';
 export * from './reactivity/constRef.js';
 export * from './reactivity/makeRef.js';
+export * from './reactivity/reactive.js';

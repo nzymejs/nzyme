@@ -7,3 +7,4 @@ export * from './loadStyles.js';
 export * from './getOuterHeight.js';
 export * from './scrollToTopElement.js';
 export * from './getScrollBarWidth.js';
+export * from './clearFocus.js';

@@ -1,6 +1,6 @@
-import { Ref, defineComponent, h, reactive, ref, ComponentInternalInstance } from 'vue';
+import { Ref, defineComponent, h, ref, ComponentInternalInstance } from 'vue';
 
-import { virtualHistory } from '@nzyme/dom';
+import { clearFocus, virtualHistory } from '@nzyme/dom';
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
 import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
@@ -13,7 +13,9 @@ import {
     ModalProps,
     ModalComponentView,
     ModalHandlerProps,
+    ModalHandler,
 } from './ModalTypes.js';
+import { reactive } from '../reactivity/reactive.js';
 
 interface ModalServiceOpenOptions {
     /**
@@ -45,9 +47,13 @@ export const ModalService = defineService({
             const modal = result.promise as Writable<Modal<T>>;
             const historyHandle = virtualHistory.pushState(() => modal.handler.cancel());
 
+            // When modal is opened, we want to clear focus from the previously focused element.
+            clearFocus();
+
             modal.id = Symbol('modal');
             modal.props = options.props as ModalProps<T>;
-            modal.handler = {
+            modal.handler = reactive<ModalHandler<ModalResult<T>>>({
+                open,
                 setResult(result: ModalResult<T>) {
                     modalResult = result;
                     modalDone = true;
@@ -77,7 +83,7 @@ export const ModalService = defineService({
                     modalDone = false;
                     closeModal();
                 },
-            };
+            });
 
             modal.component = defineComponent({
                 async setup() {
@@ -89,10 +95,6 @@ export const ModalService = defineService({
                     const view = await unwrapModalComponent(options.modal);
 
                     return () => {
-                        if (!open.value) {
-                            return null;
-                        }
-
                         const vnode = h(view, props);
                         if (options.parent) {
                             vnode.appContext = { ...options.parent.appContext };
@@ -109,7 +111,10 @@ export const ModalService = defineService({
 
             function closeModal() {
                 open.value = false;
-                arrayRemove(modals.value, modal as Modal);
+
+                // Give some time to perform animations
+                setTimeout(() => arrayRemove(modals.value, modal as Modal), 1000);
+
                 historyHandle.cancel();
 
                 if (modalDone) {

@@ -32,6 +32,7 @@ export interface ModalHandler<T> {
     done(this: void, result: T): void;
     close(this: void): void;
     cancel(this: void): void;
+    readonly open: boolean;
 }
 
 export type OpenModalOptions<T extends ModalComponent = ModalComponent> = ModalProps<T> extends void

@@ -40,7 +40,7 @@ export function useModal(opts?: ModalOptions) {
             localModals.push(modal);
 
             // Remove modal from local ones when it is closed.
-            modal.finally(() => arrayRemove(localModals, modal));
+            void modal.finally(() => arrayRemove(localModals, modal));
 
             return modal;
         },
