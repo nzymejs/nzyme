@@ -45,7 +45,7 @@ export const ModalService = defineService({
             let modalDone = false;
 
             const modal = result.promise as Writable<Modal<T>>;
-            const historyHandle = virtualHistory.pushState(() => modal.handler.cancel());
+            const historyHandle = virtualHistory.pushState(() => modal.handler.close());
 
             // When modal is opened, we want to clear focus from the previously focused element.
             clearFocus();
