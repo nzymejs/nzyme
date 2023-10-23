@@ -18,7 +18,6 @@ export function defineVModel<K extends string, P extends Prop<any>>(prop: K, opt
         props: { [prop]: options } as PropsDef,
         emits: undefined as unknown as Emits,
         setup,
-        x: null as unknown as Props,
     };
 
     function setup(props: Props, emit: (event: `update:${K}`, value: PropValue) => void) {
