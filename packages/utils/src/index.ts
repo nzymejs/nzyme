@@ -31,6 +31,7 @@ export * from './Cancelable.js';
 export * from './CancelError.js';
 export * from './createCache.js';
 export * from './createEventEmitter.js';
+export * from './createSingleEventEmitter.js';
 export * from './createMemo.js';
 export * from './createPromise.js';
 export * from './deepCopy.js';

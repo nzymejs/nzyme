@@ -2,7 +2,7 @@ import { IfLiteral, NonVoidPropKeys, VoidPropKeys } from '@nzyme/types';
 
 import { arrayRemove } from './array/arrayRemove.js';
 
-export type EventCallback<TEvents, E extends keyof TEvents> = TEvents[E] extends void
+export type EventEmitterCallback<TEvents, E extends keyof TEvents> = TEvents[E] extends void
     ? () => void | Promise<void>
     : (event: TEvents[E]) => void | Promise<void>;
 
@@ -18,7 +18,7 @@ type GenericEvents<TEvents> = {
 };
 
 export function createEventEmitter<TEvents>() {
-    type Callback = EventCallback<TEvents, keyof TEvents>;
+    type Callback = EventEmitterCallback<TEvents, keyof TEvents>;
     const listeners = new Map<keyof TEvents, Callback[]>();
 
     return {
@@ -30,13 +30,13 @@ export function createEventEmitter<TEvents>() {
 
     function on<E extends keyof PredefinedEvents<TEvents>>(
         event: E,
-        callback: EventCallback<TEvents, E>,
+        callback: EventEmitterCallback<TEvents, E>,
     ): void;
     function on<E extends keyof GenericEvents<TEvents>>(
         event: E,
-        callback: EventCallback<TEvents, E>,
+        callback: EventEmitterCallback<TEvents, E>,
     ): void;
-    function on<E extends keyof TEvents>(event: E, callback: EventCallback<TEvents, E>) {
+    function on<E extends keyof TEvents>(event: E, callback: EventEmitterCallback<TEvents, E>) {
         let callbacks = listeners.get(event);
         if (!callbacks) {
             callbacks = [];
@@ -48,13 +48,13 @@ export function createEventEmitter<TEvents>() {
 
     function off<E extends keyof PredefinedEvents<TEvents>>(
         event: E,
-        callback: EventCallback<TEvents, E>,
+        callback: EventEmitterCallback<TEvents, E>,
     ): void;
     function off<E extends keyof GenericEvents<TEvents>>(
         event: E,
-        callback: EventCallback<TEvents, E>,
+        callback: EventEmitterCallback<TEvents, E>,
     ): void;
-    function off<E extends keyof TEvents>(event: E, callback: EventCallback<TEvents, E>) {
+    function off<E extends keyof TEvents>(event: E, callback: EventEmitterCallback<TEvents, E>) {
         const callbacks = listeners.get(event);
         if (callbacks) {
             arrayRemove(callbacks, callback as Callback);
