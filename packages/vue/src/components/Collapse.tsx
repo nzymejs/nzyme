@@ -13,7 +13,7 @@ const DEBUG = false;
 export const Collapse = defineComponent({
     name: 'Collapse',
     props: {
-        lazy: prop(Boolean).optional(),
+        render: prop<'always' | 'lazy'>().optional(),
         show: prop(Boolean).optional(),
     },
     emits: {
@@ -24,11 +24,12 @@ export const Collapse = defineComponent({
     setup(props, ctx) {
         const vm = getCurrentInstance();
         const lazyHydrate =
-            props.lazy &&
-            // There is no need to lazy load if it's shown from the start.
-            !props.show &&
-            // Check if we are on SSR or hydration process.
-            (vm?.vnode.el != null || !isBrowser());
+            props.render === 'always' ||
+            (props.render === 'lazy' &&
+                // There is no need to lazy load if it's shown from the start.
+                !props.show &&
+                // Check if we are on SSR or hydration process.
+                (vm?.vnode.el != null || !isBrowser()));
 
         const Inner = () => {
             if (lazyHydrate) {

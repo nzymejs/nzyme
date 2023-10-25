@@ -1,4 +1,4 @@
-import { inject, provide, reactive, UnwrapRef } from 'vue';
+import { inject, provide, UnwrapRef } from 'vue';
 
 export interface ContextConstructor<TParams extends unknown[], TContext extends object> {
     (this: undefined, ...params: TParams): TContext;
@@ -9,10 +9,12 @@ export interface ContextDefinition<TParams extends unknown[], TContext extends o
     readonly symbol: symbol;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ContextOf<T> = T extends ContextDefinition<any, infer TContext>
     ? UnwrapRef<TContext>
     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ContextParams<T> = T extends ContextDefinition<infer TParams, any> ? TParams : never;
 
 export function defineContext<TParams extends unknown[], TContext extends object>(
