@@ -1,7 +1,12 @@
+import { effectScope } from 'vue';
+
 import { Injectable } from '@nzyme/ioc';
 
 import { useContainer } from './useContainer.js';
 
+const scope = effectScope(true);
+
 export function useService<T>(service: Injectable<T>): T {
-    return useContainer().resolve(service);
+    const container = useContainer();
+    return scope.run(() => container.resolve(service)) as T;
 }
