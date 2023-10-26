@@ -1,4 +1,4 @@
-import { Ref, defineComponent, h, ref, ComponentInternalInstance } from 'vue';
+import { Ref, defineComponent, h, ref, ComponentInternalInstance, nextTick } from 'vue';
 
 import { clearFocus, virtualHistory } from '@nzyme/dom';
 import { defineService } from '@nzyme/ioc';
@@ -112,8 +112,9 @@ export const ModalService = defineService({
             function closeModal() {
                 open.value = false;
 
-                // Give some time to perform animations
-                setTimeout(() => arrayRemove(modals.value, modal as Modal), 1000);
+                // Destroy the modal after a slight delay
+                // This way you can use customized transitions.
+                void nextTick(() => arrayRemove(modals.value, modal as Modal));
 
                 historyHandle.cancel();
 
