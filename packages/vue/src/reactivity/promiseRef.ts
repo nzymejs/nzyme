@@ -1,18 +1,25 @@
 import { Ref, ref, watch } from 'vue';
 
-export interface PromiseRef<T> extends Ref<T> {
+export interface PromiseRef<T, TValue extends T | undefined = T> extends Ref<TValue> {
     promise: Promise<T>;
 }
 
 export function promiseRef<T>(): PromiseRef<T | undefined>;
-export function promiseRef<T>(promise: Promise<T>): PromiseRef<T>;
-export function promiseRef<T>(promise?: Promise<T | undefined>) {
-    if (!promise) {
-        promise = Promise.resolve(undefined);
+export function promiseRef<T>(promise: Promise<T>): PromiseRef<T, T | undefined>;
+export function promiseRef<T>(value: T): PromiseRef<T>;
+export function promiseRef<T>(promiseOrValue?: Promise<T | undefined> | T) {
+    let promise: Promise<T | undefined>;
+    let value: T | undefined;
+    if (promiseOrValue instanceof Promise) {
+        promise = promiseOrValue;
+        value = undefined;
+    } else {
+        promise = Promise.resolve(promiseOrValue);
+        value = promiseOrValue;
     }
 
     const promiseRef = ref(wrapPromise(promise));
-    const valueRef = ref<T>() as PromiseRef<T | undefined>;
+    const valueRef = ref<T | undefined>(value) as PromiseRef<T | undefined>;
 
     let runWatch = true;
 
