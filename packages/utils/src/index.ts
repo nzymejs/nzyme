@@ -52,3 +52,4 @@ export * from './waitForever.js';
 export * from './writable.js';
 export * from './promiseAll.js';
 export * from './getTopLevelDomain.js';
+export * from './debounceAsyncFunction.js';

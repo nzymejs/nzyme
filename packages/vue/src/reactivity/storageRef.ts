@@ -1,4 +1,4 @@
-import { Ref, onMounted, onUnmounted, ref, watch } from 'vue';
+import { Ref, onMounted, onUnmounted, ref, watch, shallowRef } from 'vue';
 
 import { identity } from '@nzyme/utils';
 
@@ -62,7 +62,9 @@ export function storageRef<T>(
         options.deserialize ?? ((options.json ? JSON.parse : identity) as (value: string) => T);
     const storage = getStorage(options.storage);
 
-    const variable = ref<T | null>(read()) as StorageRef<T>;
+    const variable = options.deep
+        ? (ref<T | null>(read()) as StorageRef<T>)
+        : (shallowRef<T | null>(read()) as StorageRef<T>);
     watch(variable, write, { deep: options.deep });
 
     variable.reload = reload;
