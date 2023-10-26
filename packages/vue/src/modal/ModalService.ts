@@ -3,7 +3,7 @@ import { Ref, defineComponent, h, ref, ComponentInternalInstance, nextTick } fro
 import { clearFocus, virtualHistory } from '@nzyme/dom';
 import { defineService } from '@nzyme/ioc';
 import { Writable } from '@nzyme/types';
-import { CancelError, arrayRemove, assertValue, createPromise } from '@nzyme/utils';
+import { arrayRemove, createPromise } from '@nzyme/utils';
 
 import {
     ModalComponent,
@@ -39,10 +39,9 @@ export const ModalService = defineService({
             options: OpenModalOptions<T> & ModalServiceOpenOptions,
         ): Modal<T> {
             const open = ref(true);
-            const result = createPromise<ModalResult<T>>();
+            const result = createPromise<ModalResult<T> | undefined>();
 
             let modalResult: ModalResult<T> | undefined;
-            let modalDone = false;
 
             const modal = result.promise as Writable<Modal<T>>;
             const historyHandle = virtualHistory.pushState(() => modal.handler.close());
@@ -56,7 +55,6 @@ export const ModalService = defineService({
                 open,
                 setResult(result: ModalResult<T>) {
                     modalResult = result;
-                    modalDone = true;
                 },
                 done(result) {
                     if (!open.value) {
@@ -64,7 +62,6 @@ export const ModalService = defineService({
                     }
 
                     modalResult = result;
-                    modalDone = true;
                     closeModal();
                 },
                 close() {
@@ -80,7 +77,6 @@ export const ModalService = defineService({
                     }
 
                     modalResult = undefined;
-                    modalDone = false;
                     closeModal();
                 },
             });
@@ -118,11 +114,7 @@ export const ModalService = defineService({
 
                 historyHandle.cancel();
 
-                if (modalDone) {
-                    result.resolve(assertValue(modalResult));
-                } else {
-                    result.reject(new CancelError());
-                }
+                result.resolve(modalResult);
             }
         }
 
