@@ -15,6 +15,7 @@ export const Collapse = defineComponent({
     props: {
         render: prop<'always' | 'lazy'>().optional(),
         show: prop(Boolean).optional(),
+        fade: prop(Boolean).optional(),
     },
     emits: {
         heightChange: (height: number) => true,
@@ -45,12 +46,14 @@ export const Collapse = defineComponent({
         };
 
         return () => {
+            const fade = props.fade || false;
+            const activeClass = fade ? `${css.active} ${css.fadeIn}` : css.active;
             const collapse = (
                 <Transition
-                    enterFromClass={css.enterFrom}
-                    enterActiveClass={css.enterActive}
-                    leaveFromClass={css.leaveFrom}
-                    leaveActiveClass={css.leaveActive}
+                    enterFromClass={fade ? css.fadeOut : undefined}
+                    enterActiveClass={activeClass}
+                    leaveFromClass={fade ? css.fadeOut : undefined}
+                    leaveActiveClass={activeClass}
                     onBeforeEnter={beforeEnter}
                     onEnter={enter}
                     onAfterEnter={afterEnter}

@@ -1,10 +1,11 @@
 .collapse {
-    transition: height 0.2s ease-out, opacity 0.2s ease-out 0.1s;
+    transition:
+        height 0.2s ease-out,
+        opacity 0.2s ease-out 0.1s;
     box-sizing: content-box;
 }
 
-.enterActive,
-.leaveActive {
+.active {
     // forces hardware acceleration
     will-change: height;
     transform: translateZ(0);
@@ -12,18 +13,10 @@
     perspective: 1000px;
 }
 
-.enterFrom {
+.fadeOut {
     opacity: 0 !important;
 }
 
-.enterActive {
+.fadeIn {
     opacity: 1;
-}
-
-.leaveFrom {
-    opacity: 1;
-}
-
-.leaveActive {
-    opacity: 0 !important;
 }
