@@ -1,13 +1,14 @@
-import { ComponentOptions } from 'vue';
+import type { ComponentOptions } from 'vue';
 
-import { Flatten } from '@nzyme/types';
+import type { Flatten } from '@nzyme/types';
 
-import { ComponentProps } from '../types/ComponentProps.js';
+import type { ComponentProps } from '../types/ComponentProps.js';
 
 export type ModalHandlerProps<TResult> = {
     modal: ModalHandler<TResult>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ModalComponent<TProps extends ModalHandlerProps<any> = any> = ComponentOptions<TProps>;
 
 export type ModalComponentView<T extends ModalComponent> =

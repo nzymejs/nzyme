@@ -8,6 +8,7 @@
         "jsxFactory": "h",
         "jsxFragmentFactory": "h",
         "composite": false,
+        "verbatimModuleSyntax": true,
         "plugins": [
             {
                 "name": "typescript-plugin-css-modules"

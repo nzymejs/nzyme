@@ -1,4 +1,4 @@
-import { Ref, onMounted, onUnmounted, ref, watch, shallowRef } from 'vue';
+import { type Ref, onMounted, onUnmounted, ref, watch, shallowRef } from 'vue';
 
 import { identity } from '@nzyme/utils';
 

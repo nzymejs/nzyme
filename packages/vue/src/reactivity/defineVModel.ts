@@ -1,4 +1,4 @@
-import { ExtractPropTypes, Prop, computed } from 'vue';
+import { type ExtractPropTypes, type Prop, computed } from 'vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function defineVModel<K extends string, P extends Prop<any>>(prop: K, options: P) {

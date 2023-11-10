@@ -10,7 +10,7 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "dependencies": {
         "@nzyme/types": "*",
-        "@types/lodash.isequal": "^4.5.6",
+        "@types/lodash.isequal": "^4.5.8",
         "lodash.isequal": "^4.5.0"
     },
     "devDependencies": {

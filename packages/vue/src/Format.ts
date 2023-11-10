@@ -1,4 +1,4 @@
-import { defineComponent, VNodeChild } from 'vue';
+import { defineComponent, type VNodeChild } from 'vue';
 
 import { prop } from './prop.js';
 

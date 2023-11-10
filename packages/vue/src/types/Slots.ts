@@ -1,4 +1,4 @@
-import { SomeObject } from '@nzyme/types';
+import type { SomeObject } from '@nzyme/types';
 
 export type Slots<T> = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

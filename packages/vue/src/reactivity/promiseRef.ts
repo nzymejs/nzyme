@@ -1,4 +1,4 @@
-import { Ref, ref, watch } from 'vue';
+import { type Ref, ref, watch } from 'vue';
 
 export interface PromiseRef<T, TValue extends T | undefined = T> extends Ref<TValue> {
     promise: Promise<T>;

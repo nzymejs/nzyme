@@ -1,11 +1,11 @@
 import {
     Transition,
-    TransitionProps as TransitionPropsVue,
-    FunctionalComponent,
+    type TransitionProps as TransitionPropsVue,
+    type FunctionalComponent,
     TransitionGroup,
-    TransitionGroupProps as TransitionGroupPropsVue,
+    type TransitionGroupProps as TransitionGroupPropsVue,
     h,
-    HtmlHTMLAttributes,
+    type HtmlHTMLAttributes,
 } from 'vue';
 
 export type TransitionProps = Omit<TransitionPropsVue, 'name' | `${string}Class` | 'css'> & {

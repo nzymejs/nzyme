@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import { Ref, ref, watch, toRaw, onBeforeUnmount } from 'vue';
+import { type Ref, ref, watch, toRaw, onBeforeUnmount } from 'vue';
 
 import { useHistory } from '../useHistory.js';
 

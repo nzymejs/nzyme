@@ -1,4 +1,4 @@
-import { inject, provide, UnwrapRef } from 'vue';
+import { inject, provide, type UnwrapRef } from 'vue';
 
 export interface ContextConstructor<TParams extends unknown[], TContext extends object> {
     (this: undefined, ...params: TParams): TContext;

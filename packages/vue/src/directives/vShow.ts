@@ -1,4 +1,4 @@
-import { ObjectDirective } from 'vue';
+import { type ObjectDirective } from 'vue';
 
 // TODO remove when https://github.com/vuejs/core/pull/8371 is released
 

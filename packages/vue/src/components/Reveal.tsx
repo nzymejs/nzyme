@@ -3,7 +3,7 @@ import {
     defineComponent,
     Transition,
     h,
-    ComponentPublicInstance,
+    type ComponentPublicInstance,
     withCtx,
     renderSlot,
     openBlock,

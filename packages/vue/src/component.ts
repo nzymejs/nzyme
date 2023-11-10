@@ -1,4 +1,4 @@
-import {
+import type {
     ComponentCustomProps,
     VNodeProps,
     EmitsOptions,
@@ -6,7 +6,7 @@ import {
     ObjectEmitsOptions,
 } from 'vue';
 
-import { UnionToIntersection } from '@nzyme/types';
+import type { UnionToIntersection } from '@nzyme/types';
 
 declare type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps;
 

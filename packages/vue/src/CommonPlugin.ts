@@ -1,4 +1,5 @@
-import { Plugin } from 'vue';
+import type { Plugin } from 'vue';
+
 import { Container } from '@nzyme/ioc';
 
 import { containerSymbol } from './useContainer.js';

@@ -1,4 +1,4 @@
-import { PropType } from 'vue';
+import { type PropType } from 'vue';
 
 type ClassType = string | boolean | object | number | null | undefined;
 

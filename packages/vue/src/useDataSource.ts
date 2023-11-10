@@ -1,9 +1,9 @@
 import debounce from 'lodash.debounce';
-import { isRef, reactive, ref, watch, Ref } from 'vue';
+import { isRef, reactive, ref, watch, type Ref } from 'vue';
 
-import { CancelablePromise, isCancelablePromise } from '@nzyme/utils';
+import { type CancelablePromise, isCancelablePromise } from '@nzyme/utils';
 
-import { makeRef, RefParam, unref } from './reactivity/makeRef.js';
+import { makeRef, type RefParam, unref } from './reactivity/makeRef.js';
 
 export interface DataSourceOptions<T, TResult> {
     /**

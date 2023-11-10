@@ -1,11 +1,11 @@
-import { Ref, defineComponent, h, ref, ComponentInternalInstance, nextTick } from 'vue';
+import { type Ref, defineComponent, h, ref, type ComponentInternalInstance, nextTick } from 'vue';
 
 import { clearFocus, virtualHistory } from '@nzyme/dom';
 import { defineService } from '@nzyme/ioc';
-import { Writable } from '@nzyme/types';
+import type { Writable } from '@nzyme/types';
 import { arrayRemove, createPromise } from '@nzyme/utils';
 
-import {
+import type {
     ModalComponent,
     Modal,
     OpenModalOptions,

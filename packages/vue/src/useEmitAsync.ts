@@ -1,6 +1,6 @@
-import { EmitsOptions, ObjectEmitsOptions, capitalize } from 'vue';
+import { type EmitsOptions, type ObjectEmitsOptions, capitalize } from 'vue';
 
-import { RecordToUnion, UnionToIntersection } from '@nzyme/types';
+import type { RecordToUnion, UnionToIntersection } from '@nzyme/types';
 
 import { useInstance } from './useInstance.js';
 
@@ -11,7 +11,7 @@ export function useEmitAsync<E extends Record<string, any[]>>(): ShortEmits<E>;
 export function useEmitAsync() {
     const instance = useInstance();
 
-    return  (event: string, ...args: unknown[]) => {
+    return (event: string, ...args: unknown[]) => {
         const attrName = 'on' + capitalize(event);
 
         type Listener = (...args: unknown[]) => unknown;

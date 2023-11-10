@@ -1,4 +1,4 @@
-import { computed, isRef, ref, Ref } from 'vue';
+import { computed, isRef, ref, type Ref } from 'vue';
 
 export type RefParam<T> = Readonly<Ref<T>> | ((this: void) => T) | T;
 

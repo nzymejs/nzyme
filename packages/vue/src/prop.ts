@@ -1,5 +1,6 @@
-import { AbstractConstructor, IfPropertyOptional, Simplify } from '@nzyme/types';
-import { PropType, Prop } from 'vue';
+import type { PropType, Prop } from 'vue';
+
+import type { AbstractConstructor, IfPropertyOptional, Simplify } from '@nzyme/types';
 
 type PropOptionsPartial<T> = Omit<Prop<T>, 'required' | 'type'>;
 type PropOptionsRequired<T> = Prop<T> & { required: true };

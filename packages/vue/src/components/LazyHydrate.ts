@@ -5,7 +5,7 @@ import {
     getCurrentInstance,
     defineAsyncComponent,
     onBeforeUnmount,
-    RenderFunction,
+    type RenderFunction,
 } from 'vue';
 
 import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@nzyme/dom';

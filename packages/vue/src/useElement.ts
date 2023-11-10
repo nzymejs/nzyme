@@ -1,4 +1,4 @@
-import { computed, getCurrentInstance, Ref } from 'vue';
+import { computed, getCurrentInstance, type Ref } from 'vue';
 
 export function useElement<T extends Element>(): Readonly<Ref<T | undefined>> {
     const vm = getCurrentInstance()?.proxy;
