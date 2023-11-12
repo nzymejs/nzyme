@@ -37,6 +37,7 @@ export * from './createPromise.js';
 export * from './deepCopy.js';
 export * from './deepEquals.js';
 export * from './getBaseClass.js';
+export * from './getClassName.js';
 export * from './getClassMarker.js';
 export * from './guid.js';
 export * from './HttpError.js';
