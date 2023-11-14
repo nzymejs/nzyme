@@ -4,7 +4,7 @@ export type EventCallback<TEvent = void> = TEvent extends void
     ? () => void | Promise<void>
     : (event: TEvent) => void | Promise<void>;
 
-export type EventEmitterSingle<TEvent> = {
+export type EventEmitterSingle<TEvent = void> = {
     on(this: void, callback: EventCallback<TEvent>): void;
     off(this: void, callback: EventCallback<TEvent>): void;
     emit(this: void, event: TEvent): void;
