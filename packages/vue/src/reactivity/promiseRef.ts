@@ -2,6 +2,7 @@ import { type Ref, ref, watch } from 'vue';
 
 export interface PromiseRef<T, TValue extends T | undefined = T> extends Ref<TValue> {
     promise: Promise<T>;
+    update(promise: Promise<T>): Promise<T>;
 }
 
 export function promiseRef<T>(): PromiseRef<T | undefined>;
@@ -23,10 +24,15 @@ export function promiseRef<T>(promiseOrValue?: Promise<T | undefined> | T) {
 
     let runWatch = true;
 
-    Object.defineProperty(valueRef, 'promise', {
-        get: () => promiseRef.value,
-        set: (value: Promise<T>) => {
-            promiseRef.value = wrapPromise(value);
+    Object.defineProperties(valueRef, {
+        promise: {
+            get: () => promiseRef.value,
+            set: (value: Promise<T>) => {
+                promiseRef.value = wrapPromise(value);
+            },
+        },
+        update: {
+            value: update,
         },
     });
 
@@ -39,14 +45,25 @@ export function promiseRef<T>(promiseOrValue?: Promise<T | undefined> | T) {
     return valueRef;
 
     function wrapPromise(promise: Promise<T | undefined>) {
-        void promise.then(result => {
-            if (promiseRef.value === promise) {
-                runWatch = false;
-                valueRef.value = result;
-                runWatch = true;
+        const wrapped = promise.then(result => {
+            if (promiseRef.value === wrapped) {
+                try {
+                    runWatch = false;
+                    valueRef.value = result;
+                } finally {
+                    runWatch = true;
+                }
             }
+
+            return result;
         });
 
-        return promise;
+        return wrapped;
+    }
+
+    function update(promise: Promise<T | undefined>) {
+        const wrapped = wrapPromise(promise);
+        promiseRef.value = wrapped;
+        return wrapped;
     }
 }
