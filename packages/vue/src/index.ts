@@ -26,6 +26,7 @@ export * from './useHistory.js';
 
 export * from './defineEmits.js';
 export * from './defineProps.js';
+export * from './defineProp.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
