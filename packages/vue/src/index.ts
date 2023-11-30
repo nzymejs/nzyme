@@ -23,6 +23,7 @@ export * from './onWindowScroll.js';
 export * from './useScrollLock.js';
 export * from './useIntersectionObserver.js';
 export * from './useHistory.js';
+export * from './useProps.js';
 
 export * from './defineEmits.js';
 export * from './defineProps.js';
