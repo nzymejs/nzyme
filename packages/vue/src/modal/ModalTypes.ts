@@ -19,7 +19,7 @@ export type ModalComponentView<T extends ModalComponent> =
 type ModalPropsWithoutHandler<T extends ModalComponent> = Flatten<Omit<ComponentProps<T>, 'modal'>>;
 
 export type ModalProps<T extends ModalComponent> = keyof ModalPropsWithoutHandler<T> extends never
-    ? void
+    ? undefined
     : ModalPropsWithoutHandler<T>;
 
 export type ModalResult<T extends ModalComponent> = ComponentProps<T> extends ModalHandlerProps<

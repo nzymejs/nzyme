@@ -15,6 +15,7 @@ import type {
     ModalHandlerProps,
     ModalHandler,
 } from './ModalTypes.js';
+import { onKeyUp } from '../onKeyUp.js';
 import { reactive } from '../reactivity/reactive.js';
 
 interface ModalServiceOpenOptions {
@@ -64,13 +65,7 @@ export const ModalService = defineService({
                     modalResult = result;
                     closeModal();
                 },
-                close() {
-                    if (!open.value) {
-                        return;
-                    }
-
-                    closeModal();
-                },
+                close: closeModal,
                 cancel() {
                     if (!open.value) {
                         return;
@@ -87,6 +82,8 @@ export const ModalService = defineService({
                         ...modal.props,
                         modal: modal.handler,
                     };
+
+                    onKeyUp('Escape', closeModal);
 
                     const view = await unwrapModalComponent(options.modal);
 
@@ -106,6 +103,10 @@ export const ModalService = defineService({
             return modal;
 
             function closeModal() {
+                if (!open.value) {
+                    return;
+                }
+
                 open.value = false;
 
                 // Destroy the modal after a slight delay
