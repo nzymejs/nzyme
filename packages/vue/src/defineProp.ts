@@ -8,7 +8,7 @@ interface PropOptions<T = unknown, D = T> {
 }
 
 type PropOptionsRequired<T> = PropOptions<T> & { required: true };
-type PropOptionsOptional<T> = PropOptions<T> & { required?: false };
+type PropOptionsOptional<T> = PropOptions<T | null> & { required?: false };
 
 export function defineProp<T>(): PropOptionsOptional<T>;
 export function defineProp<T>(opts: PropOptionsRequired<T>): PropOptionsRequired<T>;
