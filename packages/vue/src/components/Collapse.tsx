@@ -116,10 +116,17 @@ export const Collapse = defineComponent({
         }
 
         function fixedHeight(el: HTMLElement) {
-            el.style.height = `${el.scrollHeight}px`;
+            // scrollHeight does not include inner margins
+            const lastChild = el.lastElementChild;
+            const lastChildMargin = lastChild
+                ? parseInt(getComputedStyle(lastChild).marginBottom, 10)
+                : 0;
+            const height = el.scrollHeight + lastChildMargin;
+
+            el.style.height = `${height}px`;
             el.style.overflow = 'hidden';
             if (DEBUG) {
-                console.warn('fixedHeight', el);
+                console.warn('fixedHeight', el, el.scrollHeight);
             }
             forceRepaint(el);
         }
