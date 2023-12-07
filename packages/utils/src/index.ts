@@ -6,6 +6,8 @@ export * from './array/filterNotNull.js';
 export * from './array/findMax.js';
 export * from './array/findMin.js';
 export * from './array/getSingleItem.js';
+export * from './array/groupBy.js';
+export * from './array/groupByToMap.js';
 export * from './array/getLastItem.js';
 export * from './array/mapIterable.js';
 export * from './array/mapNotNull.js';
