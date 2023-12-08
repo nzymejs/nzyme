@@ -1,6 +1,6 @@
 import type { ComponentOptions } from 'vue';
 
-import type { Flatten } from '@nzyme/types';
+import type { EmptyObject, Flatten } from '@nzyme/types';
 
 import type { ComponentProps } from '../types/ComponentProps.js';
 
@@ -28,7 +28,7 @@ export type ModalResult<T extends ModalComponent> = ComponentProps<T> extends Mo
     ? R
     : void;
 
-export interface ModalHandler<T> {
+export interface ModalHandler<T = unknown> {
     setResult(this: void, result: T): void;
     done(this: void, result: T): void;
     close(this: void): void;
@@ -49,7 +49,7 @@ type OpenModalOptionsBase<T extends ModalComponent = ModalComponent> = {
 };
 
 interface OpenModalOptionsWithoutProps<T extends ModalComponent> extends OpenModalOptionsBase<T> {
-    props?: void;
+    props?: undefined | EmptyObject;
 }
 
 interface OpenModalOptionsWithProps<T extends ModalComponent> extends OpenModalOptionsBase<T> {
