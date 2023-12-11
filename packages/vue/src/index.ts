@@ -54,6 +54,7 @@ export { Reveal } from './components/Reveal.js';
 export * from './components/Collapse.jsx';
 //export { default as Collapse } from './components/Collapse.vue';
 
+export * from './directives/vAutofocus.js';
 export * from './directives/vShow.js';
 export * from './directives/vMounted.js';
 export * from './directives/vUid.js';
