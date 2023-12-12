@@ -20,6 +20,10 @@ type StorageRefDefault<T> = {
     default: () => T;
 };
 
+type StorageRefNoDefault = {
+    default?: undefined;
+};
+
 type StorageRefOptionsRaw = StorageRefOptions & {
     json?: false;
     serialize?: undefined;
@@ -41,12 +45,16 @@ type StorageRefOptionsJson = StorageRefOptions & {
 const skipWrite = Symbol();
 type StorageValue<T> = T & { [skipWrite]?: true };
 
-export function storageRef(options: StorageRefOptionsRaw): StorageRef<string | null>;
 export function storageRef(
     options: StorageRefOptionsRaw & StorageRefDefault<string>,
 ): StorageRef<string>;
-export function storageRef<T>(options: StorageRefOptionsJson): StorageRef<T | null>;
+export function storageRef(
+    options: StorageRefOptionsRaw & StorageRefNoDefault,
+): StorageRef<string | null>;
 export function storageRef<T>(options: StorageRefOptionsJson & StorageRefDefault<T>): StorageRef<T>;
+export function storageRef<T>(
+    options: StorageRefOptionsJson & StorageRefNoDefault,
+): StorageRef<T | null>;
 export function storageRef<T>(options: StorageRefOptionsCustom<T>): StorageRef<T | null>;
 export function storageRef<T>(
     options: StorageRefOptionsCustom<T> & StorageRefDefault<T>,
