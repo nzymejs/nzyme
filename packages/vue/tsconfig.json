@@ -1,34 +1,39 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "jsx": "react",
-        "jsxFactory": "h",
-        "jsxFragmentFactory": "h",
-        "composite": false,
-        "verbatimModuleSyntax": true,
-        "plugins": [
-            {
-                "name": "typescript-plugin-css-modules"
-            }
-        ],
-        "types": ["node", "vite/client"]
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "h",
+    "composite": false,
+    "verbatimModuleSyntax": true,
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ],
+    "types": ["node", "vite/client"]
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.json",
+    "./src/**/*.scss"
+  ],
+  "references": [
+    {
+      "path": "../dom/tsconfig.json"
     },
-    "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.json", "./src/**/*.scss"],
-    "references": [
-        {
-            "path": "../dom/tsconfig.json"
-        },
-        {
-            "path": "../ioc/tsconfig.json"
-        },
-        {
-            "path": "../types/tsconfig.json"
-        },
-        {
-            "path": "../utils/tsconfig.json"
-        }
-    ]
+    {
+      "path": "../ioc/tsconfig.json"
+    },
+    {
+      "path": "../types/tsconfig.json"
+    },
+    {
+      "path": "../utils/tsconfig.json"
+    }
+  ]
 }

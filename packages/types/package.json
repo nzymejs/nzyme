@@ -9,6 +9,6 @@
     "sideEffects": false,
     "dependencies": {
         "tslib": "^2.6.2",
-        "type-fest": "^4.7.1"
+        "type-fest": "^4.8.3"
     }
 }

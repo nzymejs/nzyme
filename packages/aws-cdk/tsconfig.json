@@ -1,18 +1,18 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "types": ["@types/node"]
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["@types/node"]
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../esm/tsconfig.json"
     },
-    "include": ["src"],
-    "references": [
-        {
-            "path": "../esm/tsconfig.json"
-        },
-        {
-            "path": "../utils/tsconfig.json"
-        }
-    ]
+    {
+      "path": "../utils/tsconfig.json"
+    }
+  ]
 }

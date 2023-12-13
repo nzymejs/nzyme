@@ -1,12 +1,12 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "module": "commonjs",
-        "moduleResolution": "Node",
-        "outDir": "./dist",
-        "rootDir": "./src"
-    },
-    "include": ["src"],
-    "references": []
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src"],
+  "references": []
 }

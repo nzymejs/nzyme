@@ -23,12 +23,12 @@
         "@nzyme/types": "*",
         "@nzyme/utils": "*",
         "lodash.debounce": "^4.0.8",
-        "vue": "^3.3.8"
+        "vue": "^3.3.11"
     },
     "devDependencies": {
-        "@types/lodash.debounce": "^4.0.7",
-        "sass": "1.69.0",
-        "typescript-plugin-css-modules": "5.0.1"
+        "@types/lodash.debounce": "^4.0.9",
+        "sass": "1.69.5",
+        "typescript-plugin-css-modules": "5.0.2"
     },
     "depcheck": {
         "ignoreDeps": [

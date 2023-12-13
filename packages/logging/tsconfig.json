@@ -1,15 +1,15 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "types": ["@types/node"]
-    },
-    "include": ["src"],
-    "references": [
-        {
-            "path": "../ioc/tsconfig.json"
-        }
-    ]
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["@types/node"]
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../ioc/tsconfig.json"
+    }
+  ]
 }
