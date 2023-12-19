@@ -5,6 +5,7 @@ export * from './localStorageUtils.js';
 export * from './loadScript.js';
 export * from './loadStyles.js';
 export * from './getOuterHeight.js';
+export * from './getChildrenHeight.js';
 export * from './scrollToTopElement.js';
 export * from './getScrollBarWidth.js';
 export * from './clearFocus.js';

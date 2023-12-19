@@ -1,6 +1,6 @@
 import { defineComponent, getCurrentInstance, h, Transition, withDirectives } from 'vue';
 
-import { isBrowser } from '@nzyme/dom';
+import { getChildrenHeight, isBrowser } from '@nzyme/dom';
 
 import css from './Collapse.module.scss';
 import { LazyHydrate } from './LazyHydrate.js';
@@ -116,17 +116,12 @@ export const Collapse = defineComponent({
         }
 
         function fixedHeight(el: HTMLElement) {
-            // scrollHeight does not include inner margins
-            const lastChild = el.lastElementChild;
-            const lastChildMargin = lastChild
-                ? parseInt(getComputedStyle(lastChild).marginBottom, 10)
-                : 0;
-            const height = el.scrollHeight + lastChildMargin;
+            const height = getChildrenHeight(el);
 
             el.style.height = `${height}px`;
             el.style.overflow = 'hidden';
             if (DEBUG) {
-                console.warn('fixedHeight', el, el.scrollHeight);
+                console.warn('fixedHeight', el, height);
             }
             forceRepaint(el);
         }
