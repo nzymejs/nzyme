@@ -68,6 +68,13 @@ export class PrettyLogger implements Logger {
         this.info(formatted);
     }
 
+    public context<T extends Record<string, unknown>>(
+        name: string,
+        ctx: T | null | undefined,
+    ): void {
+        consola.info(this.name, chalk.green(name), ctx);
+    }
+
     private format(message: string) {
         return this.name ? `${this.name}: ${message}` : message;
     }

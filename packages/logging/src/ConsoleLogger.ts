@@ -62,6 +62,14 @@ export class ConsoleLogger implements Logger {
         this.info(formatted);
     }
 
+    public context<T extends Record<string, unknown>>(
+        name: string,
+        ctx: T | null | undefined,
+    ): void {
+        const displayName = this.name ? `${this.name}:${name}` : name;
+        console.info(`[CTX] ${displayName}`, ctx);
+    }
+
     protected format(message: string) {
         return this.name ? `${this.name}: ${message}` : message;
     }
