@@ -12,6 +12,7 @@
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-import": "^2.29.0",
         "eslint-plugin-jsdoc": "^46.9.0",
-        "eslint-plugin-vue": "^9.19.2"
+        "eslint-plugin-vue": "^9.19.2",
+        "eslint-plugin-monorepo": "^0.3.2"
     }
 }
