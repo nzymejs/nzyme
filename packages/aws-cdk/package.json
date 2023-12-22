@@ -11,7 +11,6 @@
     "dependencies": {
         "@aws-cdk/cloudformation-diff": "^2.114.1",
         "@aws-cdk/cx-api": "^2.114.1",
-        "@nzyme/esm": "*",
         "@nzyme/utils": "*",
         "aws-cdk": "^2.114.1",
         "aws-cdk-lib": "^2.114.1",

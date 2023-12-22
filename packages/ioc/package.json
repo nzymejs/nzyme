@@ -8,9 +8,7 @@
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "sideEffects": false,
-    "dependencies": {
-        "@nzyme/types": "*"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@nzyme/jest": "*",
         "@types/jest": "^29.5.11"

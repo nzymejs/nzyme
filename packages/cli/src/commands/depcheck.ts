@@ -133,7 +133,10 @@ async function processPackage(pkg: Package, flags: CommandFlags, deps: Record<st
     }
 
     if (toWrite.length) {
-        consola.log(`\n${chalk.underline(chalk.magenta(pkg.name))}`);
+        const packageName = chalk.underline(chalk.magenta(pkg.name));
+        const packagePath = `${pkg.location}/package.json`;
+
+        consola.log(`\n${packageName} (${packagePath})`);
         for (const line of toWrite) {
             consola.log(line);
         }
@@ -172,7 +175,7 @@ function getOptions(pkg: Package): depcheck.Options {
         ],
         specials: [
             // the target special parsers
-            depcheck.special.eslint,
+            // depcheck.special.eslint,
             depcheck.special.jest,
         ],
     };
