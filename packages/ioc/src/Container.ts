@@ -18,7 +18,9 @@ export class Container {
             if (instanceOrService.for !== injectable) {
                 const injectableName = injectable.name ?? '';
                 const serviceName = instanceOrService.name ?? '';
-                throw new Error(`Service ${serviceName} is not registered for ${injectableName}`);
+                throw new Error(
+                    `Service ${serviceName} is not cannot be resolved as ${injectableName}`,
+                );
             }
 
             this.resolvers.set(injectable.symbol, instanceOrService);

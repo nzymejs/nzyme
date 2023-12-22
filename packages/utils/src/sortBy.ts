@@ -5,13 +5,13 @@ export interface SortOptions {
     ignoreCase?: boolean;
 }
 
-export function sortBy<T>(array: T[], key: keyof T, options?: SortOptions) {
+export function sortBy<T>(array: T[], value: (item: T) => unknown, options?: SortOptions) {
     const orderDesc = options?.order === 'desc';
     const ignoreCase = options?.ignoreCase || false;
 
     return array.sort((a, b) => {
-        let first = orderDesc ? b[key] : (a[key] as unknown);
-        let second = orderDesc ? a[key] : (b[key] as unknown);
+        let first = value(orderDesc ? b : a);
+        let second = value(orderDesc ? a : b);
 
         if (typeof first === 'string') {
             if (ignoreCase) {

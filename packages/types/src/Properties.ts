@@ -11,3 +11,7 @@ export type OptionalProperties<T> = {
 export type RequiredProperties<T> = {
     [K in keyof T as IfPropertyOptional<T, K, never, K>]: T[K];
 };
+
+export type DefinedProperties<T> = {
+    [K in keyof T as T[K] | undefined extends T[K] ? never : K]: T[K];
+};

@@ -59,7 +59,7 @@ export type Override<T1, T2> = Exclude<
 
 export type Maybe<T> = T | null | undefined;
 
-export type Item<T> = T extends any[] ? T[0] : T[keyof T];
+export type Item<T> = T[keyof T];
 
 export type PromiseValue<T extends Promise<unknown>> = T extends Promise<infer V> ? V : never;
 
