@@ -1,5 +1,5 @@
 type PromiseObjectResult<T> = Promise<{
-    [K in keyof T]: T[K] extends Promise<infer V> ? V : T[K];
+    [K in keyof T]: Awaited<T[K]>;
 }>;
 
 /** Works in the same way as `Promise.all` but for objects instead of arrays. */

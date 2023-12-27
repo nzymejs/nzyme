@@ -61,8 +61,6 @@ export type Maybe<T> = T | null | undefined;
 
 export type Item<T> = T[keyof T];
 
-export type PromiseValue<T extends Promise<unknown>> = T extends Promise<infer V> ? V : never;
-
 export type Writable<T> = { -readonly [P in keyof T]: T[P] };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
