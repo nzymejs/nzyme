@@ -19,10 +19,6 @@ export interface StackEvents {
     'destroy:finished': void;
 }
 
-export type StackOutputs = {
-    [stackName: string]: Record<string, string | undefined>;
-};
-
 export type StackHandler = () => Promise<void>;
 
 export class Stack extends cdk.Stack {
@@ -70,12 +66,17 @@ export class Stack extends cdk.Stack {
             throw new Error('Export name can only contain letters and numbers.');
         }
 
-        new CfnOutput(this, name, {
+        const output = new CfnOutput(this, name, {
             value,
+            exportName: name,
         });
 
-        return (outputs: StackOutputs) => {
-            return outputs[this.stackName][name];
+        return () => {
+            if (this.deployResult) {
+                return this.deployResult.outputs[name];
+            }
+
+            return cdk.Fn.importValue(output.importValue);
         };
     }
 }
