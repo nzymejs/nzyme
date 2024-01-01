@@ -6,6 +6,7 @@ import {
 import { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
 import { Bootstrapper } from 'aws-cdk/lib/api/bootstrap/index.js';
 import { Deployments } from 'aws-cdk/lib/api/deployments.js';
+import { StackActivityProgress } from 'aws-cdk/lib/api/util/cloudformation/stack-activity-monitor.js';
 import { ResourcesToImport } from 'aws-cdk/lib/api/util/cloudformation.js';
 import * as cdk from 'aws-cdk-lib/core';
 import {
@@ -118,6 +119,7 @@ export class App extends cdk.App {
                 resourcesToImport: params.import
                     ? await this.getResourcesToImport(artifact)
                     : undefined,
+                progress: StackActivityProgress.EVENTS,
             });
 
             consola.success(

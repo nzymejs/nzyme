@@ -1,6 +1,5 @@
 import { DeployStackResult } from 'aws-cdk/lib/api';
 import * as cdk from 'aws-cdk-lib/core';
-import { CfnOutput } from 'aws-cdk-lib/core';
 
 import { createEventEmitter } from '@nzyme/utils';
 
@@ -59,24 +58,5 @@ export class Stack extends cdk.Stack {
 
     public enqueue(handler: StackHandler) {
         this.tasks.push(handler);
-    }
-
-    public createExport(name: string, value: string) {
-        if (!/^\w+$/.test(name)) {
-            throw new Error('Export name can only contain letters and numbers.');
-        }
-
-        const output = new CfnOutput(this, name, {
-            value,
-            exportName: `${this.stackName}:${name}`,
-        });
-
-        return () => {
-            if (this.deployResult) {
-                return this.deployResult.outputs[name];
-            }
-
-            return output.importValue;
-        };
     }
 }
