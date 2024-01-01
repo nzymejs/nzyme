@@ -25,7 +25,7 @@ export class Stack extends cdk.Stack {
     private readonly eventEmitter = createEventEmitter<StackEvents>();
     private readonly tasks: StackHandler[] = [];
 
-    private deployResult: DeployStackResult | undefined;
+    public deployResult: DeployStackResult | undefined;
 
     constructor(
         app: App,
@@ -68,7 +68,7 @@ export class Stack extends cdk.Stack {
 
         const output = new CfnOutput(this, name, {
             value,
-            exportName: name,
+            exportName: `${this.stackName}:${name}`,
         });
 
         return () => {
@@ -76,7 +76,7 @@ export class Stack extends cdk.Stack {
                 return this.deployResult.outputs[name];
             }
 
-            return cdk.Fn.importValue(output.importValue);
+            return output.importValue;
         };
     }
 }

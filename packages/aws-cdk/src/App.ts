@@ -6,6 +6,7 @@ import {
 import { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
 import { Bootstrapper } from 'aws-cdk/lib/api/bootstrap/index.js';
 import { Deployments } from 'aws-cdk/lib/api/deployments.js';
+import { ResourcesToImport } from 'aws-cdk/lib/api/util/cloudformation.js';
 import * as cdk from 'aws-cdk-lib/core';
 import {
     AssetManifestArtifact,
@@ -26,6 +27,10 @@ export interface AppOptions {
 
 export interface AppStackParams {
     stacks?: cdk.Stack[] | ((stack: cdk.Stack) => boolean);
+}
+
+export interface AppDeployParams extends AppStackParams {
+    import?: boolean;
 }
 
 export interface AppBootstrapOptions {
@@ -80,7 +85,7 @@ export class App extends cdk.App {
         }
     }
 
-    public async deploy(params: AppStackParams = {}) {
+    public async deploy(params: AppDeployParams = {}) {
         await this.build(params);
 
         const cloudAssembly = this.synth();
@@ -110,6 +115,9 @@ export class App extends cdk.App {
             const deployment = await this.deployments.deployStack({
                 stack: artifact as unknown as CloudFormationStackArtifactLegacy,
                 deployName: artifact.stackName,
+                resourcesToImport: params.import
+                    ? await this.getResourcesToImport(artifact)
+                    : undefined,
             });
 
             consola.success(
@@ -237,5 +245,42 @@ export class App extends cdk.App {
         }
 
         return artifacts;
+    }
+
+    private async getResourcesToImport(artifact: CloudFormationStackArtifact) {
+        const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
+            artifact as unknown as CloudFormationStackArtifactLegacy,
+        );
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const diff = diffTemplate(currentTemplate.deployedTemplate, artifact.template);
+
+        const toImport: ResourcesToImport = [];
+
+        for (const id of diff.resources.logicalIds) {
+            const resource = diff.resources.get(id);
+            if (resource.isAddition) {
+                const identifier = this.getResourceIdentifier(
+                    resource.resourceType,
+                    resource.newProperties || {},
+                );
+                if (identifier) {
+                    toImport.push({
+                        LogicalResourceId: id,
+                        ResourceType: resource.resourceType,
+                        ResourceIdentifier: identifier,
+                    });
+                }
+            }
+        }
+
+        return toImport;
+    }
+
+    private getResourceIdentifier(type: string, props: Record<string, unknown>) {
+        switch (type) {
+            case 'AWS::DynamoDB::Table':
+                return { TableName: props.TableName as string };
+        }
     }
 }
