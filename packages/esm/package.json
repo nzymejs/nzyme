@@ -9,6 +9,6 @@
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "devDependencies": {
-        "@types/node": "^20.10.4"
+        "@types/node": "^20.10.6"
     }
 }
