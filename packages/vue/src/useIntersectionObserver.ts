@@ -14,7 +14,8 @@ import { isBrowser } from '@nzyme/dom';
 
 type Options = IntersectionObserverInit & {
     immediate?: boolean;
-    onIntersect?: () => void | Promise<void>;
+    onVisible?: () => void | Promise<void>;
+    onHidden?: () => void | Promise<void>;
 };
 
 export function useIntersectionObserver(
@@ -59,17 +60,23 @@ export function useIntersectionObserver(
 
     function init() {
         observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
+            let intersecting = false;
+
+            for (const entry of entries) {
                 intersectionRatio.value = entry.intersectionRatio;
                 if (entry.intersectionRatio > 0) {
                     isIntersecting.value = true;
                     isFullyInView.value = entry.intersectionRatio >= 1;
-                    void options.onIntersect?.();
-                    return;
+                    void options.onVisible?.();
+                    intersecting = true;
+                    break;
                 }
+            }
 
+            if (!intersecting) {
                 isIntersecting.value = false;
-            });
+                void options.onHidden?.();
+            }
 
             isReadyIntersection.value = true;
         }, options);
