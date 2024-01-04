@@ -19,7 +19,7 @@ export function useModal(opts?: ModalOptions) {
     const modalService = useService(ModalService);
     const localModals: Modal[] = [];
 
-    const closeOnUnmounted = opts?.closeOnUnmounted ?? true;
+    const closeOnUnmounted = opts?.closeOnUnmounted ?? false;
     if (closeOnUnmounted && instance) {
         onUnmounted(() => {
             localModals.forEach(m => m.handler.close());
@@ -37,10 +37,12 @@ export function useModal(opts?: ModalOptions) {
                 ...options,
                 parent: instance,
             });
-            localModals.push(modal);
 
-            // Remove modal from local ones when it is closed.
-            void modal.finally(() => arrayRemove(localModals, modal));
+            if (closeOnUnmounted) {
+                localModals.push(modal);
+                // Remove modal from local ones when it is closed.
+                void modal.finally(() => arrayRemove(localModals, modal));
+            }
 
             return modal;
         },
