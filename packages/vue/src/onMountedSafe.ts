@@ -1,5 +1,6 @@
-import { isBrowser } from '@nzyme/dom';
 import { onMounted } from 'vue';
+
+import { isBrowser } from '@nzyme/dom';
 
 import { useElement } from './useElement.js';
 
@@ -7,7 +8,7 @@ import { useElement } from './useElement.js';
  * Workaround for https://github.com/vuejs/core/issues/5844
  * Based on https://github.com/nuxt/nuxt/issues/13471
  */
-export function onMountedSafe(listener: () => void) {
+export function onMountedSafe(listener: () => unknown) {
     if (!isBrowser()) {
         return;
     }
