@@ -44,7 +44,7 @@ export type {
 
 export type * from './types/ComponentProps.js';
 export type * from './types/PropsDefinition.js';
-export type * from './types/Slots.js';
+export * from './types/Slots.js';
 export type * from './types/VModel.js';
 
 export { LazyHydrate } from './components/LazyHydrate.js';
