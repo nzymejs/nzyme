@@ -15,6 +15,7 @@ export { useContainer } from './useContainer.js';
 export * from './useService.js';
 export { CommonPlugin } from './CommonPlugin.js';
 export * from './useVirtualHistory.js';
+export * from './useSwipeHorizontal.js';
 export * from './onMountedSafe.js';
 export * from './onMountedInScope.js';
 export * from './onHistoryBack.js';

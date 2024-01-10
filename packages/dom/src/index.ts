@@ -9,3 +9,4 @@ export * from './getChildrenHeight.js';
 export * from './scrollToTopElement.js';
 export * from './getScrollBarWidth.js';
 export * from './clearFocus.js';
+export * from './isAncestorOf.js';
