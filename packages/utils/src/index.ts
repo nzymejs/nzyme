@@ -15,6 +15,7 @@ export * from './array/splitIntoChunks.js';
 export * from './array/countWhere.js';
 export * from './array/sumOver.js';
 export * from './array/forEachParalell.js';
+export * from './array/shuffleArray.js';
 
 export * from './string/formatWith.js';
 export * from './string/isDigit.js';
