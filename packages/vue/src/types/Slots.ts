@@ -4,7 +4,7 @@ import type { SomeObject } from '@nzyme/types';
 
 export type Slots<T> = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [K in keyof T]: (props: undefined extends T[K] ? SomeObject : T[K]) => VNode[];
+    [K in keyof T]?: (props: undefined extends T[K] ? SomeObject : T[K]) => VNode[];
 };
 
 /** Allows to define slots in @see defineComponent function. */
