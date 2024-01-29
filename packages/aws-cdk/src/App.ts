@@ -49,7 +49,7 @@ export class App extends cdk.App {
     }
 
     public get stacks() {
-        return this.node.children.filter(child => child instanceof Stack) as Stack[];
+        return this.node.children.filter(child => child instanceof cdk.Stack) as cdk.Stack[];
     }
 
     /**
@@ -76,19 +76,7 @@ export class App extends cdk.App {
         );
     }
 
-    public async build(params: AppStackParams = {}) {
-        for (const stack of this.stacks) {
-            // if (!stackMatches(stack, params)) {
-            //     continue;
-            // }
-
-            await stack.$.execute();
-        }
-    }
-
     public async deploy(params: AppDeployParams = {}) {
-        await this.build(params);
-
         const cloudAssembly = this.synth();
         const artifacts = this.getStackArtifacts(params, cloudAssembly);
 
@@ -111,7 +99,9 @@ export class App extends cdk.App {
             }
 
             consola.info(`Deploying stack ${chalk.green(stackName)}`);
-            stack?.$.emit('deploy:start');
+            if (stack instanceof Stack) {
+                stack.$.emit('deploy:start');
+            }
 
             const deployment = await this.deployments.deployStack({
                 stack: artifact as unknown as CloudFormationStackArtifactLegacy,
@@ -127,7 +117,9 @@ export class App extends cdk.App {
                     perf.format(start),
                 )}`,
             );
-            stack?.$.emit('deploy:finished', deployment);
+            if (stack instanceof Stack) {
+                stack?.$.emit('deploy:finished', deployment);
+            }
         }
     }
 
@@ -141,7 +133,9 @@ export class App extends cdk.App {
             const stack = this.stacks.find(stack => stack.stackName === stackName);
 
             consola.info(`Destroying stack ${chalk.green(stackName)}`);
-            stack?.$.emit('destroy:start');
+            if (stack instanceof Stack) {
+                stack.$.emit('destroy:start');
+            }
 
             await this.deployments.destroyStack({
                 stack: artifact as unknown as CloudFormationStackArtifactLegacy,
@@ -149,13 +143,13 @@ export class App extends cdk.App {
             });
 
             consola.success(`Successfully destroyed stack ${chalk.green(stackName)}`);
-            stack?.$.emit('destroy:finished');
+            if (stack instanceof Stack) {
+                stack.$.emit('destroy:finished');
+            }
         }
     }
 
     public async diff(params: AppStackParams = {}) {
-        await this.build();
-
         const cloudAssembly = this.synth();
         const artifacts = this.getStackArtifacts(params, cloudAssembly);
 
