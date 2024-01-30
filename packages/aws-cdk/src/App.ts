@@ -116,6 +116,7 @@ export class App extends cdk.App {
                 `Successfully deployed stack ${chalk.green(stackName)} in ${chalk.green(
                     perf.format(start),
                 )}`,
+                deployment.outputs,
             );
             if (stack instanceof Stack) {
                 stack?.$.emit('deploy:finished', deployment);

@@ -1,7 +1,7 @@
 import { Container } from './Container.js';
 import { Injectable, InjectableOptions } from './Injectable.js';
 
-export abstract class Resolvable<T = unknown> extends Injectable<T> {
+export abstract class Resolvable<T = unknown, TExtend extends T = T> extends Injectable<TExtend> {
     public readonly for?: Injectable<T>;
 
     constructor(def: ResolvableOptions<T>) {
@@ -10,7 +10,7 @@ export abstract class Resolvable<T = unknown> extends Injectable<T> {
     }
 
     public abstract get cached(): boolean;
-    public abstract resolve(container: Container, scope?: Injectable): T | undefined;
+    public abstract resolve(container: Container, scope?: Injectable): TExtend | undefined;
 
     public setup(container: Container) {
         if (this.for) {

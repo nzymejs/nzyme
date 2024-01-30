@@ -24,10 +24,10 @@ export interface ServiceContext {
     readonly inject: <T>(injectable: Injectable<T>) => T;
 }
 
-export interface ServiceOptions<T> extends ResolvableOptions<T> {
-    readonly setup: (ctx: ServiceContext) => T;
+export interface ServiceOptions<T, TExtend extends T = T> extends ResolvableOptions<T> {
+    readonly setup: (ctx: ServiceContext) => TExtend;
 }
 
-export function defineService<T>(definition: ServiceOptions<T>): Service<T> {
-    return new Service(definition);
+export function defineService<T, TExtend extends T = T>(definition: ServiceOptions<T, TExtend>) {
+    return new Service<TExtend>(definition as ServiceOptions<TExtend>);
 }

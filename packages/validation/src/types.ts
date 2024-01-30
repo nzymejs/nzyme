@@ -24,6 +24,6 @@ export enum CommonErrors {
 
 export class ValidationException extends Error {
     constructor(public readonly errors: ValidationErrors) {
-        super('Validation failed');
+        super('Validation failed', { cause: errors });
     }
 }
