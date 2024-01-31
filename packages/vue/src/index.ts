@@ -2,7 +2,6 @@ export * from './App.js';
 export * from './asyncImport.js';
 export * from './component.js';
 export * from './prop.js';
-export * from './context.js';
 export * from './useDataSource.js';
 export * from './useElement.js';
 export * from './useEmitAsync.js';
@@ -47,7 +46,6 @@ export type {
 
 export type * from './types/ComponentProps.js';
 export type * from './types/PropsDefinition.js';
-export * from './types/Slots.js';
 export type * from './types/VModel.js';
 
 export { LazyHydrate } from './components/LazyHydrate.js';
@@ -70,5 +68,3 @@ export * from './reactivity/constRef.js';
 export * from './reactivity/makeRef.js';
 export * from './reactivity/reactive.js';
 export * from './reactivity/defineVModel.js';
-
-export * from './transitions/TransitionFade.jsx';
