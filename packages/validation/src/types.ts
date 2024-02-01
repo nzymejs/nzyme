@@ -1,7 +1,7 @@
 import { Translatable } from '@nzyme/i18n';
 
 export interface ValidationError {
-    code: string;
+    code?: string;
     params?: Record<string, unknown>;
     message?: Translatable;
 }
@@ -23,7 +23,21 @@ export enum CommonErrors {
 }
 
 export class ValidationException extends Error {
-    constructor(public readonly errors: ValidationErrors) {
-        super('Validation failed', { cause: errors });
+    public readonly errors: ValidationErrors;
+
+    constructor(message: string);
+    constructor(message: string, errors: ValidationErrors);
+    constructor(errors: ValidationErrors);
+    constructor(messageOrErrors: string | ValidationErrors, errors?: ValidationErrors) {
+        let message: string;
+        if (typeof messageOrErrors === 'string') {
+            message = messageOrErrors;
+        } else {
+            message = 'Validation failed';
+            errors = messageOrErrors;
+        }
+
+        super(message, { cause: errors });
+        this.errors = errors || {};
     }
 }
