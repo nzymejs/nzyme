@@ -1,4 +1,4 @@
-import { Maybe } from '@nzyme/types';
+import type { Maybe } from '@nzyme/types';
 
 type Callback<TResult> = (err: Maybe<unknown>, result: TResult) => void;
 

@@ -1,18 +1,19 @@
 import { diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff';
-import {
+import type {
     CloudFormationStackArtifact as CloudFormationStackArtifactLegacy,
     AssetManifestArtifact as AssetManifestArtifactLegacy,
 } from '@aws-cdk/cx-api';
-import { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
+import type { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
 import { Bootstrapper } from 'aws-cdk/lib/api/bootstrap/index.js';
 import { Deployments } from 'aws-cdk/lib/api/deployments.js';
 import { StackActivityProgress } from 'aws-cdk/lib/api/util/cloudformation/stack-activity-monitor.js';
-import { ResourcesToImport } from 'aws-cdk/lib/api/util/cloudformation.js';
+import type { ResourcesToImport } from 'aws-cdk/lib/api/util/cloudformation.js';
 import * as cdk from 'aws-cdk-lib/core';
+import type {
+    CloudAssembly} from 'aws-cdk-lib/cx-api';
 import {
     AssetManifestArtifact,
-    CloudFormationStackArtifact,
-    CloudAssembly,
+    CloudFormationStackArtifact
 } from 'aws-cdk-lib/cx-api';
 import chalk from 'chalk';
 import consola from 'consola';

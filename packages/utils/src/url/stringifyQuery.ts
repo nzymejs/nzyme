@@ -1,4 +1,4 @@
-import { QueryParams } from './queryTypes.js';
+import type { QueryParams } from './queryTypes.js';
 
 export function stringifyQuery(params: QueryParams) {
     let qs = '';

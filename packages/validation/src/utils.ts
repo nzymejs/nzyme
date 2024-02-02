@@ -1,8 +1,9 @@
-import { Translator, translate } from '@nzyme/i18n';
-import { Maybe } from '@nzyme/types';
+import type { Translator} from '@nzyme/i18n';
+import { translate } from '@nzyme/i18n';
+import type { Maybe } from '@nzyme/types';
 
-import { ValidationErrors, ValidationError } from './types.js';
-import { ValidationContext, Validator } from './validator.js';
+import type { ValidationErrors, ValidationError } from './types.js';
+import type { ValidationContext, Validator } from './validator.js';
 
 export async function validateWithMany<T>(
     value: T,

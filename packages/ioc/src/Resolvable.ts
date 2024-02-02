@@ -1,5 +1,6 @@
-import { Container } from './Container.js';
-import { Injectable, InjectableOptions } from './Injectable.js';
+import type { Container } from './Container.js';
+import type { InjectableOptions } from './Injectable.js';
+import { Injectable } from './Injectable.js';
 
 export abstract class Resolvable<T = unknown, TExtend extends T = T> extends Injectable<TExtend> {
     public readonly for?: Injectable<T>;

@@ -1,8 +1,9 @@
 import { asArray } from '@nzyme/utils';
 
-import { ValidationErrors, ValidationException } from './types.js';
+import type { ValidationErrors} from './types.js';
+import { ValidationException } from './types.js';
 import { validateWithMany } from './utils.js';
-import { ValidationContext, Validator,ValidatorResult  } from './validator.js';
+import type { ValidationContext, Validator,ValidatorResult  } from './validator.js';
 
 export interface ValidableConfig<T> {
     validate?: Validator<T> | readonly Validator<T>[];

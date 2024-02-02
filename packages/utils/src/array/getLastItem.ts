@@ -1,4 +1,4 @@
-import { Immutable } from '@nzyme/types';
+import type { Immutable } from '@nzyme/types';
 
 export function getLastItem<T>(array: Immutable<T[]>) {
     if (!array.length) {

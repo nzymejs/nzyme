@@ -1,5 +1,5 @@
-import { Container } from './Container.js';
-import { Injectable, InjectableOptions } from './Injectable.js';
+import type { Container } from './Container.js';
+import type { Injectable, InjectableOptions } from './Injectable.js';
 import { Resolvable } from './Resolvable.js';
 
 export class Executable<T> extends Resolvable<() => T> {

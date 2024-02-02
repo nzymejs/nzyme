@@ -1,9 +1,9 @@
-import { Translatable } from '@nzyme/i18n';
+import type { Translatable } from '@nzyme/i18n';
 
 import translations from './translations.js';
 import { CommonErrors } from '../types.js';
 import { createError } from '../utils.js';
-import { Validator } from '../validator.js';
+import type { Validator } from '../validator.js';
 
 export function regexValidator(regex: RegExp, message?: Translatable): Validator<string> {
     return (value: string) => {

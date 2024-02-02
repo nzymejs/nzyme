@@ -1,6 +1,6 @@
 import { inject } from 'vue';
 
-import { Container } from '@nzyme/ioc';
+import type { Container } from '@nzyme/ioc';
 
 export const containerSymbol = Symbol('container');
 

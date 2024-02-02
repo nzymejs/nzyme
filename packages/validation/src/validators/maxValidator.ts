@@ -1,7 +1,7 @@
 import translations from './translations.js';
 import { CommonErrors } from '../types.js';
 import { createError } from '../utils.js';
-import { Validator } from '../validator.js';
+import type { Validator } from '../validator.js';
 
 export interface MaxValidatorOptions {
     maxValue: number;

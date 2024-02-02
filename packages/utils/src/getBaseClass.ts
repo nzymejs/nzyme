@@ -1,4 +1,4 @@
-import { AbstractConstructor } from '@nzyme/types';
+import type { AbstractConstructor } from '@nzyme/types';
 
 export function getBaseClass(ctor: AbstractConstructor) {
     const proto = Object.getPrototypeOf(ctor.prototype) as {

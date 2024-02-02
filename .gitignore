@@ -7,6 +7,9 @@ dist/
 # TypeScript cache
 *.tsbuildinfo
 
+# Eslint cache
+.eslintcache
+
 # Yarn logs
 yarn-error.log
 

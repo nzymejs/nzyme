@@ -18,6 +18,7 @@ export interface Logger {
     debug(message: string, args?: LoggerArgs): void;
     trace(message: string, args?: LoggerArgs): void;
     measure(start: number, message: string): void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     context<T extends Record<string, any>>(name: string, ctx: T | null | undefined): void;
 }
 

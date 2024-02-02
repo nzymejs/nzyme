@@ -1,5 +1,5 @@
 declare module '@lerna/filter-packages' {
-    import { Package } from '@lerna/package';
+    import type { Package } from '@lerna/package';
 
     /**
      * Filters a list of packages, returning all packages that match the `include` glob[s]

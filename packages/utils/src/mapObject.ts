@@ -1,4 +1,4 @@
-import { ValueOf } from '@nzyme/types';
+import type { ValueOf } from '@nzyme/types';
 
 export function mapObject<T, TTo>(
     obj: T,

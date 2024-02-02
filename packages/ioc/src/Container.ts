@@ -1,5 +1,5 @@
-import { Executable } from './Executable.js';
-import { Injectable } from './Injectable.js';
+import type { Executable } from './Executable.js';
+import type { Injectable } from './Injectable.js';
 import { Resolvable } from './Resolvable.js';
 
 export class Container {

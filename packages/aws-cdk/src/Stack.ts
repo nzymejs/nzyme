@@ -1,9 +1,9 @@
-import { DeployStackResult } from 'aws-cdk/lib/api';
+import type { DeployStackResult } from 'aws-cdk/lib/api';
 import * as cdk from 'aws-cdk-lib/core';
 
 import { createEventEmitter } from '@nzyme/utils';
 
-import { App } from './App.js';
+import type { App } from './App.js';
 
 export interface StackOptions {
     readonly name: string;

@@ -9,7 +9,8 @@
         "nzyme": "./bin/cli.js"
     },
     "scripts": {
-        "prepack": "oclif-dev manifest && oclif-dev readme"
+        "prepack": "oclif-dev manifest && oclif-dev readme",
+        "eslint": "eslint . --fix --cache"
     },
     "dependencies": {
         "@lerna/package": "^6.4.1",

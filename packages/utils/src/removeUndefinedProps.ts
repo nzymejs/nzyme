@@ -1,4 +1,4 @@
-import { DefinedProperties } from '@nzyme/types';
+import type { DefinedProperties } from '@nzyme/types';
 
 /**
  * Removes props that are undefined.

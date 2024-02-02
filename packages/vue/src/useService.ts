@@ -1,6 +1,6 @@
 import { effectScope } from 'vue';
 
-import { Injectable } from '@nzyme/ioc';
+import type { Injectable } from '@nzyme/ioc';
 
 import { useContainer } from './useContainer.js';
 

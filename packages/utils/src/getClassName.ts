@@ -1,4 +1,4 @@
-import { AbstractConstructor } from '@nzyme/types';
+import type { AbstractConstructor } from '@nzyme/types';
 
 export function getClassName(obj: object) {
     if (typeof obj.constructor === 'function') {

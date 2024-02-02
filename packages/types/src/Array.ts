@@ -1,1 +1,1 @@
-export type ArrayItem<T extends readonly any[]> = T[keyof T & number];
+export type ArrayItem<T extends readonly unknown[]> = T[keyof T & number];

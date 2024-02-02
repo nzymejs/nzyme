@@ -8,6 +8,9 @@
     "sideEffects": false,
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "scripts": {
+        "eslint": "eslint . --fix --cache"
+    },
     "devDependencies": {
         "@types/node": "^20.10.6"
     }

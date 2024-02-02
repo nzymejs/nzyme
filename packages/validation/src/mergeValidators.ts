@@ -1,6 +1,6 @@
 import { asArray } from '@nzyme/utils';
 
-import { Validator } from './validator.js';
+import type { Validator } from './validator.js';
 
 type ValidatorParam<T> = Validator<T> | readonly Validator<T>[] | undefined | null;
 

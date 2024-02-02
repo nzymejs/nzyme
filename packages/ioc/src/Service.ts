@@ -1,6 +1,7 @@
-import { Container } from './Container.js';
-import { Injectable } from './Injectable.js';
-import { Resolvable, ResolvableOptions } from './Resolvable.js';
+import type { Container } from './Container.js';
+import type { Injectable } from './Injectable.js';
+import type { ResolvableOptions } from './Resolvable.js';
+import { Resolvable } from './Resolvable.js';
 
 export class Service<T> extends Resolvable<T> {
     constructor(private readonly def: ServiceOptions<T>) {

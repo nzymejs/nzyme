@@ -1,4 +1,4 @@
-import { Translatable } from '@nzyme/i18n';
+import type { Translatable } from '@nzyme/i18n';
 
 export interface ValidationError {
     code?: string;

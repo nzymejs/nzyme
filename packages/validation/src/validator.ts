@@ -1,4 +1,4 @@
-import { ValidationErrors } from './types.js';
+import type { ValidationErrors } from './types.js';
 
 export interface ValidationContext {}
  

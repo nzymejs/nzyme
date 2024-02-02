@@ -1,4 +1,4 @@
-import { type ModalHandler } from './ModalTypes.js';
+import type { ModalHandler } from './ModalTypes.js';
 import { prop } from '../prop.js';
 
 export function useModalProps<T = void>() {

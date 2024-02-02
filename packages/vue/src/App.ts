@@ -1,4 +1,4 @@
-import { type App as AppImport } from 'vue';
+import type { App as AppImport } from 'vue';
 
 import { defineInjectable } from '@nzyme/ioc';
 

@@ -1,6 +1,6 @@
 import { formatWith } from '@nzyme/utils';
 
-import { Translatable } from './Translatable.js';
+import type { Translatable } from './Translatable.js';
 
 export interface TranslateArgs {
     locale?: string;

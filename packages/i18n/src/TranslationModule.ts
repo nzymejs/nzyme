@@ -1,4 +1,4 @@
-import { Translatable } from './Translatable.js';
+import type { Translatable } from './Translatable.js';
 
 export type TranslationModuleConfig<TKeys extends string> = Record<
     TKeys,

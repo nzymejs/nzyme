@@ -1,4 +1,4 @@
-import { type VirtualHistoryHandle } from '@nzyme/dom';
+import type { VirtualHistoryHandle } from '@nzyme/dom';
 
 import { useVirtualHistory } from './useVirtualHistory.js';
 

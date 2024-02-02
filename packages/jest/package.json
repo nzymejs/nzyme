@@ -6,6 +6,9 @@
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "sideEffects": false,
+    "scripts": {
+        "eslint": "eslint . --fix --cache"
+    },
     "dependencies": {
         "@jest/types": "^29.6.3",
         "@types/jest": "^29.5.11",

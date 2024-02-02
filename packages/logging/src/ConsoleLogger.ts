@@ -1,6 +1,7 @@
 import { defineFactory } from '@nzyme/ioc';
 
-import { Logger, LoggerArgs, LoggerErrorArgs } from './Logger.js';
+import type { LoggerArgs, LoggerErrorArgs } from './Logger.js';
+import { Logger } from './Logger.js';
 import { perf } from './perf.js';
 
 export class ConsoleLogger implements Logger {
@@ -8,7 +9,7 @@ export class ConsoleLogger implements Logger {
 
     public error(error: unknown, args?: LoggerArgs): void;
     public error(message: string, args?: LoggerErrorArgs): void;
-    public error(message: string | unknown, args?: LoggerArgs): void {
+    public error(message: unknown, args?: LoggerArgs): void {
         if (typeof message === 'string') {
             console.error(this.format(message), args);
         } else {

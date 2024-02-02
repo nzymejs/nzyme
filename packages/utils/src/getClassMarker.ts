@@ -1,4 +1,4 @@
-import { AbstractConstructor } from '@nzyme/types';
+import type { AbstractConstructor } from '@nzyme/types';
 
 type MarkedClass = AbstractConstructor & {
     [marker: symbol]: symbol | undefined;

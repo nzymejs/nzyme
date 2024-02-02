@@ -3,7 +3,8 @@ import consola from 'consola';
 
 import { defineFactory } from '@nzyme/ioc';
 
-import { Logger, LoggerArgs } from './Logger.js';
+import type { LoggerArgs } from './Logger.js';
+import { Logger } from './Logger.js';
 import { perf } from './perf.js';
 
 export class PrettyLogger implements Logger {
@@ -14,7 +15,7 @@ export class PrettyLogger implements Logger {
 
     public error(error: unknown, args?: LoggerArgs): void;
     public error(message: string, args?: LoggerArgs): void;
-    public error(message: string | unknown, args?: LoggerArgs): void {
+    public error(message: unknown, args?: LoggerArgs): void {
         if (typeof message === 'string') {
             consola.error(this.format(message), args);
         } else {

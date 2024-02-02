@@ -1,10 +1,10 @@
 import { defineService } from '@nzyme/ioc';
-import { FunctionOnly } from '@nzyme/types';
+import type { FunctionOnly } from '@nzyme/types';
 import { formatWith } from '@nzyme/utils';
 
 import { LocaleProvider } from './LocaleProvider.js';
-import { Translatable } from './Translatable.js';
-import { TranslationModule } from './TranslationModule.js';
+import type { Translatable } from './Translatable.js';
+import type { TranslationModule } from './TranslationModule.js';
 import { translate } from './utils.js';
 
 export interface Translator {

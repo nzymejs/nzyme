@@ -1,4 +1,4 @@
-import { Package } from '@lerna/package';
+import type { Package } from '@lerna/package';
 import { getPackages } from '@lerna/project';
 import { Command, Flags } from '@oclif/core';
 import chalk from 'chalk';

@@ -1,4 +1,4 @@
-import { QueryParams, QueryParamsSimple } from './queryTypes.js';
+import type { QueryParams, QueryParamsSimple } from './queryTypes.js';
 
 export function parseQuery(querystring: string | null | undefined): QueryParamsSimple;
 export function parseQuery(

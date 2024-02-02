@@ -1,4 +1,4 @@
-import { IfLiteral, NonVoidPropKeys, VoidPropKeys } from '@nzyme/types';
+import type { IfLiteral, NonVoidPropKeys, VoidPropKeys } from '@nzyme/types';
 
 import { arrayRemove } from './array/arrayRemove.js';
 

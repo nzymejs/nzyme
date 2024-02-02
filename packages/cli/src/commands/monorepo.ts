@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { Package } from '@lerna/package';
+import type { Package } from '@lerna/package';
 import { getPackages } from '@lerna/project';
 import { Command } from '@oclif/core';
 import * as json from 'comment-json';
