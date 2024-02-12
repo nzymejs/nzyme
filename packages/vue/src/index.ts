@@ -25,12 +25,7 @@ export * from './onKeyUp.js';
 export * from './useScrollLock.js';
 export * from './useIntersectionObserver.js';
 export * from './useHistory.js';
-export * from './useProps.js';
 export * from './useElementClass.js';
-
-export * from './defineEmits.js';
-export * from './defineProps.js';
-export * from './defineProp.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
@@ -45,7 +40,6 @@ export type {
 } from './modal/ModalTypes.js';
 
 export type * from './types/ComponentProps.js';
-export type * from './types/PropsDefinition.js';
 export type * from './types/VModel.js';
 
 export { LazyHydrate } from './components/LazyHydrate.js';
