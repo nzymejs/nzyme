@@ -17,6 +17,7 @@ export * from './array/sumOver.js';
 export * from './array/forEachParalell.js';
 export * from './array/shuffleArray.js';
 
+export * from './string/equalIgnoreCase.js';
 export * from './string/formatWith.js';
 export * from './string/isDigit.js';
 
