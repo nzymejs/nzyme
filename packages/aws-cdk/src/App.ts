@@ -1,4 +1,4 @@
-import { diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff';
+import { fullDiff, formatDifferences } from '@aws-cdk/cloudformation-diff';
 import type {
     CloudFormationStackArtifact as CloudFormationStackArtifactLegacy,
     AssetManifestArtifact as AssetManifestArtifactLegacy,
@@ -9,12 +9,8 @@ import { Deployments } from 'aws-cdk/lib/api/deployments.js';
 import { StackActivityProgress } from 'aws-cdk/lib/api/util/cloudformation/stack-activity-monitor.js';
 import type { ResourcesToImport } from 'aws-cdk/lib/api/util/cloudformation.js';
 import * as cdk from 'aws-cdk-lib/core';
-import type {
-    CloudAssembly} from 'aws-cdk-lib/cx-api';
-import {
-    AssetManifestArtifact,
-    CloudFormationStackArtifact
-} from 'aws-cdk-lib/cx-api';
+import type { CloudAssembly } from 'aws-cdk-lib/cx-api';
+import { AssetManifestArtifact, CloudFormationStackArtifact } from 'aws-cdk-lib/cx-api';
 import chalk from 'chalk';
 import consola from 'consola';
 
@@ -161,7 +157,7 @@ export class App extends cdk.App {
             );
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            const diff = diffTemplate(currentTemplate.deployedTemplate, artifact.template);
+            const diff = fullDiff(currentTemplate.deployedTemplate, artifact.template);
 
             if (diff.isEmpty) {
                 consola.success(`No changes detected for stack ${chalk.green(artifact.stackName)}`);
@@ -251,7 +247,7 @@ export class App extends cdk.App {
         );
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const diff = diffTemplate(currentTemplate.deployedTemplate, artifact.template);
+        const diff = fullDiff(currentTemplate.deployedTemplate, artifact.template);
 
         const toImport: ResourcesToImport = [];
 
