@@ -25,6 +25,7 @@ export interface AppOptions {
 
 export interface AppStackParams {
     stacks?: cdk.Stack[] | ((stack: cdk.Stack) => boolean);
+    recursive?: boolean;
 }
 
 export interface AppDeployParams extends AppStackParams {
@@ -221,6 +222,7 @@ export class App extends cdk.App {
 
                 // Skip if the dependency is not in the list of selected stacks.
                 if (
+                    !params.recursive &&
                     this.stacks.some(s => s.stackName === dep.stackName) &&
                     !selectedStacks.some(s => s.stackName === dep.stackName)
                 ) {
