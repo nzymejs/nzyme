@@ -1,10 +1,15 @@
 import type { Executable } from './Executable.js';
 import type { Injectable } from './Injectable.js';
+import type { Module } from './Module.js';
 import { Resolvable } from './Resolvable.js';
 
 export class Container {
     private instances = new Map<symbol, unknown>();
     private resolvers = new Map<symbol, Resolvable>();
+
+    public addModule<TParams extends unknown[]>(module: Module<TParams>, ...params: TParams) {
+        module(this, ...params);
+    }
 
     public get<T>(injectable: Injectable<T>) {
         const instance = this.instances.get(injectable.symbol);
