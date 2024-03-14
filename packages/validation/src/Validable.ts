@@ -1,9 +1,9 @@
 import { asArray } from '@nzyme/utils';
 
-import type { ValidationErrors} from './types.js';
+import type { ValidationErrors } from './types.js';
 import { ValidationException } from './types.js';
 import { validateWithMany } from './utils.js';
-import type { ValidationContext, Validator,ValidatorResult  } from './validator.js';
+import type { ValidationContext, Validator, ValidatorResult } from './validator.js';
 
 export interface ValidableConfig<T> {
     validate?: Validator<T> | readonly Validator<T>[];
@@ -14,18 +14,17 @@ export abstract class Validable<T> {
     private readonly validators: Validator<any>[];
 
     constructor(config: ValidableConfig<T>) {
-        this.validators = asArray(config.validate || []);
+        this.validators = asArray(config.validate || []) as Validator<any>[];
     }
 
     public async validate(
         value: unknown,
         ctx: ValidationContext = {},
     ): Promise<ValidationErrors | null> {
-        const result = (
+        const result =
             (await this.preValidate(value, ctx)) ??
             (await this.runValidators(value as T, ctx)) ??
-            (await this.postValidate(value as T, ctx))
-        );
+            (await this.postValidate(value as T, ctx));
 
         return result || null;
     }
