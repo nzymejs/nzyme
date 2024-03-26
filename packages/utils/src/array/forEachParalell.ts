@@ -1,5 +1,5 @@
 type ForEachParalellParams<T> = {
-    callback: (item: T) => Promise<unknown> | void;
+    callback: (item: T, index: number) => Promise<unknown> | void;
     concurrency: number;
 };
 
@@ -38,7 +38,7 @@ export function forEachParalell<T>(array: readonly T[], params: ForEachParalellP
 
                 const item = array[index++];
                 try {
-                    const result = await callback(item);
+                    const result = await callback(item, index - 1);
                     if (result === false) {
                         // When the callback returns false, we stop the loop.
                         index = array.length;
