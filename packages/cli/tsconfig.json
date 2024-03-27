@@ -1,13 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "allowJs": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "types": ["@types/node"]
-  },
-  "include": ["src"],
-  "exclude": ["node_modules"],
-  "references": []
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "types": ["@types/node"]
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"],
+    "references": []
 }
