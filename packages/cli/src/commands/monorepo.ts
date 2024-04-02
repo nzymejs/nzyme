@@ -24,7 +24,7 @@ interface TsConfig {
 }
 
 const tsConfigsCache: Record<string, TsConfig | undefined> = {};
-let prettierConfig: prettier.Options | null = null;
+const prettierConfig: prettier.Options | null = null;
 
 async function run() {
     const cwd = process.cwd();
@@ -196,9 +196,7 @@ async function loadTsConfigCore(filePath: string) {
 }
 
 async function saveTsConfig(tsconfig: TsConfig) {
-    if (!prettierConfig) {
-        prettierConfig = (await prettier.resolveConfig(process.cwd())) || {};
-    }
+    const prettierConfig = await prettier.resolveConfig(tsconfig.path);
 
     let configJson = json.stringify(tsconfig.config, undefined, 2);
     configJson = await prettier.format(configJson, {
