@@ -98,7 +98,7 @@ export class App extends cdk.App {
 
             consola.info(`Deploying stack ${chalk.green(stackName)}`);
             if (stack instanceof Stack) {
-                stack.$.emit('deploy:start');
+                await stack.$.emitAsync('deploy:start');
             }
 
             const deployment = await this.deployments.deployStack({
@@ -117,7 +117,7 @@ export class App extends cdk.App {
                 deployment.outputs,
             );
             if (stack instanceof Stack) {
-                stack?.$.emit('deploy:finished', deployment);
+                await stack?.$.emitAsync('deploy:finished', deployment);
             }
         }
     }
@@ -133,7 +133,7 @@ export class App extends cdk.App {
 
             consola.info(`Destroying stack ${chalk.green(stackName)}`);
             if (stack instanceof Stack) {
-                stack.$.emit('destroy:start');
+                await stack.$.emitAsync('destroy:start');
             }
 
             await this.deployments.destroyStack({
@@ -143,7 +143,7 @@ export class App extends cdk.App {
 
             consola.success(`Successfully destroyed stack ${chalk.green(stackName)}`);
             if (stack instanceof Stack) {
-                stack.$.emit('destroy:finished');
+                await stack.$.emitAsync('destroy:finished');
             }
         }
     }

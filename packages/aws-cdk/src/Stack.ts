@@ -22,7 +22,6 @@ export type StackHandler = () => Promise<void>;
 
 export class Stack extends cdk.Stack {
     private readonly eventEmitter = createEventEmitter<StackEvents>();
-    private readonly tasks: StackHandler[] = [];
 
     public deployResult: DeployStackResult | undefined;
 
@@ -49,14 +48,6 @@ export class Stack extends cdk.Stack {
     /** Internal */
     public readonly $ = {
         emit: this.eventEmitter.emit,
-        execute: async () => {
-            for (const task of this.tasks) {
-                await task();
-            }
-        },
+        emitAsync: this.eventEmitter.emitAsync,
     };
-
-    public enqueue(handler: StackHandler) {
-        this.tasks.push(handler);
-    }
 }
