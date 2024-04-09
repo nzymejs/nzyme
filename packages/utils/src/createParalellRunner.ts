@@ -12,13 +12,10 @@ export function createParalellRunner(options: ParalelllRunnerOptions) {
     let active = 0;
     let done = true;
 
-    for (let i = 0; i < concurrency; i++) {
-        void startThread();
-    }
-
     return {
         start,
         stop,
+        wait,
     };
 
     async function start() {
@@ -40,6 +37,10 @@ export function createParalellRunner(options: ParalelllRunnerOptions) {
         await promise?.promise;
     }
 
+    async function wait() {
+        await promise?.promise;
+    }
+
     async function startThread() {
         active++;
 
@@ -47,12 +48,14 @@ export function createParalellRunner(options: ParalelllRunnerOptions) {
         while (true) {
             if (done) {
                 stopThread();
+                return;
             }
 
             try {
                 const result = await handler();
                 if (result === false) {
                     stopThread();
+                    return;
                 }
             } catch (e) {
                 active--;
