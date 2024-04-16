@@ -1,6 +1,6 @@
+import { isAncestorOf } from '@barebone/dom-utils';
 import { onBeforeUnmount, reactive, ref, computed, watch } from 'vue';
 
-import { isAncestorOf } from '@nzyme/dom';
 import { readonly } from '@nzyme/utils';
 
 import { makeRef, type RefParam } from './reactivity/makeRef.js';

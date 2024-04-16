@@ -18,7 +18,7 @@
     "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.json", "./src/**/*.scss"],
     "references": [
         {
-            "path": "../dom/tsconfig.json"
+            "path": "../../../barebone/dom-utils/tsconfig.json"
         },
         {
             "path": "../ioc/tsconfig.json"

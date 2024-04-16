@@ -44,11 +44,11 @@ export function onKeyUp(keyOrCallback: Key | Key[] | KeyCallback, callback?: Key
     }
 
     onMounted(() => {
-        document.addEventListener('keyup', callback!);
+        document.addEventListener('keyup', callback);
     });
 
     onUnmounted(() => {
-        document.removeEventListener('keyup', callback!);
+        document.removeEventListener('keyup', callback);
     });
 }
 

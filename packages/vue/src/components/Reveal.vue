@@ -4,7 +4,7 @@ const fallbackKey = Symbol('fallback');
 
 <script lang="ts" setup>
 import { getCurrentInstance, defineComponent, Transition, h, ComponentPublicInstance } from 'vue';
-import { getOuterHeight } from '@nzyme/dom';
+import { getOuterHeight } from '@barebone/dom-utils';
 
 import { useElement } from '../useElement';
 
@@ -71,16 +71,18 @@ function forceRepaint(el: HTMLElement) {
 <template>
     <div :class="css.reveal">
         <div :class="css.reveal_inner">
-            <Transition :enter-from-class="css.enterFrom"
-                        :enter-active-class="css.enterActive"
-                        :leave-from-class="css.leaveFrom"
-                        :leave-active-class="css.leaveActive"
-                        @before-enter="beforeEnter"
-                        @enter="enter"
-                        @after-enter="afterEnter"
-                        @before-leave="beforeLeave"
-                        @leave="leave"
-                        @after-leave="afterLeave">
+            <Transition
+                :enter-from-class="css.enterFrom"
+                :enter-active-class="css.enterActive"
+                :leave-from-class="css.leaveFrom"
+                :leave-active-class="css.leaveActive"
+                @before-enter="beforeEnter"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @before-leave="beforeLeave"
+                @leave="leave"
+                @after-leave="afterLeave"
+            >
                 <slot>
                     <div :key="fallbackKey" />
                 </slot>
@@ -114,7 +116,9 @@ function forceRepaint(el: HTMLElement) {
 }
 
 .enterActive {
-    transition: opacity 0.2s ease-out 0.1s, transform 0.2s ease-out 0.1s;
+    transition:
+        opacity 0.2s ease-out 0.1s,
+        transform 0.2s ease-out 0.1s;
     opacity: 1;
 }
 

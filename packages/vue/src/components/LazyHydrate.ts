@@ -1,3 +1,4 @@
+import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@barebone/dom-utils';
 import {
     defineComponent,
     watch,
@@ -8,7 +9,6 @@ import {
     type RenderFunction,
 } from 'vue';
 
-import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@nzyme/dom';
 import { createPromise } from '@nzyme/utils';
 
 import { prop } from '../prop.js';

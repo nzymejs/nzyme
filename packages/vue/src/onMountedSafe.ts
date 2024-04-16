@@ -1,6 +1,5 @@
+import { isBrowser } from '@barebone/dom-utils';
 import { onMounted } from 'vue';
-
-import { isBrowser } from '@nzyme/dom';
 
 import { useElement } from './useElement.js';
 

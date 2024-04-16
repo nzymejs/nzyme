@@ -21,7 +21,7 @@
         "eslint": "eslint . --fix --cache"
     },
     "dependencies": {
-        "@nzyme/dom": "*",
+        "@barebone/dom-utils": "*",
         "@nzyme/ioc": "*",
         "@nzyme/types": "*",
         "@nzyme/utils": "*",

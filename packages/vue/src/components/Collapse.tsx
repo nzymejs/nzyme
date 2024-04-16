@@ -1,6 +1,6 @@
+import { getChildrenHeight, isBrowser } from '@barebone/dom-utils';
 import { defineComponent, getCurrentInstance, h, Transition, withDirectives } from 'vue';
 
-import { getChildrenHeight, isBrowser } from '@nzyme/dom';
 
 import css from './Collapse.module.scss';
 import { LazyHydrate } from './LazyHydrate.js';

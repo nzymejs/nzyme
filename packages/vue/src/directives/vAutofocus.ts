@@ -1,6 +1,6 @@
+import { isBrowser } from '@barebone/dom-utils';
 import type { ObjectDirective } from 'vue';
 
-import { isBrowser } from '@nzyme/dom';
 
 export const vAutofocus: ObjectDirective<Element, boolean | undefined | null> = {
     mounted(el, binding) {

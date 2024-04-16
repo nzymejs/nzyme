@@ -1,6 +1,6 @@
+import { clearFocus, virtualHistory } from '@barebone/dom-utils';
 import { type Ref, defineComponent, h, ref, type ComponentInternalInstance, nextTick } from 'vue';
 
-import { clearFocus, virtualHistory } from '@nzyme/dom';
 import { defineService } from '@nzyme/ioc';
 import type { Writable } from '@nzyme/types';
 import { arrayRemove, createPromise } from '@nzyme/utils';
