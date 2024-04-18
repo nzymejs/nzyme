@@ -158,7 +158,7 @@ export class App extends cdk.App {
             );
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            const diff = fullDiff(currentTemplate.deployedTemplate, artifact.template);
+            const diff = fullDiff(currentTemplate.deployedRootTemplate, artifact.template);
 
             if (diff.isEmpty) {
                 consola.success(`No changes detected for stack ${chalk.green(artifact.stackName)}`);
@@ -249,7 +249,7 @@ export class App extends cdk.App {
         );
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const diff = fullDiff(currentTemplate.deployedTemplate, artifact.template);
+        const diff = fullDiff(currentTemplate.deployedRootTemplate, artifact.template);
 
         const toImport: ResourcesToImport = [];
 
