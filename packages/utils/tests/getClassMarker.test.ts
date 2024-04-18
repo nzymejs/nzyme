@@ -1,4 +1,4 @@
-import { getClassMarker } from '@nzyme/utils';
+import { getClassMarker } from '..';
 
 test('gets same marker for the same class', () => {
     class Foo {}

@@ -1,4 +1,4 @@
-import { cachedProp } from '@nzyme/utils';
+import { cachedProp } from '..';
 
 test('cached decorated prop is called only once', () => {
     let timesCalled = 0;

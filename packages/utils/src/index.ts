@@ -3,6 +3,7 @@ export * from './array/arrayReverse.js';
 export * from './array/arrayToMap.js';
 export * from './array/asArray.js';
 export * from './array/filterNotNull.js';
+export * from './array/findAndRemove.js';
 export * from './array/findMax.js';
 export * from './array/findMin.js';
 export * from './array/getSingleItem.js';

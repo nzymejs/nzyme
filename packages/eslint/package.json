@@ -13,6 +13,7 @@
         "eslint-plugin-import": "^2.29.1",
         "eslint-plugin-jsdoc": "^48.2.0",
         "eslint-plugin-monorepo": "^0.3.2",
-        "eslint-plugin-vue": "^9.22.0"
+        "eslint-plugin-vue": "^9.22.0",
+        "eslint-plugin-workspaces": "^0.10.0"
     }
 }

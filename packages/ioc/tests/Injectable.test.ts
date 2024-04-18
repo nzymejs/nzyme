@@ -1,4 +1,4 @@
-import { Container, defineInjectable } from '@nzyme/ioc';
+import { Container, defineInjectable } from '..';
 
 test('register and get injectable', () => {
     const container = new Container();

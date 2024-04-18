@@ -1,4 +1,4 @@
-import { Container, defineFactory, defineInjectable, defineService } from '@nzyme/ioc';
+import { Container, defineFactory, defineInjectable, defineService } from '..';
 
 test('resolve factory with no deps', () => {
     const container = new Container();
