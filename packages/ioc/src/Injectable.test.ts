@@ -1,4 +1,5 @@
-import { Container, defineInjectable } from '..';
+import { Container } from './Container.js';
+import { defineInjectable } from './Injectable.js';
 
 test('register and get injectable', () => {
     const container = new Container();

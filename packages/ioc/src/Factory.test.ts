@@ -1,4 +1,7 @@
-import { Container, defineFactory, defineInjectable, defineService } from '..';
+import { Container } from './Container.js';
+import { defineFactory } from './Factory.js';
+import { defineInjectable } from './Injectable.js';
+import { defineService } from './Service.js';
 
 test('resolve factory with no deps', () => {
     const container = new Container();

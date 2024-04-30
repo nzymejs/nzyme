@@ -7,8 +7,11 @@ export class Container {
     private instances = new Map<symbol, unknown>();
     private resolvers = new Map<symbol, Resolvable>();
 
-    public addModule<TParams extends unknown[]>(module: Module<TParams>, ...params: TParams) {
-        module(this, ...params);
+    public addModule<TParams extends unknown[], TResult>(
+        module: Module<TParams, TResult>,
+        ...params: TParams
+    ) {
+        return module(this, ...params);
     }
 
     public get<T>(injectable: Injectable<T>) {

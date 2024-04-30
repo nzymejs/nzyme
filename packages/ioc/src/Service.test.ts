@@ -1,4 +1,6 @@
-import { Container, defineInjectable, defineService } from '..';
+import { Container } from './Container.js';
+import { defineInjectable } from './Injectable.js';
+import { defineService } from './Service.js';
 
 test('resolve service with no deps', () => {
     const container = new Container();

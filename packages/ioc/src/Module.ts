@@ -1,9 +1,9 @@
 import type { Container } from './Container.js';
 
-export type Module<TParams extends unknown[]> = {
-    (container: Container, ...params: TParams): void;
+export type Module<TParams extends unknown[], TResult> = {
+    (container: Container, ...params: TParams): TResult;
 };
 
-export function defineModule<TParams extends unknown[]>(module: Module<TParams>) {
+export function defineModule<TParams extends unknown[], TResult>(module: Module<TParams, TResult>) {
     return module;
 }
