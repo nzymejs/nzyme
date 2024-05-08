@@ -12,6 +12,6 @@
         "eslint": "eslint . --fix --cache"
     },
     "devDependencies": {
-        "@types/node": "^20.12.7"
+        "@types/node": "^20.12.11"
     }
 }
