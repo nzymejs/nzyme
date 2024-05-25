@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 import { type Ref, onMounted, onUnmounted, ref, watch, shallowRef } from 'vue';
 
 import { identity } from '@nzyme/utils';
@@ -14,6 +15,7 @@ type StorageRefOptions = {
     sync?: 'when-mounted' | 'always';
     storage?: 'local' | 'session';
     deep?: boolean;
+    debounce?: number;
 };
 
 type StorageRefDefault<T> = {
@@ -73,7 +75,9 @@ export function storageRef<T>(
     const variable = options.deep
         ? (ref<T | null>(read()) as StorageRef<T>)
         : (shallowRef<T | null>(read()) as StorageRef<T>);
-    watch(variable, write, { deep: options.deep });
+
+    const watcher = options.debounce ? debounce(write, options.debounce) : write;
+    watch(variable, watcher, { deep: options.deep });
 
     variable.reload = reload;
     variable.startSync = startSync;
