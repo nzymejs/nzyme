@@ -1,9 +1,10 @@
 import debounce from 'lodash.debounce';
-import { isRef, reactive, ref, watch, type Ref } from 'vue';
+import { isRef, ref, watch, type Ref } from 'vue';
 
 import { type CancelablePromise, isCancelablePromise } from '@nzyme/utils';
 
-import { makeRef, type RefParam, unref } from './reactivity/makeRef.js';
+import { makeRef, type RefParam } from './reactivity/makeRef.js';
+import { reactive } from './reactivity/reactive.js';
 
 export interface DataSourceOptions<T, TResult> {
     /**
@@ -11,9 +12,9 @@ export interface DataSourceOptions<T, TResult> {
      * Can be function or a reference.
      * If undefined is returned, API call will not be made.
      */
-    readonly params: RefParam<T | undefined>;
+    readonly params: RefParam<T>;
 
-    readonly request: (params: T) => Promise<TResult> | CancelablePromise<TResult>;
+    readonly load: (params: T) => Promise<TResult> | CancelablePromise<TResult>;
 
     /** Options for debouncing */
     readonly debounce?: {
@@ -24,64 +25,84 @@ export interface DataSourceOptions<T, TResult> {
     };
 
     /** Data will be loaded into this ref. Optional. */
-    readonly data?: ((result: TResult) => void) | Ref<TResult | null>;
-
-    /** Loading flag will be updated into this ref. Optional. */
-    readonly loading?: Ref<boolean>;
+    readonly data?: ((result: TResult) => void) | Ref<TResult | undefined>;
 }
 
 export interface DataSource<T> {
-    readonly data: T | null;
-    readonly loading: boolean;
-    reload(): Promise<T | null>;
+    readonly value: T | undefined;
+    readonly pending: Promise<T> | null;
+    readonly get: () => Promise<T>;
+    readonly reload: () => Promise<T>;
+    readonly clear: () => void;
 }
 
 export function useDataSource<T, TResult>(opts: DataSourceOptions<T, TResult>) {
-    let pending: Promise<TResult> | CancelablePromise<TResult> | undefined;
-
-    const dataRef: Ref<TResult | null> = isRef(opts.data) ? opts.data : ref(null);
+    const dataRef: Ref<TResult | undefined> = isRef(opts.data) ? opts.data : ref();
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);
 
-    const loadingRef = opts.loading ?? ref<boolean>(false);
+    const pendingRef = ref<Promise<TResult> | null>(null);
 
-    loadingRef.value = false;
-
-    const debounceTime = opts.debounce?.time ?? 300;
-    const debouncedLoad = debounce(loadData, debounceTime, {
-        leading: opts.debounce?.leading ?? true,
-        trailing: opts.debounce?.trailing ?? true,
-    });
+    const debounceTime = opts.debounce?.time;
+    const debouncedLoad = debounceTime
+        ? debounce(loadData, debounceTime, {
+              leading: opts.debounce?.leading ?? true,
+              trailing: opts.debounce?.trailing ?? true,
+          })
+        : loadData;
 
     watch(paramsRef, debouncedLoad, { deep: true });
 
-    return reactive({
-        data: unref(dataRef),
-        loading: unref(loadingRef),
-        reload() {
-            void debouncedLoad();
-            return debouncedLoad.flush();
-        },
-    }) as DataSource<TResult>;
+    return reactive<DataSource<TResult>>({
+        value: dataRef,
+        pending: pendingRef,
+        get,
+        reload,
+        clear,
+    });
 
-    // function used to load the data
-    async function loadData() {
+    async function get() {
+        const pending = pendingRef.value;
+        if (pending) {
+            return await pending;
+        }
+
+        return await reload();
+    }
+
+    async function reload() {
+        if ('flush' in debouncedLoad) {
+            void debouncedLoad();
+            return (await debouncedLoad.flush()) as TResult;
+        }
+
+        return await debouncedLoad();
+    }
+
+    function clear() {
+        const pending = pendingRef.value;
         if (pending && isCancelablePromise(pending)) {
             pending.cancel();
         }
-        pending = undefined;
 
-        const params = paramsRef.value;
-        if (params === undefined) {
-            return null;
+        pendingRef.value = null;
+        dataRef.value = undefined;
+    }
+
+    // function used to load the data
+    async function loadData() {
+        const pending = pendingRef.value;
+        if (pending && isCancelablePromise(pending)) {
+            pending.cancel();
         }
 
+        pendingRef.value = null;
+
+        const params = paramsRef.value;
         let promise: Promise<TResult> | undefined;
 
         try {
-            pending = promise = opts.request(params);
-
-            loadingRef.value = true;
+            pendingRef.value = promise = opts.load(params);
 
             const result = await promise;
 
@@ -95,9 +116,7 @@ export function useDataSource<T, TResult>(opts: DataSourceOptions<T, TResult>) {
             // we need to check if this is really the same request we started
             // because in the meantime some other request might start
             if (pending === promise) {
-                pending = undefined;
-
-                loadingRef.value = false;
+                pendingRef.value = null;
             }
         }
     }
