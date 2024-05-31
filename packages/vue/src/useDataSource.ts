@@ -4,17 +4,22 @@ import { isRef, ref, watch, type Ref } from 'vue';
 import { type CancelablePromise, isCancelablePromise } from '@nzyme/utils';
 
 import { makeRef, type RefParam } from './reactivity/makeRef.js';
-import { reactive } from './reactivity/reactive.js';
 
-export interface DataSourceOptions<T, TResult> {
+export interface DataSourceLoader<TParams, TResult> {
+    (params: TParams, oldValue: TResult | undefined): Promise<TResult> | CancelablePromise<TResult>;
+}
+
+export interface DataSourceOptions<TParams, TResult> {
     /**
      * Request payload - it will be watched for changes to make calls.
      * Can be function or a reference.
      * If undefined is returned, API call will not be made.
      */
-    readonly params: RefParam<T>;
+    readonly params: RefParam<TParams>;
 
-    readonly load: (params: T) => Promise<TResult> | CancelablePromise<TResult>;
+    readonly load: DataSourceLoader<TParams, TResult>;
+
+    readonly immediate?: boolean;
 
     /** Options for debouncing */
     readonly debounce?: {
@@ -28,8 +33,7 @@ export interface DataSourceOptions<T, TResult> {
     readonly data?: ((result: TResult) => void) | Ref<TResult | undefined>;
 }
 
-export interface DataSource<T> {
-    readonly value: T | undefined;
+export interface DataSource<T> extends Readonly<Ref<T | undefined>> {
     readonly pending: Promise<T> | null;
     readonly get: () => Promise<T>;
     readonly reload: () => Promise<T>;
@@ -51,15 +55,18 @@ export function useDataSource<T, TResult>(opts: DataSourceOptions<T, TResult>) {
           })
         : loadData;
 
-    watch(paramsRef, debouncedLoad, { deep: true });
+    const dataSource = dataRef as unknown as DataSource<TResult>;
 
-    return reactive<DataSource<TResult>>({
-        value: dataRef,
-        pending: pendingRef,
-        get,
-        reload,
-        clear,
+    Object.defineProperties(dataSource, {
+        pending: { get: () => pendingRef.value },
+        get: { value: get },
+        reload: { value: reload },
+        clear: { value: clear },
     });
+
+    watch(paramsRef, debouncedLoad, { deep: true, immediate: opts.immediate });
+
+    return dataSource;
 
     async function get() {
         const pending = pendingRef.value;
@@ -102,7 +109,7 @@ export function useDataSource<T, TResult>(opts: DataSourceOptions<T, TResult>) {
         let promise: Promise<TResult> | undefined;
 
         try {
-            pendingRef.value = promise = opts.load(params);
+            pendingRef.value = promise = opts.load(params, dataRef.value);
 
             const result = await promise;
 
