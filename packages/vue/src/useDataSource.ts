@@ -33,7 +33,7 @@ export interface DataSourceOptions<TParams, TResult> {
     readonly data?: ((result: TResult) => void) | Ref<TResult | undefined>;
 }
 
-export interface DataSource<T> extends Readonly<Ref<T | undefined>> {
+export interface DataSource<T> extends Ref<T | undefined> {
     readonly pending: Promise<T> | null;
     readonly get: () => Promise<T>;
     readonly reload: () => Promise<T>;
