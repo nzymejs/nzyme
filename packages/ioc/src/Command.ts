@@ -39,6 +39,10 @@ export interface CommandDefinition<T extends CommandFunction> extends Resolvable
     readonly setup: (ctx: CommandContext) => T;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CommandResult<T extends Command<any>> =
+    T extends Command<infer R> ? Awaited<ReturnType<R>> : never;
+
 export function defineCommand<T extends CommandFunction>(
     definition: CommandDefinition<T>,
 ): Command<T> {
