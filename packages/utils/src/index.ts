@@ -43,6 +43,7 @@ export * from './createMemo.js';
 export * from './createPromise.js';
 export * from './deepCopy.js';
 export * from './deepEquals.js';
+export * from './defineEnum.js';
 export * from './getBaseClass.js';
 export * from './getClassName.js';
 export * from './getClassMarker.js';
