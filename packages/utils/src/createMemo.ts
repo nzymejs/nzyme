@@ -1,6 +1,7 @@
 export type Memo<T> = {
     (): T;
     clear(): void;
+    current(): T | undefined;
 };
 
 export function createMemo<T>(factory: () => T): Memo<T> {
@@ -20,6 +21,8 @@ export function createMemo<T>(factory: () => T): Memo<T> {
         value = undefined;
         valueSet = false;
     };
+
+    memo.current = () => value;
 
     return memo;
 }

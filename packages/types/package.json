@@ -11,7 +11,7 @@
         "eslint": "eslint . --fix --cache"
     },
     "dependencies": {
-        "tslib": "^2.6.2",
-        "type-fest": "^4.15.0"
+        "tslib": "^2.6.3",
+        "type-fest": "^4.20.0"
     }
 }
