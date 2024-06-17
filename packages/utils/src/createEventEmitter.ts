@@ -36,6 +36,10 @@ export function createEventEmitter<TEvents>() {
         event: E,
         callback: EventEmitterCallback<TEvents, E>,
     ): void;
+    function on<E extends keyof TEvents>(
+        event: E,
+        callback: EventEmitterCallback<TEvents, E>,
+    ): void;
     function on<E extends keyof TEvents>(event: E, callback: EventEmitterCallback<TEvents, E>) {
         let callbacks = listeners.get(event);
         if (!callbacks) {
@@ -51,6 +55,10 @@ export function createEventEmitter<TEvents>() {
         callback: EventEmitterCallback<TEvents, E>,
     ): void;
     function off<E extends keyof GenericEvents<TEvents>>(
+        event: E,
+        callback: EventEmitterCallback<TEvents, E>,
+    ): void;
+    function off<E extends keyof TEvents>(
         event: E,
         callback: EventEmitterCallback<TEvents, E>,
     ): void;
