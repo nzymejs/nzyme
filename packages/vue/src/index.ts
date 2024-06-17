@@ -53,6 +53,7 @@ export * from './directives/vAutofocus.js';
 export * from './directives/vShow.js';
 export * from './directives/vMounted.js';
 export * from './directives/vUid.js';
+export * from './directives/vVisible.js';
 
 export * from './reactivity/historyStateRef.js';
 export * from './reactivity/storageRef.js';

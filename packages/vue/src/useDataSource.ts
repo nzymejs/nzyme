@@ -15,7 +15,7 @@ export interface DataSourceOptions<TParams, TResult> {
      * Can be function or a reference.
      * If undefined is returned, API call will not be made.
      */
-    readonly params: RefParam<TParams>;
+    readonly params?: RefParam<TParams>;
 
     readonly load: DataSourceLoader<TParams, TResult>;
 
@@ -40,7 +40,7 @@ export interface DataSource<T> extends Ref<T | undefined> {
     readonly clear: () => void;
 }
 
-export function useDataSource<T, TResult>(opts: DataSourceOptions<T, TResult>) {
+export function useDataSource<TParams, TResult>(opts: DataSourceOptions<TParams, TResult>) {
     const dataRef: Ref<TResult | undefined> = isRef(opts.data) ? opts.data : ref();
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);
@@ -109,7 +109,7 @@ export function useDataSource<T, TResult>(opts: DataSourceOptions<T, TResult>) {
         let promise: Promise<TResult> | undefined;
 
         try {
-            pendingRef.value = promise = opts.load(params, dataRef.value);
+            pendingRef.value = promise = opts.load(params as TParams, dataRef.value);
 
             const result = await promise;
 
