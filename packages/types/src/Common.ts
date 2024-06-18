@@ -73,3 +73,7 @@ export type ValueOf<T> = Exclude<T[keyof T], undefined>;
 export type RecordToUnion<T extends Record<string, any>> = T[keyof T];
 
 export type Fn<T = void> = () => T;
+
+export type OmitProps<T, K extends keyof T> = {
+    [P in keyof T as P extends K ? never : P]: T[P];
+};
