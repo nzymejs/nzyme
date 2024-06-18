@@ -74,6 +74,10 @@ export function useDataSource<TParams, TResult>(opts: DataSourceOptions<TParams,
             return await pending;
         }
 
+        if (dataRef.value !== undefined) {
+            return dataRef.value;
+        }
+
         return await reload();
     }
 
