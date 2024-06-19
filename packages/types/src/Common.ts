@@ -77,3 +77,9 @@ export type Fn<T = void> = () => T;
 export type OmitProps<T, K extends keyof T> = {
     [P in keyof T as P extends K ? never : P]: T[P];
 };
+
+export type PickProps<T, K extends keyof T> = {
+    [P in keyof T as P extends K ? P : never]: T[P];
+} & {
+    [P in keyof T as P extends K ? never : P]?: never;
+};
