@@ -1,17 +1,25 @@
-import type { Executable } from './Executable.js';
 import type { Injectable } from './Injectable.js';
 import type { Module } from './Module.js';
 import { Resolvable } from './Resolvable.js';
 
 export class Container {
-    private instances = new Map<symbol, unknown>();
-    private resolvers = new Map<symbol, Resolvable>();
+    private readonly instances = new Map<symbol, unknown>();
+    private readonly resolvers = new Map<symbol, Resolvable>();
+    private readonly parent?: Container;
+
+    constructor(parent?: Container) {
+        this.parent = parent;
+    }
 
     public addModule<TParams extends unknown[], TResult>(
         module: Module<TParams, TResult>,
         ...params: TParams
     ) {
         return module(this, ...params);
+    }
+
+    public createChild() {
+        return new Container(this);
     }
 
     public get<T>(injectable: Injectable<T>) {
@@ -42,45 +50,32 @@ export class Container {
      * @param injectable Injectable to be resolved.
      * @returns Resolved value of the injectable.
      */
-    public resolve<T>(injectable: Injectable<T>, scope?: Injectable): T;
-    /**
-     * Resolves multiple injectables.
-     * @param injectables Injectables to be resolved.
-     * @returns Resolved value of the injectable.
-     */
-    public resolve<T extends Injectable[]>(
-        injectables: T,
-        scope?: Injectable,
-    ): T[number] extends Injectable<infer U> ? [U] : [];
-    public resolve(injectable: Injectable | Injectable[], scope?: Injectable) {
-        if (Array.isArray(injectable)) {
-            return injectable.map(i => this.resolveInstance(i, scope));
+    public resolve<T>(injectable: Injectable<T>, scope?: Injectable): T {
+        const instance = this.tryResolve(injectable, scope);
+        if (instance == null) {
+            throw new Error(`Service ${injectable.name ?? ''} was not registered`);
         }
 
-        return this.resolveInstance(injectable, scope);
+        return instance;
     }
 
-    public execute<T>(executable: Executable<T>) {
-        return this.resolve(executable)();
-    }
-
-    private resolveInstance(injectable: Injectable, scope?: Injectable): unknown {
-        let instance = this.instances.get(injectable.symbol);
+    public tryResolve<T>(injectable: Injectable<T>, scope?: Injectable): T | undefined {
+        let instance = this.instances.get(injectable.symbol) as T | undefined;
         if (instance) {
             return instance;
         }
 
         // Try to resolve as a registered service
-        const resolver = this.resolvers.get(injectable.symbol);
+        const resolver = this.resolvers.get(injectable.symbol) as Resolvable<T> | undefined;
         if (resolver) {
-            instance = this.instances.get(resolver.symbol);
+            instance = this.instances.get(resolver.symbol) as T | undefined;
             if (instance) {
                 // Cache it for later
                 this.instances.set(injectable.symbol, instance);
                 return instance;
             }
 
-            instance = resolver.resolve(this, scope);
+            instance = this.doResolve(resolver, scope);
             if (resolver.cached) {
                 this.instances.set(injectable.symbol, instance);
                 this.instances.set(resolver.symbol, instance);
@@ -90,17 +85,24 @@ export class Container {
         }
 
         if (injectable instanceof Resolvable) {
-            instance = injectable.resolve(this, scope);
+            if (injectable.scope === 'root' && this.parent) {
+                instance = this.parent.tryResolve(injectable, scope) as T | undefined;
+            } else if (injectable.scope === 'child' && !this.parent) {
+                // Not possible to resolve a child service in a root container
+                return undefined;
+            } else {
+                instance = this.doResolve(injectable, scope) as T | undefined;
+            }
 
             if (instance && injectable.cached) {
                 this.instances.set(injectable.symbol, instance);
             }
         }
 
-        if (instance == null) {
-            throw new Error(`Service ${injectable.name ?? ''} was not registered`);
-        }
-
         return instance;
+    }
+
+    protected doResolve<T>(resolvable: Resolvable<T>, scope?: Injectable): T | undefined {
+        return resolvable.resolve(this, scope);
     }
 }

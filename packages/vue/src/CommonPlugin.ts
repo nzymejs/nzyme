@@ -1,11 +1,10 @@
 import type { Plugin } from 'vue';
 
-import type { Container } from '@nzyme/ioc';
-
+import type { VueContainer } from './VueContainer.js';
 import { containerSymbol } from './useContainer.js';
 
 export interface CommonPluginOptions {
-    container: Container;
+    container: VueContainer;
 }
 
 export const CommonPlugin: Plugin<CommonPluginOptions> = {
