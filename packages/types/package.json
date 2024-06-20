@@ -8,7 +8,8 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "sideEffects": false,
     "scripts": {
-        "eslint": "eslint . --fix --cache"
+        "eslint": "eslint . --fix --cache",
+        "build": "tsc --build"
     },
     "dependencies": {
         "tslib": "^2.6.3",

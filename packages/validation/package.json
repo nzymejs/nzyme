@@ -10,7 +10,8 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "private": true,
     "scripts": {
-        "eslint": "eslint . --fix --cache"
+        "eslint": "eslint . --fix --cache",
+        "build": "tsc --build"
     },
     "dependencies": {
         "@nzyme/i18n": "*",

@@ -10,7 +10,8 @@
     },
     "scripts": {
         "prepack": "oclif-dev manifest && oclif-dev readme",
-        "eslint": "eslint . --fix --cache"
+        "eslint": "eslint . --fix --cache",
+        "build": "tsc --build"
     },
     "dependencies": {
         "@lerna/package": "^6.4.1",

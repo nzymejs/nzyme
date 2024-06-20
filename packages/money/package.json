@@ -9,7 +9,8 @@
     "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "scripts": {
-        "eslint": "eslint . --fix --cache"
+        "eslint": "eslint . --fix --cache",
+        "build": "tsc --build"
     },
     "dependencies": {
         "@nzyme/utils": "*"
