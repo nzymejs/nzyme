@@ -99,6 +99,10 @@ export class Container {
             }
         }
 
+        if (instance == null && this.parent) {
+            return this.parent.tryResolve(injectable, scope);
+        }
+
         return instance;
     }
 

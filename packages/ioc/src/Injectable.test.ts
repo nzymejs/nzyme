@@ -27,3 +27,17 @@ test('get non registered injectable', () => {
 
     expect(container.get(injectable)).toBe(undefined);
 });
+
+test('resolve injectable from parent container', () => {
+    const parent = new Container();
+    const child = new Container(parent);
+
+    const injectable = defineInjectable<string>({
+        name: 'test',
+    });
+
+    parent.set(injectable, 'test');
+
+    expect(child.get(injectable)).toBe(undefined);
+    expect(child.resolve(injectable)).toBe('test');
+});

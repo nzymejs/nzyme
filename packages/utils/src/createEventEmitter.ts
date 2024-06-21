@@ -3,8 +3,8 @@ import type { IfLiteral, NonVoidPropKeys, VoidPropKeys } from '@nzyme/types';
 import { arrayRemove } from './array/arrayRemove.js';
 
 export type EventEmitterCallback<TEvents, E extends keyof TEvents> = TEvents[E] extends void
-    ? () => void | Promise<void>
-    : (event: TEvents[E]) => void | Promise<void>;
+    ? () => void | Promise<unknown>
+    : (event: TEvents[E]) => void | Promise<unknown>;
 
 export type EventEmitterPrivate<TEvents> = ReturnType<typeof createEventEmitter<TEvents>>;
 export type EventEmitterPublic<TEvents> = Pick<EventEmitterPrivate<TEvents>, 'on' | 'off'>;
