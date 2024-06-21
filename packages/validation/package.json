@@ -11,7 +11,7 @@
     "private": true,
     "scripts": {
         "eslint": "eslint . --fix --cache",
-        "build": "tsc --build"
+        "tsc": "tsc --build"
     },
     "dependencies": {
         "@nzyme/i18n": "*",

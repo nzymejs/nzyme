@@ -9,7 +9,7 @@
     "sideEffects": false,
     "scripts": {
         "eslint": "eslint . --fix --cache",
-        "build": "tsc --build"
+        "tsc": "tsc --build"
     },
     "dependencies": {
         "tslib": "^2.6.3",

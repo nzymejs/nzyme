@@ -9,7 +9,7 @@
         "packages/*"
     ],
     "scripts": {
-        "build": "tsc --build",
+        "tsc": "tsc --build",
         "watch": "tsc --build --watch"
     },
     "devDependencies": {
