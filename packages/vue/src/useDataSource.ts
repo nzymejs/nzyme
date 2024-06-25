@@ -6,7 +6,10 @@ import { type CancelablePromise, isCancelablePromise } from '@nzyme/utils';
 import { makeRef, type RefParam } from './reactivity/makeRef.js';
 
 export interface DataSourceLoader<TParams, TResult> {
-    (params: TParams, oldValue: TResult | undefined): Promise<TResult> | CancelablePromise<TResult>;
+    (
+        params: TParams,
+        oldValue: TResult | undefined,
+    ): Promise<TResult> | CancelablePromise<TResult> | TResult;
 }
 
 export interface DataSourceOptions<TParams, TResult> {
@@ -113,7 +116,9 @@ export function useDataSource<TParams, TResult>(opts: DataSourceOptions<TParams,
         let promise: Promise<TResult> | undefined;
 
         try {
-            pendingRef.value = promise = opts.load(params as TParams, dataRef.value);
+            pendingRef.value = promise = Promise.resolve(
+                opts.load(params as TParams, dataRef.value),
+            );
 
             const result = await promise;
 
