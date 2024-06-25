@@ -24,7 +24,6 @@ interface TsConfig {
 }
 
 const tsConfigsCache: Record<string, TsConfig | undefined> = {};
-const prettierConfig: prettier.Options | null = null;
 
 async function run() {
     const cwd = process.cwd();
@@ -112,6 +111,7 @@ async function getTsReferences(params: {
             !depTsConfig ||
             !depTsConfig.resolved.compilerOptions ||
             !depTsConfig.resolved.compilerOptions.composite ||
+            depTsConfig.resolved.compilerOptions.noEmit ||
             !(dep.get('main') || dep.get('exports') || dep.get('bin'));
 
         if (disable) {
