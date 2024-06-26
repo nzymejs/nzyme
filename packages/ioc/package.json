@@ -10,7 +10,7 @@
     "sideEffects": false,
     "scripts": {
         "eslint": "eslint . --fix --cache",
-        "tsc": "tsc --build"
+        "build": "tsc --build"
     },
     "devDependencies": {
         "@nzyme/jest": "*",

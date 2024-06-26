@@ -8,7 +8,7 @@
     "sideEffects": false,
     "scripts": {
         "eslint": "eslint . --fix --cache",
-        "tsc": "tsc --build"
+        "build": "tsc --build"
     },
     "dependencies": {
         "@jest/types": "^29.6.3",

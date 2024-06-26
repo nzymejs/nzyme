@@ -31,19 +31,10 @@ async function run() {
 
     const tsconfig = await loadTsConfig(path.resolve(cwd, './tsconfig.json'));
     if (tsconfig) {
-        const referencesEsm = await getTsReferences({
+        tsconfig.config.references = await getTsReferences({
             tsconfig: tsconfig,
             dependencies: packages,
-            cjs: false,
         });
-
-        const referencesCjs = await getTsReferences({
-            tsconfig: tsconfig,
-            dependencies: packages,
-            cjs: true,
-        });
-
-        tsconfig.config.references = [...referencesEsm, ...referencesCjs];
         await saveTsConfig(tsconfig);
     }
 
@@ -58,10 +49,9 @@ async function run() {
 }
 
 async function processPackage(params: { pkg: Package; packages: Package[] }) {
-    const tsconfigEsm = await loadTsConfigForPackage({ pkg: params.pkg, cjs: false });
-    const tsconfigCjs = await loadTsConfigForPackage({ pkg: params.pkg, cjs: true });
+    const tsconfig = await loadTsConfigForPackage(params.pkg);
 
-    if (!tsconfigEsm && !tsconfigCjs) {
+    if (!tsconfig) {
         return;
     }
 
@@ -74,38 +64,20 @@ async function processPackage(params: { pkg: Package; packages: Package[] }) {
         .map(d => params.packages.find(p => p.name === d)!)
         .filter(Boolean);
 
-    if (tsconfigEsm) {
-        const references = await getTsReferences({
-            tsconfig: tsconfigEsm,
-            dependencies: dependencies,
-            cjs: false,
-        });
+    const references = await getTsReferences({
+        tsconfig: tsconfig,
+        dependencies: dependencies,
+    });
 
-        tsconfigEsm.config.references = references;
-        await saveTsConfig(tsconfigEsm);
-    }
-
-    if (tsconfigCjs) {
-        const references = await getTsReferences({
-            tsconfig: tsconfigCjs,
-            dependencies: dependencies,
-            cjs: true,
-        });
-
-        tsconfigCjs.config.references = references;
-        await saveTsConfig(tsconfigCjs);
-    }
+    tsconfig.config.references = references;
+    await saveTsConfig(tsconfig);
 }
 
-async function getTsReferences(params: {
-    tsconfig: TsConfig;
-    dependencies: Package[];
-    cjs: boolean;
-}) {
+async function getTsReferences(params: { tsconfig: TsConfig; dependencies: Package[] }) {
     const references: { path: string }[] = [];
 
     for (const dep of params.dependencies) {
-        const depTsConfig = await loadTsConfigForPackage({ pkg: dep, cjs: params.cjs });
+        const depTsConfig = await loadTsConfigForPackage(dep);
 
         const disable =
             !depTsConfig ||
@@ -135,15 +107,8 @@ async function getTsReferences(params: {
     return references;
 }
 
-async function loadTsConfigForPackage(params: { pkg: Package; cjs: boolean }) {
-    if (params.cjs) {
-        return await loadTsConfig(path.join(params.pkg.location, 'tsconfig.cjs.json'));
-    } else {
-        return (
-            (await loadTsConfig(path.join(params.pkg.location, 'tsconfig.esm.json'))) ||
-            (await loadTsConfig(path.join(params.pkg.location, 'tsconfig.json')))
-        );
-    }
+async function loadTsConfigForPackage(pkg: Package) {
+    return await loadTsConfig(path.join(pkg.location, 'tsconfig.json'));
 }
 
 async function loadTsConfig(filePath: string) {

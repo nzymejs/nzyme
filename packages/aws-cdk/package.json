@@ -10,7 +10,7 @@
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "scripts": {
         "eslint": "eslint . --fix --cache",
-        "tsc": "tsc --build"
+        "build": "tsc --build"
     },
     "dependencies": {
         "@aws-cdk/cloudformation-diff": "^2.137.0",
