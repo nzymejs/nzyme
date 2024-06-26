@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 import v8 from 'v8';
-import * as path from 'path';
-import * as url from 'url';
 
 import dotenv from 'dotenv';
 import sourceMap from 'source-map-support';
