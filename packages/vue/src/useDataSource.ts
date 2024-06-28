@@ -12,7 +12,7 @@ export interface DataSourceLoader<TParams, TResult> {
     ): Promise<TResult> | CancelablePromise<TResult> | TResult;
 }
 
-export interface DataSourceOptions<TParams, TResult> {
+export interface DataSourceOptions<TParams, TResult, TDefault = undefined> {
     /**
      * Request payload - it will be watched for changes to make calls.
      * Can be function or a reference.
@@ -21,6 +21,8 @@ export interface DataSourceOptions<TParams, TResult> {
     readonly params?: RefParam<TParams>;
 
     readonly load: DataSourceLoader<TParams, TResult>;
+
+    readonly default?: RefParam<TDefault>;
 
     readonly immediate?: boolean;
 
@@ -36,15 +38,21 @@ export interface DataSourceOptions<TParams, TResult> {
     readonly data?: ((result: TResult) => void) | Ref<TResult | undefined>;
 }
 
-export interface DataSource<T> extends Ref<T | undefined> {
-    readonly pending: Promise<T> | null;
-    readonly get: () => Promise<T>;
-    readonly reload: () => Promise<T>;
+export interface DataSource<TResult, TDefault extends TResult | undefined = undefined>
+    extends Ref<TResult | TDefault> {
+    readonly pending: Promise<TResult> | null;
+    readonly get: () => Promise<TResult>;
+    readonly reload: () => Promise<TResult>;
     readonly clear: () => void;
 }
 
-export function useDataSource<TParams, TResult>(opts: DataSourceOptions<TParams, TResult>) {
-    const dataRef: Ref<TResult | undefined> = isRef(opts.data) ? opts.data : ref();
+export function useDataSource<TParams, TResult, TDefault extends TResult | undefined = undefined>(
+    opts: DataSourceOptions<TParams, TResult, TDefault>,
+) {
+    const defaultRef = makeRef(opts.default);
+    const dataRef: Ref<TResult | TDefault> = isRef(opts.data)
+        ? (opts.data as Ref<TResult | TDefault>)
+        : (ref(defaultRef.value) as Ref<TResult | TDefault>);
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);
 
@@ -58,7 +66,7 @@ export function useDataSource<TParams, TResult>(opts: DataSourceOptions<TParams,
           })
         : loadData;
 
-    const dataSource = dataRef as unknown as DataSource<TResult>;
+    const dataSource = dataRef as unknown as DataSource<TResult, TDefault>;
 
     Object.defineProperties(dataSource, {
         pending: { get: () => pendingRef.value },
@@ -100,7 +108,7 @@ export function useDataSource<TParams, TResult>(opts: DataSourceOptions<TParams,
         }
 
         pendingRef.value = null;
-        dataRef.value = undefined;
+        dataRef.value = defaultRef.value as TDefault;
     }
 
     // function used to load the data
