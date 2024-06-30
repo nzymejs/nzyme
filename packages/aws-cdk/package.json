@@ -29,7 +29,7 @@
     },
     "devDependencies": {
         "@nzyme/eslint": "*",
-        "@types/node": "^20.12.11"
+        "@types/node": "^20.14.9"
     },
     "depcheck": {
         "ignoreDeps": [

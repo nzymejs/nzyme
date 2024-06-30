@@ -13,6 +13,6 @@
         "build": "tsc --build"
     },
     "devDependencies": {
-        "@types/node": "^20.12.11"
+        "@types/node": "^20.14.9"
     }
 }

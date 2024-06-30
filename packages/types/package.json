@@ -13,6 +13,6 @@
     },
     "dependencies": {
         "tslib": "^2.6.3",
-        "type-fest": "^4.20.0"
+        "type-fest": "^4.20.1"
     }
 }
