@@ -1,10 +1,10 @@
 export type Memo<T> = {
     (): T;
-    clear(): void;
-    current(): T | undefined;
+    clear: () => void;
+    value: () => T | undefined;
 };
 
-export function createMemo<T>(factory: () => T): Memo<T> {
+export function createMemo<T>(factory: () => T) {
     let valueSet: boolean = false;
     let value: T | undefined;
 
@@ -22,7 +22,40 @@ export function createMemo<T>(factory: () => T): Memo<T> {
         valueSet = false;
     };
 
-    memo.current = () => value;
+    memo.value = () => value;
+
+    return memo;
+}
+
+export type MemoAsync<T> = {
+    (): Promise<T>;
+    clear: () => void;
+    promise: () => Promise<T> | undefined;
+    value: () => T | undefined;
+};
+
+export function createMemoAsync<T>(factory: () => Promise<T>) {
+    let promise: Promise<T> | undefined;
+    let value: T | undefined;
+
+    const memo: MemoAsync<T> = (() => {
+        if (!promise) {
+            promise = factory().then(result => {
+                value = result;
+                return result;
+            });
+        }
+
+        return promise;
+    }) as MemoAsync<T>;
+
+    memo.clear = () => {
+        promise = undefined;
+        value = undefined;
+    };
+
+    memo.promise = () => promise;
+    memo.value = () => value;
 
     return memo;
 }
