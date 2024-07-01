@@ -20,5 +20,6 @@ export function typescriptConfig(): Config.InitialOptions {
         moduleFileExtensions: ['ts', 'tsx', 'js'],
         extensionsToTreatAsEsm: ['.ts'],
         collectCoverageFrom: ['./dist/**/*.js'],
+        setupFilesAfterEnv: [require.resolve('./setup.js')],
     };
 }
