@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import { isRef, ref, watch, type Ref } from 'vue';
+import { computed, isRef, ref, watch, type Ref } from 'vue';
 
 import { type CancelablePromise, isCancelablePromise } from '@nzyme/utils';
 
@@ -50,9 +50,9 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
     opts: DataSourceOptions<TParams, TResult, TDefault>,
 ) {
     const defaultRef = makeRef(opts.default);
-    const dataRef: Ref<TResult | TDefault> = isRef(opts.data)
-        ? (opts.data as Ref<TResult | TDefault>)
-        : (ref(defaultRef.value) as Ref<TResult | TDefault>);
+    const dataRef: Ref<TResult | undefined> = isRef(opts.data)
+        ? (opts.data as Ref<TResult | undefined>)
+        : (ref() as Ref<TResult | undefined>);
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);
 
@@ -66,7 +66,19 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
           })
         : loadData;
 
-    const dataSource = dataRef as unknown as DataSource<TResult, TDefault>;
+    const dataSource = computed<TResult | TDefault>({
+        get: () => {
+            const data = dataRef.value;
+            if (data === undefined) {
+                return defaultRef.value as TDefault;
+            }
+
+            return data as TResult;
+        },
+        set: (value: TResult | TDefault) => {
+            dataRef.value = value;
+        },
+    });
 
     Object.defineProperties(dataSource, {
         pending: { get: () => pendingRef.value },
@@ -77,7 +89,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
 
     watch(paramsRef, debouncedLoad, { deep: true, immediate: opts.immediate });
 
-    return dataSource;
+    return dataSource as unknown as DataSource<TResult, TDefault>;
 
     async function get() {
         const pending = pendingRef.value;
@@ -108,7 +120,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
         }
 
         pendingRef.value = null;
-        dataRef.value = defaultRef.value as TDefault;
+        dataRef.value = undefined;
     }
 
     // function used to load the data
