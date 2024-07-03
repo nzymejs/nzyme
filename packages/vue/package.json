@@ -26,7 +26,7 @@
         "@nzyme/types": "*",
         "@nzyme/utils": "*",
         "lodash.debounce": "^4.0.8",
-        "vue": "^3.4.27"
+        "vue": "^3.4.31"
     },
     "devDependencies": {
         "@types/lodash.debounce": "^4.0.9",
