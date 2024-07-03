@@ -3,19 +3,11 @@ import path from 'path';
 
 import type { Package } from '@lerna/package';
 import { getPackages } from '@lerna/project';
-import { Command } from '@oclif/core';
 import * as json from 'comment-json';
 import merge from 'lodash.merge';
 import prettier from 'prettier';
 
-export default class extends Command {
-    public static override description = `Runs monorepo setup`;
-    public static override flags = {};
-
-    run() {
-        return run();
-    }
-}
+import { isMainFile } from './isMainFile.js';
 
 interface TsConfig {
     path: string;
@@ -25,7 +17,11 @@ interface TsConfig {
 
 const tsConfigsCache: Record<string, TsConfig | undefined> = {};
 
-async function run() {
+if (isMainFile(import.meta)) {
+    await monorepo();
+}
+
+export async function monorepo() {
     const cwd = process.cwd();
     const packages = await getPackages(cwd);
 

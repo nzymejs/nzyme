@@ -1,15 +1,24 @@
 {
-    "name": "@nzyme/cli",
+    "name": "@nzyme/project-tools",
     "version": "1.0.0",
-    "repository": "https://github.com/lesscms/lesscms.git",
+    "repository": "https://github.com/nzymejs/nzyme.git",
     "author": "",
     "private": true,
     "type": "module",
-    "bin": {
-        "nzyme": "./bin/cli.js"
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "default": "./src/index.ts",
+            "types": "./src/index.ts"
+        },
+        "./*": {
+            "default": "./src/*",
+            "types": "./src/*"
+        }
     },
     "scripts": {
-        "prepack": "oclif-dev manifest && oclif-dev readme",
         "eslint": "eslint . --fix --cache",
         "build": "tsc --build"
     },
@@ -36,23 +45,6 @@
         "@types/lerna__project": "^5.1.2",
         "@types/lodash.merge": "^4.6.9",
         "@types/node": "^20.14.9"
-    },
-    "files": [
-        "/bin/cli.js",
-        "/dist",
-        "/oclif.manifest.json"
-    ],
-    "oclif": {
-        "commands": "./dist/commands",
-        "bin": "nzyme",
-        "plugins": [
-            "@oclif/plugin-help",
-            "@oclif/plugin-version"
-        ]
-    },
-    "ts-node": {
-        "esm": true,
-        "experimentalSpecifierResolution": "node"
     },
     "depcheck": {
         "ignoreDeps": [

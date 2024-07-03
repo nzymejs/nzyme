@@ -1,31 +1,15 @@
 import type { Package } from '@lerna/package';
 import { getPackages } from '@lerna/project';
-import { Command, Flags } from '@oclif/core';
 import chalk from 'chalk';
 import { compareVersions } from 'compare-versions';
 import consola from 'consola';
-import depcheck from 'depcheck';
-
-export default class DepcheckCommand extends Command {
-    public static override description = `Checks NPM dependencies`;
-    public static override flags = {
-        fix: Flags.boolean({
-            default: false,
-            description: 'Try to fix found issues.',
-        }),
-    };
-
-    async run() {
-        const { flags } = await this.parse(DepcheckCommand);
-        return run(flags);
-    }
-}
+import depcheckImport from 'depcheck';
 
 interface CommandFlags {
     fix: boolean;
 }
 
-async function run(flags: CommandFlags) {
+export async function depcheck(flags: CommandFlags) {
     const cwd = process.cwd();
     const packages = await getPackages(cwd);
 
@@ -58,7 +42,7 @@ async function run(flags: CommandFlags) {
 
 async function processPackage(pkg: Package, flags: CommandFlags, deps: Record<string, string>) {
     const options = getOptions(pkg);
-    const result = await depcheck(pkg.location, options);
+    const result = await depcheckImport(pkg.location, options);
     const toWrite: string[] = [];
 
     let dependencies = pkg.dependencies;
@@ -151,8 +135,9 @@ async function processPackage(pkg: Package, flags: CommandFlags, deps: Record<st
     }
 }
 
-function getOptions(pkg: Package): depcheck.Options {
+function getOptions(pkg: Package): depcheckImport.Options {
     const depcheckConfig = pkg.get('depcheck');
+
     return {
         ignoreBinPackage: false, // ignore the packages with bin entry
         skipMissing: false, // skip calculation of missing dependencies
@@ -160,23 +145,23 @@ function getOptions(pkg: Package): depcheck.Options {
         ignoreMatches: depcheckConfig?.ignoreDeps ?? [], //['@oclif/*'],
         parsers: {
             // the target parsers
-            '**/*.js': depcheck.parser.es6,
-            '**/*.jsx': depcheck.parser.jsx,
-            '**/*.ts': depcheck.parser.typescript,
-            '**/*.tsx': depcheck.parser.typescript,
-            '**/*.scss': depcheck.parser.sass,
-            '**/*.sass': depcheck.parser.sass,
-            '**/*.vue': depcheck.parser.vue,
+            '**/*.js': depcheckImport.parser.es6,
+            '**/*.jsx': depcheckImport.parser.jsx,
+            '**/*.ts': depcheckImport.parser.typescript,
+            '**/*.tsx': depcheckImport.parser.typescript,
+            '**/*.scss': depcheckImport.parser.sass,
+            '**/*.sass': depcheckImport.parser.sass,
+            '**/*.vue': depcheckImport.parser.vue,
         },
         detectors: [
             // the target detectors
-            depcheck.detector.requireCallExpression,
-            depcheck.detector.importDeclaration,
+            depcheckImport.detector.requireCallExpression,
+            depcheckImport.detector.importDeclaration,
         ],
         specials: [
             // the target special parsers
             // depcheck.special.eslint,
-            depcheck.special.jest,
+            depcheckImport.special.jest,
         ],
     };
 }
