@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import { computed, isRef, ref, watch, type Ref } from 'vue';
+import { computed, isRef, ref, shallowRef, watch, type Ref } from 'vue';
 
 import { type CancelablePromise, isCancelablePromise } from '@nzyme/utils';
 
@@ -11,6 +11,8 @@ export interface DataSourceLoader<TParams, TResult> {
         oldValue: TResult | undefined,
     ): Promise<TResult> | CancelablePromise<TResult> | TResult;
 }
+
+export type DataSourceBehavior = 'lazy' | 'eager';
 
 export interface DataSourceOptions<TParams, TResult, TDefault = undefined> {
     /**
@@ -24,7 +26,7 @@ export interface DataSourceOptions<TParams, TResult, TDefault = undefined> {
 
     readonly default?: RefParam<TDefault>;
 
-    readonly immediate?: boolean;
+    readonly behavior?: DataSourceBehavior;
 
     /** Options for debouncing */
     readonly debounce?: {
@@ -44,15 +46,18 @@ export interface DataSource<TResult, TDefault extends TResult | undefined = unde
     readonly get: () => Promise<TResult>;
     readonly reload: () => Promise<TResult>;
     readonly clear: () => void;
+    readonly invalidate: () => void;
 }
 
 export function useDataSource<TParams, TResult, TDefault extends TResult | undefined = undefined>(
     opts: DataSourceOptions<TParams, TResult, TDefault>,
 ) {
+    const behavior = opts.behavior;
+    const loadRef = shallowRef(behavior !== 'lazy');
     const defaultRef = makeRef(opts.default);
     const dataRef: Ref<TResult | undefined> = isRef(opts.data)
         ? (opts.data as Ref<TResult | undefined>)
-        : (ref() as Ref<TResult | undefined>);
+        : (shallowRef() as Ref<TResult | undefined>);
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);
 
@@ -68,6 +73,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
 
     const dataSource = computed<TResult | TDefault>({
         get: () => {
+            loadRef.value = true;
             const data = dataRef.value;
             if (data === undefined) {
                 return defaultRef.value as TDefault;
@@ -85,13 +91,19 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
         get: { value: get },
         reload: { value: reload },
         clear: { value: clear },
+        invalidate: { value: invalidate },
     });
 
-    watch(paramsRef, debouncedLoad, { deep: true, immediate: opts.immediate });
+    watch(paramsRef, debouncedLoad, { deep: true, immediate: behavior === 'eager' });
+    if (behavior === 'lazy') {
+        watch(loadRef, debouncedLoad);
+    }
 
     return dataSource as unknown as DataSource<TResult, TDefault>;
 
     async function get() {
+        loadRef.value = true;
+
         const pending = pendingRef.value;
         if (pending) {
             return await pending;
@@ -105,6 +117,8 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
     }
 
     async function reload() {
+        loadRef.value = true;
+
         if ('flush' in debouncedLoad) {
             void debouncedLoad();
             return (await debouncedLoad.flush()) as TResult;
@@ -121,10 +135,23 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
 
         pendingRef.value = null;
         dataRef.value = undefined;
+        if (behavior === 'lazy') {
+            loadRef.value = false;
+        }
+    }
+
+    function invalidate() {
+        if (behavior === 'lazy') {
+            loadRef.value = false;
+        }
     }
 
     // function used to load the data
     async function loadData() {
+        if (!loadRef.value) {
+            return;
+        }
+
         const pending = pendingRef.value;
         if (pending && isCancelablePromise(pending)) {
             pending.cancel();
