@@ -1,7 +1,7 @@
-import type { Config } from '@jest/types';
+import { defineConfig } from './defineConfig';
 
-export function typescriptConfig(): Config.InitialOptions {
-    return {
+export function typescriptConfig() {
+    return defineConfig({
         preset: 'ts-jest/presets/default-esm', // or other ESM presets
         moduleNameMapper: {
             '^(\\.{1,2}/.*)\\.js$': '$1',
@@ -21,5 +21,5 @@ export function typescriptConfig(): Config.InitialOptions {
         extensionsToTreatAsEsm: ['.ts'],
         collectCoverageFrom: ['./dist/**/*.js'],
         setupFilesAfterEnv: [require.resolve('./setup.js')],
-    };
+    });
 }
