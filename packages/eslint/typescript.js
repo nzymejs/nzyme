@@ -18,6 +18,7 @@ module.exports = {
     rules: {
         curly: 'error',
         'require-await': 'error',
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/consistent-type-imports': 'error',
         '@typescript-eslint/no-import-type-side-effects': 'error',
 
