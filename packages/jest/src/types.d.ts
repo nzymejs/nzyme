@@ -1,3 +1,4 @@
+import type { expectToEqualFully } from './matchers/expectToEqualFully';
 import type { expectToEqualPartially } from './matchers/expectToEqualPartially';
 
 export * from './index.js';
@@ -7,6 +8,7 @@ type Matcher<F> = F extends (this: void, ...args: infer A) => unknown
     : never;
 
 interface CustomMatchers<T> {
+    toEqualFully: Matcher<typeof expectToEqualFully<T>>;
     toEqualPartially: Matcher<typeof expectToEqualPartially<T>>;
 }
 

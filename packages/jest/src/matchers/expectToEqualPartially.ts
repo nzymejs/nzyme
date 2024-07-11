@@ -10,8 +10,6 @@ export function expectToEqualPartially<T>(received: T, expected: ExpectedPartial
 
     const pass = equals(received, expectedResult);
 
-    expect;
-
     return {
         message: () => printDiffOrStringify(expectedResult, received, 'Expected', 'Received', true),
         pass,

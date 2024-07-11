@@ -1,0 +1,19 @@
+{
+    "name": "@nzyme/jest-utils",
+    "version": "1.0.0",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "license": "MIT",
+    "types": "./dist/index.d.ts",
+    "main": "./dist/index.js",
+    "sideEffects": false,
+    "scripts": {
+        "eslint": "eslint . --fix --cache",
+        "build": "tsc --build"
+    },
+    "dependencies": {
+        "@jest/globals": "^29.7.0",
+        "@jest/types": "^29.6.3",
+        "@types/jest": "^29.5.12",
+        "date-fns": "^3.6.0"
+    }
+}
