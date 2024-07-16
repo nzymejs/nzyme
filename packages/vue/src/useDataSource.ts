@@ -56,7 +56,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
     const loadRef = shallowRef(behavior !== 'lazy');
     const defaultRef = makeRef(opts.default);
     const dataRef: Ref<TResult | undefined> = isRef(opts.data)
-        ? (opts.data as Ref<TResult | undefined>)
+        ? (opts.data)
         : (shallowRef() as Ref<TResult | undefined>);
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);

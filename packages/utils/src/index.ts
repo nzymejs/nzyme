@@ -50,7 +50,6 @@ export * from './deepEquals.js';
 export * from './defineEnum.js';
 export * from './getBaseClass.js';
 export * from './getClassName.js';
-export * from './getClassMarker.js';
 export * from './HttpError.js';
 export * from './isFunction.js';
 export * from './mapObject.js';

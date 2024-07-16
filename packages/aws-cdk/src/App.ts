@@ -47,7 +47,7 @@ export class App extends cdk.App {
     }
 
     public get stacks() {
-        return this.node.children.filter(child => child instanceof Stack) as Stack[];
+        return this.node.children.filter(child => child instanceof Stack);
     }
 
     /**
