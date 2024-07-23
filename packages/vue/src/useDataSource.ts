@@ -56,7 +56,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
     const loadRef = shallowRef(behavior !== 'lazy');
     const defaultRef = makeRef(opts.default);
     const dataRef: Ref<TResult | undefined> = isRef(opts.data)
-        ? (opts.data)
+        ? opts.data
         : (shallowRef() as Ref<TResult | undefined>);
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);
@@ -96,7 +96,11 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
 
     watch(paramsRef, debouncedLoad, { deep: true, immediate: behavior === 'eager' });
     if (behavior === 'lazy') {
-        watch(loadRef, debouncedLoad);
+        watch(loadRef, () => {
+            if (!pendingRef.value) {
+                void debouncedLoad();
+            }
+        });
     }
 
     return dataSource as unknown as DataSource<TResult, TDefault>;
