@@ -32,3 +32,7 @@ export interface ServiceOptions<T, TExtend extends T = T> extends ResolvableOpti
 export function defineService<T, TExtend extends T = T>(definition: ServiceOptions<T, TExtend>) {
     return new Service<TExtend>(definition as ServiceOptions<TExtend>);
 }
+
+export function isService<T>(injectable: Injectable<T>): injectable is Service<T> {
+    return injectable instanceof Service;
+}

@@ -30,3 +30,7 @@ export interface ResolvableOptions<T> extends InjectableOptions {
     readonly for?: Injectable<T>;
     readonly scope?: ResolvableScope;
 }
+
+export function isResolvable<T>(injectable: Injectable<T>): injectable is Resolvable<T> {
+    return injectable instanceof Resolvable;
+}

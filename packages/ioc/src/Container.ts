@@ -1,6 +1,6 @@
 import type { Injectable } from './Injectable.js';
 import type { Module } from './Module.js';
-import { Resolvable } from './Resolvable.js';
+import { isResolvable, Resolvable } from './Resolvable.js';
 
 export class Container {
     private readonly instances = new Map<symbol, unknown>();
@@ -84,14 +84,20 @@ export class Container {
             return instance;
         }
 
-        if (injectable instanceof Resolvable) {
-            if (injectable.scope === 'root' && this.parent) {
-                instance = this.parent.tryResolve(injectable, scope) as T | undefined;
-            } else if (injectable.scope === 'child' && !this.parent) {
+        if (isResolvable(injectable)) {
+            if (injectable.scope === 'root') {
+                if (this.parent) {
+                    instance = this.parent.tryResolve(injectable, scope);
+                } else {
+                    instance = this.doResolve(injectable, scope);
+                }
+            } else if (!this.parent) {
                 // Not possible to resolve a child service in a root container
                 return undefined;
+            } else if (this.parent.parent) {
+                instance = this.parent.get(injectable) ?? this.doResolve(injectable, scope);
             } else {
-                instance = this.doResolve(injectable, scope) as T | undefined;
+                instance = this.doResolve(injectable, scope);
             }
 
             if (instance && injectable.cached) {
