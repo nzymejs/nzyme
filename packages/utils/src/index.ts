@@ -2,6 +2,7 @@ export * from './array/arrayRemove.js';
 export * from './array/arrayRemoveFirst.js';
 export * from './array/arrayRemoveWhere.js';
 export * from './array/arrayReverse.js';
+export * from './array/arrayTakeWhere.js';
 export * from './array/arrayToMap.js';
 export * from './array/asArray.js';
 export * from './array/concatIterable.js';
