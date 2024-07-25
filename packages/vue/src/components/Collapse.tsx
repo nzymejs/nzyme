@@ -1,6 +1,5 @@
-import { getChildrenHeight, isBrowser } from '@barebone/dom-utils';
+import { isBrowser } from '@barebone/dom-utils';
 import { defineComponent, getCurrentInstance, h, Transition, withDirectives } from 'vue';
-
 
 import css from './Collapse.module.scss';
 import { LazyHydrate } from './LazyHydrate.js';
@@ -116,7 +115,7 @@ export const Collapse = defineComponent({
         }
 
         function fixedHeight(el: HTMLElement) {
-            const height = getChildrenHeight(el);
+            const height = el.scrollHeight;
 
             el.style.height = `${height}px`;
             el.style.overflow = 'hidden';
