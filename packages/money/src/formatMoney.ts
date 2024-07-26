@@ -34,12 +34,14 @@ function createFormatter(currency: Currency): MoneyFormatter {
             currency: currency,
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
+            useGrouping: 'always',
         } as Intl.NumberFormatOptions),
         noDecimals: new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: currency,
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
+            useGrouping: 'always',
         } as Intl.NumberFormatOptions),
     };
 }
