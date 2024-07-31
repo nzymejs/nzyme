@@ -15,5 +15,6 @@ module.exports = {
         // Not needed in vue 3
         'vue/require-v-for-key': 'off',
         'vue/require-default-prop': 'off',
+        'vue/one-component-per-file': 'off',
     },
 };
