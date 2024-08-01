@@ -26,6 +26,6 @@ module.exports = {
         'workspaces/no-absolute-imports': 'error',
         'workspaces/require-dependency': 'error',
 
-        'monorepo/no-internal-import': 'error',
+        'monorepo/no-relative-import': 'error',
     },
 };
