@@ -43,7 +43,7 @@ export interface CommandDefinition<T extends CommandFunction> extends Resolvable
 export type CommandResult<T extends Command<any>> =
     T extends Command<infer R> ? Awaited<ReturnType<R>> : never;
 
-export function defineCommand<T extends CommandFunction>(
+export function /* #__PURE__ */ defineCommand<T extends CommandFunction>(
     definition: CommandDefinition<T>,
 ): Command<T> {
     return new Command(definition);

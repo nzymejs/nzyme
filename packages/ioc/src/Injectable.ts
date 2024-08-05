@@ -17,6 +17,6 @@ export interface InjectableOptions {
     name?: string;
 }
 
-export function defineInjectable<T>(options?: InjectableOptions) {
+export function /* #__PURE__ */ defineInjectable<T>(options?: InjectableOptions) {
     return new Injectable<T>(options);
 }

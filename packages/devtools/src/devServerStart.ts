@@ -21,6 +21,7 @@ export type DevServerOptions = {
     port: number;
     plugins?: InputPluginOption;
     externals?: RegExp[];
+    internals?: RegExp[];
 };
 
 export function devServerStart(options: DevServerOptions) {
@@ -64,6 +65,10 @@ export function devServerStart(options: DevServerOptions) {
             input: options.input,
             plugins: options.plugins,
             external: source => {
+                if (options.internals?.some(e => e.test(source))) {
+                    return false;
+                }
+
                 if (/^node:/.test(source) || /^[\w_-]+$/.test(source)) {
                     // Node built-in modules and third party modules
                     return true;
@@ -73,8 +78,8 @@ export function devServerStart(options: DevServerOptions) {
                     return true;
                 }
 
-                if (options.externals) {
-                    return options.externals.some(e => e.test(source));
+                if (options.externals?.some(e => e.test(source))) {
+                    return true;
                 }
 
                 return false;
