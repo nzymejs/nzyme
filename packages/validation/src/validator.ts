@@ -8,6 +8,7 @@ export interface Validator<T> {
     (value: T, ctx: ValidationContext): ValidatorResult | Promise<ValidatorResult>;
 }
 
-export function /* #__PURE__ */ defineValidator<T>(validator: Validator<T>) {
+/*#__NO_SIDE_EFFECTS__*/
+export function defineValidator<T>(validator: Validator<T>) {
     return validator;
 }

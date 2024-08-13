@@ -29,9 +29,8 @@ export interface ServiceOptions<T, TExtend extends T = T> extends ResolvableOpti
     readonly setup: (ctx: ServiceContext) => TExtend;
 }
 
-export function /* #__PURE__ */ defineService<T, TExtend extends T = T>(
-    definition: ServiceOptions<T, TExtend>,
-) {
+/*#__NO_SIDE_EFFECTS__*/
+export function defineService<T, TExtend extends T = T>(definition: ServiceOptions<T, TExtend>) {
     return new Service<TExtend>(definition as ServiceOptions<TExtend>);
 }
 

@@ -1,10 +1,8 @@
 import { type ExtractPropTypes, type Prop, computed } from 'vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function /* #__PURE__ */ defineVModel<K extends string, P extends Prop<any>>(
-    prop: K,
-    options: P,
-) {
+/*#__NO_SIDE_EFFECTS__*/
+export function defineVModel<K extends string, P extends Prop<any>>(prop: K, options: P) {
     type PropsDef = {
         readonly [KK in K]: P;
     };

@@ -31,6 +31,7 @@ export interface FactoryOptions<T> extends ResolvableOptions<T> {
     readonly setup: (ctx: FactoryContext) => T;
 }
 
-export function /* #__PURE__ */ defineFactory<T>(definition: FactoryOptions<T>): Factory<T> {
+/*#__NO_SIDE_EFFECTS__*/
+export function defineFactory<T>(definition: FactoryOptions<T>): Factory<T> {
     return new Factory(definition);
 }
