@@ -38,6 +38,8 @@ export interface DataSourceOptions<TParams, TResult, TDefault = undefined> {
 
     /** Data will be loaded into this ref. Optional. */
     readonly data?: ((result: TResult) => void) | Ref<TResult | undefined>;
+
+    readonly onLoad?: (result: TResult, params: TParams) => unknown;
 }
 
 export interface DataSource<TResult, TDefault extends TResult | undefined = undefined>
@@ -165,26 +167,28 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
 
         const params = paramsRef.value;
         let promise: Promise<TResult> | undefined;
+        let result: TResult;
 
         try {
             pendingRef.value = promise = Promise.resolve(
                 opts.load(params as TParams, dataRef.value),
             );
 
-            const result = await promise;
+            result = await promise;
 
             dataRef.value = result;
             if (dataCallback) {
                 dataCallback(result);
             }
-
-            return result;
         } finally {
             // we need to check if this is really the same request we started
             // because in the meantime some other request might start
-            if (pending === promise) {
+            if (pendingRef.value === promise) {
                 pendingRef.value = null;
             }
         }
+
+        opts.onLoad?.(result, params as TParams);
+        return result;
     }
 }

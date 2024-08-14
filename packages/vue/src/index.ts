@@ -51,6 +51,7 @@ export * from './components/Collapse.jsx';
 //export { default as Collapse } from './components/Collapse.vue';
 
 export * from './directives/vAutofocus.js';
+export * from './directives/vScrollIntoView.js';
 export * from './directives/vShow.js';
 export * from './directives/vUid.js';
 export * from './directives/vVisible.js';
