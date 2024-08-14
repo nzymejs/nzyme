@@ -62,6 +62,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
         : (shallowRef() as Ref<TResult | undefined>);
     const dataCallback = isRef(opts.data) ? null : opts.data;
     const paramsRef = makeRef(opts.params);
+    const dirtyRef = ref(false);
 
     const pendingRef = ref<Promise<TResult> | null>(null);
 
@@ -115,7 +116,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
             return await pending;
         }
 
-        if (dataRef.value !== undefined) {
+        if (dataRef.value !== undefined && !dirtyRef.value) {
             return dataRef.value;
         }
 
@@ -150,6 +151,8 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
         if (behavior === 'lazy') {
             loadRef.value = false;
         }
+
+        dirtyRef.value = true;
     }
 
     // function used to load the data
@@ -177,6 +180,7 @@ export function useDataSource<TParams, TResult, TDefault extends TResult | undef
             result = await promise;
 
             dataRef.value = result;
+            dirtyRef.value = false;
             if (dataCallback) {
                 dataCallback(result);
             }

@@ -8,6 +8,7 @@ export interface StorageRef<T> extends Ref<T> {
     startSync(): void;
     stopSync(): void;
     save(): void;
+    clear(): void;
 }
 
 type StorageRefOptions = {
@@ -83,6 +84,7 @@ export function storageRef<T>(
     variable.startSync = startSync;
     variable.stopSync = stopSync;
     variable.save = save;
+    variable.clear = clear;
 
     if (options.sync && storage) {
         if (options.sync === 'always') {
@@ -162,6 +164,10 @@ export function storageRef<T>(
 
     function save() {
         write(variable.value);
+    }
+
+    function clear() {
+        variable.value = getDefault();
     }
 }
 
