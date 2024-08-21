@@ -157,4 +157,43 @@ export const Currencies = [
     /** Zimbabwean dollar */ 'ZWR',
 ] as const;
 
-export type Currency = (typeof Currencies)[number];
+export type Currency = keyof typeof CURRENCIES;
+
+export type CurrencyConfig = {
+    locale: string;
+    fractionSymbol: '.' | ',';
+    fractionDigits: number;
+    symbol: string;
+    symbolBefore: boolean;
+};
+
+export const CURRENCIES = {
+    /** Polish zloty */
+    PLN: defineCurrency({
+        locale: 'pl-PL',
+        fractionSymbol: ',',
+        fractionDigits: 2,
+        symbol: 'zł',
+        symbolBefore: false,
+    }),
+    /** Euro */
+    EUR: defineCurrency({
+        locale: 'en-US',
+        fractionSymbol: '.',
+        fractionDigits: 2,
+        symbol: '€',
+        symbolBefore: true,
+    }),
+    /** United States dollar */
+    USD: defineCurrency({
+        locale: 'en-US',
+        fractionSymbol: '.',
+        fractionDigits: 2,
+        symbol: '$',
+        symbolBefore: true,
+    }),
+};
+
+function defineCurrency(currency: CurrencyConfig) {
+    return currency;
+}

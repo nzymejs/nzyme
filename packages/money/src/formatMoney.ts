@@ -1,20 +1,20 @@
-import type { Currency } from './Currency.js';
+import { CURRENCIES, type Currency } from './Currency.js';
 import type { Money } from './Money.js';
 
 export type FormatMoneyOptions = {
-    decimals?: boolean;
+    withDecimals?: boolean;
+    withCurrency?: boolean;
 };
 
+const OPTIONS_DEFAULT: FormatMoneyOptions = {};
+
+export type MoneyFormatter = (
+    amount: number | null | undefined,
+    options?: FormatMoneyOptions,
+) => string;
+
 export function formatMoney(money: Money, options?: FormatMoneyOptions): string {
-    const amount = money[0] / 100;
-
-    let decimals = options?.decimals;
-    if (!decimals && amount % 1 !== 0) {
-        decimals = true;
-    }
-
-    const formatter = getFormatter(money[1]);
-    return decimals ? formatter.withDecimals.format(amount) : formatter.noDecimals.format(amount);
+    return getFormatter(money[1])(money[0], options);
 }
 
 function getFormatter(currency: Currency) {
@@ -28,27 +28,44 @@ function getFormatter(currency: Currency) {
 }
 
 function createFormatter(currency: Currency): MoneyFormatter {
-    return {
-        withDecimals: new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: currency,
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-            useGrouping: 'always',
-        } as Intl.NumberFormatOptions),
-        noDecimals: new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: currency,
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-            useGrouping: 'always',
-        } as Intl.NumberFormatOptions),
+    const { locale, fractionDigits, symbol } = CURRENCIES[currency];
+
+    const withDecimalsFormat = new Intl.NumberFormat(locale, {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits,
+        useGrouping: 'always',
+    });
+
+    const noDecimalsFormat = new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+        useGrouping: 'always',
+    });
+
+    const multiplier = 10 ** fractionDigits;
+
+    return (amount, options = OPTIONS_DEFAULT) => {
+        if (amount == null) {
+            return '';
+        }
+
+        amount = amount / multiplier;
+
+        const withDecimals = options.withDecimals || amount % 1 !== 0;
+
+        let formatted = withDecimals
+            ? withDecimalsFormat.format(amount)
+            : noDecimalsFormat.format(amount);
+
+        formatted = formatted.replace(/\s/g, '\u00A0');
+
+        const withCurrency = options.withCurrency ?? true;
+        if (withCurrency) {
+            return `${formatted}\u00A0${symbol}`;
+        }
+
+        return formatted;
     };
 }
-
-type MoneyFormatter = {
-    withDecimals: Intl.NumberFormat;
-    noDecimals: Intl.NumberFormat;
-};
 
 const formatters = new Map<Currency, MoneyFormatter>();
