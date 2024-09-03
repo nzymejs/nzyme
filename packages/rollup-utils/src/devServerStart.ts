@@ -7,27 +7,21 @@ import getPort from 'get-port';
 import type { Middleware } from 'koa';
 import Koa from 'koa';
 import koaProxy from 'koa-proxy';
-import type { InputOptions, InputPluginOption, OutputOptions, RollupWatchOptions } from 'rollup';
-import { watch } from 'rollup';
+import { watch, type RollupWatchOptions } from 'rollup';
 
 import { formatDuration, perf } from '@nzyme/logging';
 import { createPromise } from '@nzyme/utils';
 
 import { onRollupWarning } from './onRollupWarning.js';
 
-export type DevServerOptions = {
-    input: string;
-    outputDir: string;
+export type DevServerOptions = RollupWatchOptions & {
     port: number;
-    plugins?: InputPluginOption;
-    externals?: RegExp[];
-    internals?: RegExp[];
 };
 
 export function devServerStart(options: DevServerOptions) {
-    const rollupOptions = getRollupOptions(options);
+    const outputFile = getOutputFile(options);
 
-    startRollup(rollupOptions);
+    startRollup();
 
     let compiled = false;
     let server: ReturnType<typeof createServer> | undefined;
@@ -51,56 +45,11 @@ export function devServerStart(options: DevServerOptions) {
         consola.info(`Server listening on ${chalk.green(`http://localhost:${options.port}`)}`);
     });
 
-    function getOutputFile(options: DevServerOptions) {
-        const inputExtension = path.extname(options.input);
-        const inputBase = path.basename(options.input, inputExtension);
-
-        const outputFile = path.join(options.outputDir, `${inputBase}.js`);
-
-        return outputFile;
-    }
-
-    function getRollupOptions(options: DevServerOptions): RollupWatchOptions {
-        const input: InputOptions = {
-            input: options.input,
-            plugins: options.plugins,
-            external: source => {
-                if (options.internals?.some(e => e.test(source))) {
-                    return false;
-                }
-
-                if (/^node:/.test(source) || /^[\w_-]+$/.test(source)) {
-                    // Node built-in modules and third party modules
-                    return true;
-                }
-
-                if (/node_modules/.test(source)) {
-                    return true;
-                }
-
-                if (options.externals?.some(e => e.test(source))) {
-                    return true;
-                }
-
-                return false;
-            },
+    function startRollup() {
+        const watcher = watch({
             onwarn: onRollupWarning,
-        };
-
-        const output: OutputOptions = {
-            format: 'esm',
-            dir: options.outputDir,
-            sourcemap: true,
-        };
-
-        return {
-            ...input,
-            output,
-        };
-    }
-
-    function startRollup(options: RollupWatchOptions) {
-        const watcher = watch(options);
+            ...options,
+        });
 
         watcher.on('event', event => {
             if (event.code === 'BUNDLE_START') {
@@ -143,7 +92,6 @@ export function devServerStart(options: DevServerOptions) {
 
             const start = perf.start();
             const port = await getPort();
-            const outputFile = getOutputFile(options);
 
             worker = new Worker(outputFile, {
                 stderr: true,
@@ -183,4 +131,35 @@ export function devServerStart(options: DevServerOptions) {
             await worker?.terminate();
         }
     }
+}
+
+function getOutputFile(options: DevServerOptions) {
+    if (typeof options.input !== 'string') {
+        throw new Error('Input must be single file');
+    }
+
+    if (!options.output) {
+        throw new Error('Output is required');
+    }
+
+    if (Array.isArray(options.output)) {
+        throw new Error('Output must be single file');
+    }
+
+    if (typeof options.output.file === 'string') {
+        const cwd = process.cwd();
+        const outputFile = path.resolve(cwd, options.output.file);
+
+        return outputFile;
+    }
+
+    if (typeof options.output.dir === 'string') {
+        const inputExtension = path.extname(options.input);
+        const inputBase = path.basename(options.input, inputExtension);
+        const outputFile = path.join(options.output.dir, `${inputBase}.js`);
+
+        return outputFile;
+    }
+
+    throw new Error('Output must be file or directory');
 }

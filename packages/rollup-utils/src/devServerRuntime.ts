@@ -7,7 +7,7 @@ import sourceMap from 'source-map-support';
 export function devServerRuntime() {
     sourceMap.install();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const port = workerData.port as number;
+    const port = workerData?.port as number;
 
     return {
         port,
