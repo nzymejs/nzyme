@@ -6,3 +6,5 @@ export * from './moneyMath.js';
 export * from './formatMoney.js';
 export * from './symbols.js';
 export * from './parseMoney.js';
+export * from './normalizeMoney.js';
+export * from './denormalizeMoney.js';
