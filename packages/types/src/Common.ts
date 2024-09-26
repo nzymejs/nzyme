@@ -3,7 +3,7 @@
 
 export type NonPartial<T> = { [P in keyof T]-?: T[P] };
 
-export type Primitive = string | boolean | number;
+export type Primitive = string | boolean | number | bigint;
 
 export type Strict<T> = Exclude<T, null | undefined>;
 
