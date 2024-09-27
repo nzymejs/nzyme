@@ -18,3 +18,9 @@ export function assertEquals<T, E extends T = T>(
         throw new Error(message ?? `Value is not equal to ${String(expected)}.`);
     }
 }
+
+export function assertTruthy(value: unknown, message?: string): asserts value {
+    if (!value) {
+        throw new Error(message ?? 'Value is not truthy.');
+    }
+}
