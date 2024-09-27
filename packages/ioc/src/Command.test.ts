@@ -1,3 +1,5 @@
+import { test, expect } from 'vitest';
+
 import { defineCommand } from './Command.js';
 import { Container } from './Container.js';
 import { defineInjectable } from './Injectable.js';
@@ -88,7 +90,7 @@ test('resolve command with service dependency', () => {
     let commandCount = 0;
     const command = defineCommand({
         setup({ inject }) {
-            const s = inject(service);
+            inject(service);
             commandCount++;
             return (value: number) => {
                 return value;

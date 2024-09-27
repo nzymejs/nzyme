@@ -13,8 +13,7 @@
         "build": "tsc --build"
     },
     "devDependencies": {
-        "@nzyme/jest": "*",
-        "@types/jest": "^29.5.12"
+        "vitest": "^2.1.1"
     },
     "depcheck": {
         "ignoreFiles": [

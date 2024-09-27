@@ -10,9 +10,6 @@
     "references": [
         {
             "path": "../types/tsconfig.json"
-        },
-        {
-            "path": "../jest/tsconfig.json"
         }
     ]
 }

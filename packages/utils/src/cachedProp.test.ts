@@ -1,4 +1,6 @@
-import { cachedProp } from '..';
+import { test, expect } from 'vitest';
+
+import { cachedProp } from './cachedProp.js';
 
 test('cached decorated prop is called only once', () => {
     let timesCalled = 0;
