@@ -1,3 +1,5 @@
+import { test, expect } from 'vitest';
+
 import { Container } from './Container.js';
 import { defineInjectable } from './Injectable.js';
 import { defineService } from './Service.js';

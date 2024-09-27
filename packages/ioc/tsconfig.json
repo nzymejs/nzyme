@@ -7,9 +7,5 @@
     },
     "include": ["src"],
     "exclude": ["src/**/*.test.ts"],
-    "references": [
-        {
-            "path": "../jest/tsconfig.json"
-        }
-    ]
+    "references": []
 }
