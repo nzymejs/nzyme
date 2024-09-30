@@ -9,7 +9,10 @@
     "exclude": ["src/**/*.test.ts"],
     "references": [
         {
-            "path": "../jest/tsconfig.json"
+            "path": "../types/tsconfig.json"
+        },
+        {
+            "path": "../utils/tsconfig.json"
         }
     ]
 }

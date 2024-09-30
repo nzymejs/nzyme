@@ -4,5 +4,5 @@
         "rootDir": ".",
         "types": ["@types/jest"]
     },
-    "include": ["./src/**/*.test.ts", "./jest.config.ts"]
+    "include": ["./src/**/*.ts", "./vitest.config.ts"]
 }

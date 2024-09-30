@@ -5,3 +5,5 @@ export type IfLiteral<T, Y, N = T> = T | 'jy@##O8sjzv=(+mby#4T=3gLHwU+0Z' extend
 export type IfNullable<T, Y, N> = IfAny<T, T, T | null extends T ? Y : N>;
 
 export type IfUndefined<T, Y, N> = IfAny<T, T, T | undefined extends T ? Y : N>;
+
+export type IfUnknown<T, Y, N> = IfAny<T, T, unknown extends T ? Y : N>;
