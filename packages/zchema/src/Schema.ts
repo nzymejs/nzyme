@@ -1,31 +1,33 @@
-import type { IfUnknown, Primitive } from '@nzyme/types';
+import type { IfAny, IfUnknown, Simplify } from '@nzyme/types';
 
-export type SchemaDefault<T> = T extends Primitive ? T | (() => T) : () => T;
+import type {
+    SCHEMA_DEFINITION,
+    SCHEMA_PROTO,
+    SchemaDefinition,
+    SchemaProto,
+} from './SchemaDefinition.js';
 
-export type SchemaOptions<V = unknown, TNullable extends boolean = boolean> = {
-    nullable?: TNullable;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    default?: IfUnknown<V, SchemaDefault<any>, SchemaDefault<V>>;
+export type SchemaOptions<V = unknown> = {
+    nullable?: boolean;
+    default?: () => V;
+};
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type Schema<V = unknown, O extends SchemaOptions<V> = { nullable?: boolean }> = {
+    [SCHEMA_DEFINITION]: SchemaDefinition<V>;
+    [SCHEMA_PROTO]: SchemaProto<V>;
+    nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
+} & {
+    [K in Exclude<keyof O, 'nullable'>]: O[K];
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SchemaOptionsNullable<O extends SchemaOptions<any>> = IfUnknown<
-    O['nullable'],
-    false,
-    O['nullable']
->;
+export type SchemaAny = Schema<any, any>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type Schema<
-    V = unknown,
-    O extends SchemaOptions<V, boolean> = { nullable: boolean },
-    T extends string = string,
-> = {
-    type: T;
-    nullable: SchemaOptionsNullable<O>;
-    coerce: (value: unknown) => V;
-    serialize: (value: V) => unknown;
-    default: (() => V) | null;
-} & Omit<O, 'default' | 'nullable'>;
-
-export type SchemaValue<TSchema extends Schema> = ReturnType<TSchema['coerce']>;
+export type SchemaValue<TSchema extends SchemaAny> =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    TSchema extends Schema<infer V, any>
+        ? TSchema['nullable'] extends false
+            ? IfAny<V, unknown, Simplify<V>>
+            : IfAny<V, unknown, V> | null
+        : never;
