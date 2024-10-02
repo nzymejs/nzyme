@@ -16,6 +16,7 @@ export function createSchema<V, O extends SchemaOptions<V>>(
     const schema: Schema<V, O> = {
         ...options,
         nullable: (options.nullable ?? false) as Schema<V, O>['nullable'],
+        optional: (options.optional ?? false) as Schema<V, O>['optional'],
         [SCHEMA_PROTO]: proto,
         [SCHEMA_DEFINITION]: definition,
     };

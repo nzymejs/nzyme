@@ -8,15 +8,23 @@ import { coerce } from '../coerce.js';
 test('basic object schema', () => {
     const schema = object({
         props: {
-            foo: number({}),
-            bar: string(),
+            number: number({}),
+            numberNullable: number({ nullable: true }),
+            numberOptional: number({ optional: true }),
+            string: string(),
+            stringNullable: string({ nullable: true }),
+            stringOptional: string({ optional: true }),
         },
     });
 
     const value = coerce(schema, {});
 
     expect(value).toEqual({
-        foo: 0,
-        bar: '',
+        number: 0,
+        numberNullable: null,
+        numberOptional: undefined,
+        string: '',
+        stringNullable: null,
+        stringOptional: undefined,
     });
 });

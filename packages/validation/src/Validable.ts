@@ -1,6 +1,6 @@
 import { asArray } from '@nzyme/utils';
 
-import type { ValidationErrors } from './types.js';
+import type { ValidationErrorsResult } from './types.js';
 import { ValidationException } from './types.js';
 import { validateWithMany } from './utils.js';
 import type { ValidationContext, Validator, ValidatorResult } from './validator.js';
@@ -20,7 +20,7 @@ export abstract class Validable<T> {
     public async validate(
         value: unknown,
         ctx: ValidationContext = {},
-    ): Promise<ValidationErrors | null> {
+    ): Promise<ValidationErrorsResult | null> {
         const result =
             (await this.preValidate(value, ctx)) ??
             (await this.runValidators(value as T, ctx)) ??

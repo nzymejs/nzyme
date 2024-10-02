@@ -1,5 +1,4 @@
-import type { Flatten, Simplify } from '@nzyme/types';
-
+import type { Flatten } from '@nzyme/types';
 import type { Schema, SchemaAny, SchemaOptions, SchemaValue } from '../Schema.js';
 import { coerce } from '../coerce.js';
 import { createSchema } from '../createSchema.js';
@@ -10,9 +9,17 @@ export type ObjectSchemaProps = {
     [key: string]: SchemaAny;
 };
 
-export type ObjectSchemaPropsValue<TProps extends ObjectSchemaProps> = {
-    [K in keyof TProps]: SchemaValue<TProps[K]>;
-};
+export type ObjectSchemaPropsValue<TProps extends ObjectSchemaProps> = Flatten<
+    {
+        [K in keyof TProps as TProps[K]['optional'] extends false ? K : never]: SchemaValue<
+            TProps[K]
+        >;
+    } & {
+        [K in keyof TProps as TProps[K]['optional'] extends false ? never : K]+?: SchemaValue<
+            TProps[K]
+        >;
+    }
+>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ObjectSchemaOptions<TProps extends ObjectSchemaProps = ObjectSchemaProps> =
@@ -21,10 +28,10 @@ export type ObjectSchemaOptions<TProps extends ObjectSchemaProps = ObjectSchemaP
     };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ObjectSchema<O extends ObjectSchemaOptions> = Schema<
-    ObjectSchemaPropsValue<O['props']>,
-    O
->;
+export type ObjectSchema<O extends ObjectSchemaOptions> =
+    O extends ObjectSchemaOptions<infer P extends ObjectSchemaProps>
+        ? Schema<ObjectSchemaPropsValue<P>, O>
+        : never;
 
 export type ObjectSchemaValue<O extends ObjectSchemaOptions> = ObjectSchemaPropsValue<O['props']>;
 

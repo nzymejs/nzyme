@@ -6,11 +6,11 @@ export interface ValidationError {
     message?: Translatable;
 }
 
-export type ValidationErrorsMap = {
-    [key: string | number]: ValidationErrors | undefined;
+export type ValidationErrors = {
+    [key: string | number]: ValidationError[] | ValidationErrors | undefined;
 };
 
-export type ValidationErrors = ValidationError[] | ValidationErrorsMap;
+export type ValidationErrorsResult = ValidationError[] | ValidationErrors;
 
 export enum CommonErrors {
     Required = 'Required',
@@ -23,12 +23,12 @@ export enum CommonErrors {
 }
 
 export class ValidationException extends Error {
-    public readonly errors: ValidationErrors;
+    public readonly errors: ValidationErrorsResult;
 
     constructor(message: string);
-    constructor(message: string, errors: ValidationErrors);
-    constructor(errors: ValidationErrors);
-    constructor(messageOrErrors: string | ValidationErrors, errors?: ValidationErrors) {
+    constructor(message: string, errors: ValidationErrorsResult);
+    constructor(errors: ValidationErrorsResult);
+    constructor(messageOrErrors: string | ValidationErrorsResult, errors?: ValidationErrorsResult) {
         let message: string;
         if (typeof messageOrErrors === 'string') {
             message = messageOrErrors;
