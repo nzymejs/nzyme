@@ -1,9 +1,15 @@
 import type { Flatten } from '@nzyme/types';
 
-import type { Schema, SchemaAny, SchemaOptions, SchemaValue } from '../Schema.js';
+import type {
+    Schema,
+    SchemaAny,
+    SchemaOptions,
+    SchemaOptionsSimlify,
+    SchemaValue,
+} from '../Schema.js';
+import { defineSchema, type SchemaProto } from '../SchemaDefinition.js';
 import { coerce } from '../coerce.js';
 import { createSchema } from '../createSchema.js';
-import { defineSchema } from '../defineSchema.js';
 import { serialize } from '../serialize.js';
 
 export type ObjectSchemaProps = {
@@ -28,48 +34,58 @@ export type ObjectSchemaOptions<TProps extends ObjectSchemaProps = ObjectSchemaP
         props: TProps;
     };
 
+type ObjectSchemaOptionsProps<O extends ObjectSchemaOptions> =
+    O extends ObjectSchemaOptions<infer P extends ObjectSchemaProps> ? P : never;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ObjectSchema<O extends ObjectSchemaOptions> =
+export type ObjectSchema<O extends ObjectSchemaOptions> = ForceName<
     O extends ObjectSchemaOptions<infer P extends ObjectSchemaProps>
         ? Schema<ObjectSchemaPropsValue<P>, O>
-        : never;
+        : never
+>;
+
+declare class FF {}
+type ForceName<T> = T & FF;
 
 export type ObjectSchemaValue<O extends ObjectSchemaOptions> = ObjectSchemaPropsValue<O['props']>;
 
-const proto = defineSchema((options: ObjectSchemaOptions) => {
-    const props: [name: string, schema: Schema][] = [];
+export const object = defineSchema(
+    <O extends ObjectSchemaOptions>(
+        options: O & ObjectSchemaOptions<ObjectSchemaOptionsProps<O>>,
+    ) => {
+        const props: [name: string, schema: Schema][] = [];
 
-    for (const propKey in options.props) {
-        const propSchema = options.props[propKey];
-        props.push([propKey, propSchema]);
-    }
+        for (const propKey in options.props) {
+            const propSchema = options.props[propKey];
+            props.push([propKey, propSchema]);
+        }
 
-    return {
-        coerce(value: unknown) {
-            const result: Record<string, unknown> = {};
+        const proto: SchemaProto<ObjectSchemaValue<O>> = {
+            coerce(value) {
+                const result: Record<string, unknown> = {};
 
-            for (const [propKey, propSchema] of props) {
-                const propValue = (value as Record<string, unknown>)[propKey];
-                result[propKey] = coerce(propSchema, propValue);
-            }
+                for (const [propKey, propSchema] of props) {
+                    const propValue = (value as Record<string, unknown>)[propKey];
+                    result[propKey] = coerce(propSchema, propValue);
+                }
 
-            return result;
-        },
-        serialize(value: Record<string, unknown>) {
-            const result: Record<string, unknown> = {};
+                return result as ObjectSchemaValue<O>;
+            },
+            serialize(value) {
+                const result: Record<string, unknown> = {};
 
-            for (const [propKey, propSchema] of props) {
-                const propValue = value[propKey];
-                result[propKey] = serialize(propSchema, propValue);
-            }
+                for (const [propKey, propSchema] of props) {
+                    const propValue = value[propKey as keyof ObjectSchemaValue<O>];
+                    result[propKey] = serialize(propSchema, propValue);
+                }
 
-            return result;
-        },
-    };
-});
+                return result;
+            },
+        };
 
-export function object<O extends ObjectSchemaOptions>(
-    options: O & ObjectSchemaOptions<O['props']>,
-) {
-    return createSchema(proto, options) as ObjectSchema<O>;
-}
+        return createSchema<ObjectSchemaValue<O>>(
+            proto,
+            options as SchemaOptions<ObjectSchemaValue<O>>,
+        ) as ObjectSchema<SchemaOptionsSimlify<O>>;
+    },
+);

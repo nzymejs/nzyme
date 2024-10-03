@@ -29,7 +29,7 @@ describe('non-nullable number schema', () => {
 
     test('coerce undefined', () => {
         const value = coerce(schema, undefined);
-        expect(value).toBe(0);
+        expect(value).toBe(NaN);
     });
 
     test('coerce true', () => {

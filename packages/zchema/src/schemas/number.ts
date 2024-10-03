@@ -1,25 +1,19 @@
 import { identity } from '@nzyme/utils';
 
-import type { Schema, SchemaOptions } from '../Schema.js';
+import type { Schema, SchemaOptions, SchemaOptionsSimlify } from '../Schema.js';
+import { defineSchema, type SchemaProto } from '../SchemaDefinition.js';
 import { createSchema } from '../createSchema.js';
-import { defineSchema } from '../defineSchema.js';
 
 export type NumberSchema<O extends SchemaOptions<number>> = Schema<number, O>;
 
-const proto = defineSchema<number>({
-    coerce(value) {
-        if (value == null) {
-            return 0;
-        }
-
-        return Number(value);
-    },
+const proto: SchemaProto<number> = {
+    coerce: Number,
     serialize: identity,
-});
+};
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function number<O extends SchemaOptions<number> = {}>(
-    options?: O & SchemaOptions<number>,
-): NumberSchema<O> {
-    return createSchema(proto, options);
-}
+export const number = defineSchema(
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    <O extends SchemaOptions<number> = {}>(options?: O & SchemaOptions<number>) => {
+        return createSchema(proto, options) as NumberSchema<SchemaOptionsSimlify<O>>;
+    },
+);

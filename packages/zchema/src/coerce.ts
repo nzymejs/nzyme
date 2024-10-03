@@ -1,8 +1,8 @@
 import type { SchemaAny, SchemaValue } from './Schema.js';
-import { SCHEMA_DEFINITION } from './SchemaDefinition.js';
+import { SCHEMA_PROTO } from './SchemaDefinition.js';
 
 export function coerce<S extends SchemaAny>(schema: S, value: unknown): SchemaValue<S> {
-    const def = schema[SCHEMA_DEFINITION];
+    const def = schema[SCHEMA_PROTO];
 
     if (value === null) {
         if (schema.nullable) {

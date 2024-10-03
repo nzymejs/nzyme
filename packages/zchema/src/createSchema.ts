@@ -1,25 +1,17 @@
 import type { SchemaOptions, Schema } from './Schema.js';
-import { SCHEMA_DEFINITION, SCHEMA_PROTO, type SchemaProto } from './SchemaDefinition.js';
+import { SCHEMA_PROTO, type SchemaProto } from './SchemaDefinition.js';
 
-export type CreateSchemaParams<V, T extends string, O extends SchemaOptions<V>> = {
-    type: T;
-    coerce: (value: unknown) => V;
-    serialize: (value: V) => unknown;
-    options: (O & SchemaOptions<V>) | undefined;
-};
-
-export function createSchema<V, O extends SchemaOptions<V>>(
+export function createSchema<V, O extends SchemaOptions<V> = SchemaOptions<V>>(
     proto: SchemaProto<V>,
     options: O & SchemaOptions<V> = {} as O,
 ) {
-    const definition = proto(options);
-    const schema: Schema<V, O> = {
+    type S = Schema<V, O>;
+    const schema: S = {
         ...options,
-        nullable: (options.nullable ?? false) as Schema<V, O>['nullable'],
-        optional: (options.optional ?? false) as Schema<V, O>['optional'],
+        nullable: (options.nullable ?? false) as S['nullable'],
+        optional: (options.optional ?? false) as S['optional'],
         validators: options.validators ?? [],
         [SCHEMA_PROTO]: proto,
-        [SCHEMA_DEFINITION]: definition,
     };
 
     return schema;

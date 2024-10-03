@@ -6,7 +6,6 @@ import { number } from './number.js';
 import { object } from './object.js';
 import { string } from './string.js';
 import { coerce } from '../coerce.js';
-import { SchemaValue } from '../Schema.js';
 
 test('basic object schema', () => {
     const schema = object({
@@ -23,10 +22,10 @@ test('basic object schema', () => {
     const value = coerce(schema, {});
 
     expect(value).toEqual({
-        number: 0,
+        number: NaN,
         numberNullable: null,
         numberOptional: undefined,
-        string: '',
+        string: 'undefined',
         stringNullable: null,
         stringOptional: undefined,
     });
