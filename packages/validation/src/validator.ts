@@ -1,11 +1,11 @@
-import type { ValidationErrorsResult } from './types.js';
+import type { ValidationErrors } from './types.js';
 
 export interface ValidationContext {}
 
-export type ValidatorResult = ValidationErrorsResult | null | void | undefined;
+export type ValidatorResult = ValidationErrors | null | void | undefined;
 
 export interface Validator<T> {
-    (value: T, ctx: ValidationContext): ValidatorResult;
+    (value: T, ctx: ValidationContext): ValidatorResult | Promise<ValidatorResult>;
 }
 
 /*#__NO_SIDE_EFFECTS__*/

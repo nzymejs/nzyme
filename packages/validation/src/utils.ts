@@ -1,17 +1,17 @@
-import type { Translator } from '@nzyme/i18n';
+import type { Translator} from '@nzyme/i18n';
 import { translate } from '@nzyme/i18n';
 import type { Maybe } from '@nzyme/types';
 
-import type { ValidationErrorsResult, ValidationError } from './types.js';
+import type { ValidationErrors, ValidationError } from './types.js';
 import type { ValidationContext, Validator } from './validator.js';
 
-export function validateWithMany<T>(
+export async function validateWithMany<T>(
     value: T,
     validators: readonly Validator<T>[],
     ctx: ValidationContext,
 ) {
     for (const validator of validators) {
-        const errors = validator(value, ctx);
+        const errors = await validator(value, ctx);
         if (errors) {
             return errors;
         }
@@ -24,11 +24,11 @@ export function createError(...errors: ValidationError[]) {
     return errors;
 }
 
-export function singleError(error: ValidationError): ValidationErrorsResult {
+export function singleError(error: ValidationError): ValidationErrors {
     return { '': [error] };
 }
 
-export function getErrorForKey(errors: Maybe<ValidationErrorsResult>, key: string | number) {
+export function getErrorForKey(errors: Maybe<ValidationErrors>, key: string | number) {
     if (!errors) {
         return null;
     }
@@ -40,7 +40,7 @@ export function getErrorForKey(errors: Maybe<ValidationErrorsResult>, key: strin
     return errors[key] || null;
 }
 
-export function* flattenErrors(errors: ValidationErrorsResult): IterableIterator<ValidationError> {
+export function* flattenErrors(errors: ValidationErrors): IterableIterator<ValidationError> {
     if (Array.isArray(errors)) {
         for (const error of errors) {
             yield error;
@@ -59,11 +59,11 @@ export function* flattenErrors(errors: ValidationErrorsResult): IterableIterator
     }
 }
 
-export function translateErrors(errors: ValidationErrorsResult): void;
-export function translateErrors(errors: ValidationErrorsResult, translator: Translator): void;
-export function translateErrors(errors: ValidationErrorsResult, locale: string): void;
+export function translateErrors(errors: ValidationErrors): void;
+export function translateErrors(errors: ValidationErrors, translator: Translator): void;
+export function translateErrors(errors: ValidationErrors, locale: string): void;
 export function translateErrors(
-    errors: ValidationErrorsResult,
+    errors: ValidationErrors,
     localeOrTranslator?: string | Translator,
 ) {
     if (localeOrTranslator == null || typeof localeOrTranslator === 'string') {

@@ -1,8 +1,18 @@
 {
     "extends": "../../tsconfig.tests.json",
     "compilerOptions": {
-        "rootDir": ".",
-        "types": ["@types/jest"]
+        "rootDir": "."
     },
-    "include": ["./src/**/*.ts", "./vitest.config.ts"]
+    "include": ["./src/**/*.ts", "./vitest.config.ts"],
+    "references": [
+        {
+            "path": "../types/tsconfig.json"
+        },
+        {
+            "path": "../utils/tsconfig.json"
+        },
+        {
+            "path": "../validate/tsconfig.json"
+        }
+    ]
 }

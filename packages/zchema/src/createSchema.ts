@@ -10,13 +10,14 @@ export type CreateSchemaParams<V, T extends string, O extends SchemaOptions<V>> 
 
 export function createSchema<V, O extends SchemaOptions<V>>(
     proto: SchemaProto<V>,
-    options: O = {} as O,
+    options: O & SchemaOptions<V> = {} as O,
 ) {
     const definition = proto(options);
     const schema: Schema<V, O> = {
         ...options,
         nullable: (options.nullable ?? false) as Schema<V, O>['nullable'],
         optional: (options.optional ?? false) as Schema<V, O>['optional'],
+        validators: options.validators ?? [],
         [SCHEMA_PROTO]: proto,
         [SCHEMA_DEFINITION]: definition,
     };

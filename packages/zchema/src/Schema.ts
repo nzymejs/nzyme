@@ -1,4 +1,5 @@
 import type { IfAny, IfUnknown } from '@nzyme/types';
+import type { Validator } from '@nzyme/validate';
 
 import type {
     SCHEMA_DEFINITION,
@@ -7,10 +8,11 @@ import type {
     SchemaProto,
 } from './SchemaDefinition.js';
 
-export type SchemaOptions<V = unknown> = {
+export type SchemaOptions<V> = {
     nullable?: boolean;
     optional?: boolean;
     default?: () => V;
+    validators?: Validator<V>[];
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -23,8 +25,9 @@ export type Schema<
     nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
     optional: IfAny<O, boolean, IfUnknown<O['optional'], false, Exclude<O['optional'], undefined>>>;
     default?: () => V;
+    validators: Validator<V>[];
 } & {
-    [K in Exclude<keyof O, 'nullable' | 'optional'>]: O[K];
+    [K in Exclude<keyof O, 'nullable' | 'optional' | 'validators'>]: O[K];
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

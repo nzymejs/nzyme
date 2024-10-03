@@ -1,4 +1,5 @@
 import type { Flatten } from '@nzyme/types';
+
 import type { Schema, SchemaAny, SchemaOptions, SchemaValue } from '../Schema.js';
 import { coerce } from '../coerce.js';
 import { createSchema } from '../createSchema.js';
