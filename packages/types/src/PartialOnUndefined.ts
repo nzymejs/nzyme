@@ -5,6 +5,7 @@ export type PartialOnUndefined<T> = PartialOn<T, undefined>;
 
 export type PartialOn<T, TOn> =
     | T
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | (T extends Record<any, any>
           ? { [K in keyof T as TOn extends T[K] ? K : never]?: T[K] } extends infer U // Make a partial type with all value types accepting undefined (and set them optional)
               ? Merge<

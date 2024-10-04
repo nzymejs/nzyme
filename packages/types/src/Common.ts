@@ -3,7 +3,7 @@
 
 export type NonPartial<T> = { [P in keyof T]-?: T[P] };
 
-export type Primitive = string | boolean | number;
+export type Primitive = string | boolean | number | bigint;
 
 export type Strict<T> = Exclude<T, null | undefined>;
 
@@ -43,19 +43,9 @@ export type Merge<T1, T2> = Exclude<
     undefined
 >;
 
-export type Merge3<T1, T2, T3> = Exclude<
-    {
-        [K in keyof (T1 & T2 & T3)]: (T1 & T2 & T3)[K];
-    },
-    undefined
->;
-
-export type Override<T1, T2> = Exclude<
-    {
-        [K in keyof (T1 & T2)]: K extends keyof T2 ? T2[K] : K extends keyof T1 ? T1[K] : never;
-    },
-    undefined
->;
+export type Override<T1, T2> = {
+    [K in keyof T1 | keyof T2]: K extends keyof T2 ? T2[K] : K extends keyof T1 ? T1[K] : never;
+};
 
 export type Maybe<T> = T | null | undefined;
 
