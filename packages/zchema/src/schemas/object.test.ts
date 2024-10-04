@@ -2,6 +2,7 @@ import { expect, test } from 'vitest';
 
 import { minValidator, regexValidator } from '@nzyme/validate';
 
+import { array } from './array.js';
 import { number } from './number.js';
 import { object } from './object.js';
 import { string } from './string.js';
@@ -16,6 +17,9 @@ test('basic object schema', () => {
             string: string(),
             stringNullable: string({ nullable: true }),
             stringOptional: string({ optional: true }),
+            array: array({
+                of: string(),
+            }),
         },
     });
 
@@ -28,6 +32,7 @@ test('basic object schema', () => {
         string: 'undefined',
         stringNullable: null,
         stringOptional: undefined,
+        array: [],
     });
 });
 

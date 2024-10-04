@@ -18,6 +18,7 @@
         "@nzyme/validate": "*"
     },
     "devDependencies": {
+        "@types/lodash.merge": "^4.6.9",
         "vitest": "^2.1.1"
     }
 }

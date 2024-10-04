@@ -9,6 +9,7 @@ export type StringSchema<O extends SchemaOptions<string>> = Schema<string, O>;
 const proto: SchemaProto<string> = {
     coerce: String,
     serialize: identity,
+    check: value => typeof value === 'string',
 };
 
 export const string = defineSchema(

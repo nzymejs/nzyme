@@ -22,6 +22,7 @@ export * from './array/countWhere.js';
 export * from './array/sumOver.js';
 export * from './array/forEachParalell.js';
 export * from './array/shuffleArray.js';
+export * from './array/isIterable.js';
 
 export * from './string/equalIgnoreCase.js';
 export * from './string/formatWith.js';

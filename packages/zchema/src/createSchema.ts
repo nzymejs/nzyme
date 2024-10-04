@@ -1,5 +1,11 @@
-import type { SchemaOptions, Schema } from './Schema.js';
-import { SCHEMA_PROTO, type SchemaProto } from './SchemaDefinition.js';
+import {
+    type SchemaOptions,
+    type Schema,
+    SCHEMA_FACTORY,
+    SCHEMA_PROTO,
+    SCHEMA_OPTIONS,
+} from './Schema.js';
+import type { SchemaProto } from './SchemaDefinition.js';
 
 export function createSchema<V, O extends SchemaOptions<V> = SchemaOptions<V>>(
     proto: SchemaProto<V>,
@@ -12,6 +18,8 @@ export function createSchema<V, O extends SchemaOptions<V> = SchemaOptions<V>>(
         optional: (options.optional ?? false) as S['optional'],
         validators: options.validators ?? [],
         [SCHEMA_PROTO]: proto,
+        [SCHEMA_FACTORY]: null as unknown as S[typeof SCHEMA_FACTORY],
+        [SCHEMA_OPTIONS]: options,
     };
 
     return schema;

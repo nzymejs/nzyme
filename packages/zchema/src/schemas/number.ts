@@ -9,11 +9,14 @@ export type NumberSchema<O extends SchemaOptions<number>> = Schema<number, O>;
 const proto: SchemaProto<number> = {
     coerce: Number,
     serialize: identity,
+    check: value => typeof value === 'number',
 };
 
-export const number = defineSchema(
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    <O extends SchemaOptions<number> = {}>(options?: O & SchemaOptions<number>) => {
-        return createSchema(proto, options) as NumberSchema<SchemaOptionsSimlify<O>>;
-    },
-);
+// eslint-disable-next-line @typescript-eslint/ban-types
+function factory<O extends SchemaOptions<number> = {}>(
+    options?: O & SchemaOptions<number>,
+): NumberSchema<SchemaOptionsSimlify<O>> {
+    return createSchema(proto, options) as NumberSchema<SchemaOptionsSimlify<O>>;
+}
+
+export const number = defineSchema(factory);

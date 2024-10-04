@@ -81,6 +81,9 @@ export const object = defineSchema(
 
                 return result;
             },
+            check(value): value is ObjectSchemaValue<O> {
+                return value != null && Object.getPrototypeOf(value) === Object.prototype;
+            },
         };
 
         return createSchema<ObjectSchemaValue<O>>(
