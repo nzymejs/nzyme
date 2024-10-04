@@ -1,12 +1,12 @@
-import type { ValidationResult } from './ValidationResult.js';
+import type { ValidationErrors } from './Validator.js';
 
 export class ValidationError extends Error {
-    public readonly errors: ValidationResult;
+    public readonly errors: ValidationErrors;
 
     constructor(message: string);
-    constructor(message: string, errors: ValidationResult);
-    constructor(errors: ValidationResult);
-    constructor(messageOrErrors: string | ValidationResult, errors?: ValidationResult) {
+    constructor(message: string, errors: ValidationErrors);
+    constructor(errors: ValidationErrors);
+    constructor(messageOrErrors: string | ValidationErrors, errors?: ValidationErrors) {
         let message: string;
         if (typeof messageOrErrors === 'string') {
             message = messageOrErrors;

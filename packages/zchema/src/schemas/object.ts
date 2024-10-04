@@ -1,4 +1,5 @@
 import type { Flatten } from '@nzyme/types';
+import { isPlainObject } from '@nzyme/utils';
 
 import type {
     Schema,
@@ -7,10 +8,11 @@ import type {
     SchemaOptionsSimlify,
     SchemaProto,
     SchemaValue,
+    SchemaVisitor,
 } from '../Schema.js';
-import { coerce } from '../coerce.js';
+import { coerce } from '../utils/coerce.js';
 import { createSchema } from '../createSchema.js';
-import { serialize } from '../serialize.js';
+import { serialize } from '../utils/serialize.js';
 
 export type ObjectSchemaProps = {
     [key: string]: SchemaAny;
@@ -64,6 +66,7 @@ export function object<O extends ObjectSchemaOptions>(
         serialize: serializeValue,
         check: checkValue,
         default: defaultValue,
+        visit: visitValue,
     };
 
     return createSchema<ObjectSchemaValue<O>>(
@@ -94,10 +97,17 @@ export function object<O extends ObjectSchemaOptions>(
     }
 
     function checkValue(value: unknown): value is ObjectSchemaValue<O> {
-        return value != null && Object.getPrototypeOf(value) === Object.prototype;
+        return isPlainObject(value);
     }
 
     function defaultValue() {
         return coerceValue({});
+    }
+
+    function visitValue(value: ObjectSchemaValue<O>, visitor: SchemaVisitor) {
+        for (const [propKey, propSchema] of props) {
+            const propValue = value[propKey as keyof ObjectSchemaValue<O>];
+            visitor(propSchema, propValue, propKey);
+        }
     }
 }

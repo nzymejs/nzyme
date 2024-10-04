@@ -36,6 +36,13 @@ export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) ex
 
 export type FlattenUnion<T> = T extends any ? Flatten<T> : never;
 
+export type Merge<T1, T2> = Exclude<
+    {
+        [K in keyof (T1 & T2)]: (T1 & T2)[K];
+    },
+    undefined
+>;
+
 export type Override<T1, T2> = {
     [K in keyof T1 | keyof T2]: K extends keyof T2 ? T2[K] : K extends keyof T1 ? T1[K] : never;
 };

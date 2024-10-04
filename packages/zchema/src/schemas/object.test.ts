@@ -6,7 +6,8 @@ import { array } from './array.js';
 import { number } from './number.js';
 import { object } from './object.js';
 import { string } from './string.js';
-import { coerce } from '../coerce.js';
+import { coerce } from '../utils/coerce.js';
+import { validate } from '../utils/validate.js';
 
 test('basic object schema', () => {
     const schema = object({
@@ -26,10 +27,10 @@ test('basic object schema', () => {
     const value = coerce(schema, {});
 
     expect(value).toEqual({
-        number: NaN,
+        number: 0,
         numberNullable: null,
         numberOptional: undefined,
-        string: 'undefined',
+        string: '',
         stringNullable: null,
         stringOptional: undefined,
         array: [],
@@ -37,10 +38,6 @@ test('basic object schema', () => {
 });
 
 test('validate object schema', () => {
-    const x = number({
-        validators: [minValidator({ minValue: 10 })],
-    });
-
     const schema = object({
         props: {
             number: number({
@@ -51,10 +48,27 @@ test('validate object schema', () => {
                 validators: [
                     regexValidator({
                         regex: /^[a-z]+$/,
-                        message: () => 'must be lowercase letters',
+                        message: () => 'Must be lowercase letters',
                     }),
                 ],
             }),
         },
+    });
+
+    const validResult = validate(schema, {
+        number: 42,
+        string: 'foo',
+    });
+
+    expect(validResult).toBe(null);
+
+    const invalidResult = validate(schema, {
+        number: 5,
+        string: 'FOO',
+    });
+
+    expect(invalidResult).toEqual({
+        number: ['Minimalna wartość to 10'],
+        string: ['Must be lowercase letters'],
     });
 });

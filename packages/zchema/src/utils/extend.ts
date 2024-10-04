@@ -1,6 +1,6 @@
 import type { Override } from '@nzyme/types';
 
-import type { SchemaAny, SchemaOptions, SchemaValue } from './Schema.js';
+import type { SchemaAny, SchemaOptions, SchemaValue } from '../Schema.js';
 
 declare class ForceName {}
 export type Extend<S extends SchemaAny, O> = Override<S, O> & ForceName;

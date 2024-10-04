@@ -1,14 +1,13 @@
-import type { ValidationResult } from './ValidationResult.js';
-
 export interface ValidationContext {
     lang?: string;
 }
 
-export interface Validator<T> {
-    (value: T, ctx: ValidationContext): ValidationResult | string | null | void | undefined;
+export interface ValidationErrors {
+    [key: string]: string[] | undefined;
 }
 
-/*#__NO_SIDE_EFFECTS__*/
-export function defineValidator<T>(validator: Validator<T>) {
-    return validator;
+export type ValidationResult = ValidationErrors | string[] | string | null | void | undefined;
+
+export interface Validator<T> {
+    (value: T, ctx: ValidationContext): ValidationResult;
 }

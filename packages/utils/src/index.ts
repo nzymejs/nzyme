@@ -66,3 +66,4 @@ export * from './promiseAll.js';
 export * from './getTopLevelDomain.js';
 export * from './debounceAsyncFunction.js';
 export * from './trackObjectChanges.js';
+export * from './isPlainObject.js';

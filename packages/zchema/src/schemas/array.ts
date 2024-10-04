@@ -8,9 +8,9 @@ import type {
     SchemaProto,
     SchemaValue,
 } from '../Schema.js';
-import { coerce } from '../coerce.js';
 import { createSchema } from '../createSchema.js';
-import { serialize } from '../serialize.js';
+import { coerce } from '../utils/coerce.js';
+import { serialize } from '../utils/serialize.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ArraySchemaOptions<T extends SchemaAny = SchemaAny> = SchemaOptions<
@@ -59,6 +59,11 @@ export function array<O extends ArraySchemaOptions>(options: O & ArraySchemaOpti
             return Array.isArray(value);
         },
         default: () => [],
+        visit(value, visitor) {
+            for (let i = 0; i < value.length; i++) {
+                visitor(itemSchema, value[i], i);
+            }
+        },
     };
 
     return createSchema<ArraySchemaValue<O>>(

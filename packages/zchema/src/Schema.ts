@@ -16,8 +16,13 @@ export type SchemaOptionsSimlify<O extends SchemaOptions<any>> = Simplify<{
 export type SchemaProto<V = unknown> = {
     coerce: (value: unknown) => V;
     serialize: (value: V) => unknown;
-    check(value: unknown): value is V;
-    default(): V;
+    check: (value: unknown) => value is V;
+    default: () => V;
+    visit?: (value: V, visitor: SchemaVisitor) => void;
+};
+
+export type SchemaVisitor = {
+    (schema: Schema, value: unknown, key: string | number): unknown;
 };
 
 export const SCHEMA_PROTO = Symbol('SchemaProto');

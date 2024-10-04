@@ -1,8 +1,8 @@
 import { expect, test, describe } from 'vitest';
 
 import { number } from './number.js';
-import { coerce } from '../coerce.js';
-import { serialize } from '../serialize.js';
+import { coerce } from '../utils/coerce.js';
+import { serialize } from '../utils/serialize.js';
 
 describe('non-nullable number schema', () => {
     const schema = number();
@@ -29,7 +29,7 @@ describe('non-nullable number schema', () => {
 
     test('coerce undefined', () => {
         const value = coerce(schema, undefined);
-        expect(value).toBe(NaN);
+        expect(value).toBe(0);
     });
 
     test('coerce true', () => {

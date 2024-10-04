@@ -1,4 +1,4 @@
-import { SCHEMA_PROTO, type SchemaAny, type SchemaProto, type SchemaValue } from './Schema.js';
+import { SCHEMA_PROTO, type SchemaAny, type SchemaProto, type SchemaValue } from '../Schema.js';
 
 export function coerce<S extends SchemaAny>(schema: S, value: unknown): SchemaValue<S> {
     const proto = schema[SCHEMA_PROTO] as SchemaProto<SchemaValue<S>>;
