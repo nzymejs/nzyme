@@ -5,9 +5,9 @@ import type {
     SchemaAny,
     SchemaOptions,
     SchemaOptionsSimlify,
+    SchemaProto,
     SchemaValue,
 } from '../Schema.js';
-import { defineSchema, type SchemaProto } from '../SchemaDefinition.js';
 import { coerce } from '../coerce.js';
 import { createSchema } from '../createSchema.js';
 import { serialize } from '../serialize.js';
@@ -49,46 +49,55 @@ type ForceName<T> = T & FF;
 
 export type ObjectSchemaValue<O extends ObjectSchemaOptions> = ObjectSchemaPropsValue<O['props']>;
 
-export const object = defineSchema(
-    <O extends ObjectSchemaOptions>(
-        options: O & ObjectSchemaOptions<ObjectSchemaOptionsProps<O>>,
-    ) => {
-        const props: [name: string, schema: Schema][] = [];
+export function object<O extends ObjectSchemaOptions>(
+    options: O & ObjectSchemaOptions<ObjectSchemaOptionsProps<O>>,
+) {
+    const props: [name: string, schema: Schema][] = [];
 
-        for (const propKey in options.props) {
-            const propSchema = options.props[propKey];
-            props.push([propKey, propSchema]);
+    for (const propKey in options.props) {
+        const propSchema = options.props[propKey];
+        props.push([propKey, propSchema]);
+    }
+
+    const proto: SchemaProto<ObjectSchemaValue<O>> = {
+        coerce: coerceValue,
+        serialize: serializeValue,
+        check: checkValue,
+        default: defaultValue,
+    };
+
+    return createSchema<ObjectSchemaValue<O>>(
+        proto,
+        options as SchemaOptions<ObjectSchemaValue<O>>,
+    ) as ObjectSchema<SchemaOptionsSimlify<O>>;
+
+    function coerceValue(value: unknown) {
+        const result: Record<string, unknown> = {};
+
+        for (const [propKey, propSchema] of props) {
+            const propValue = (value as Record<string, unknown>)[propKey];
+            result[propKey] = coerce(propSchema, propValue);
         }
 
-        const proto: SchemaProto<ObjectSchemaValue<O>> = {
-            coerce(value) {
-                const result: Record<string, unknown> = {};
+        return result as ObjectSchemaValue<O>;
+    }
 
-                for (const [propKey, propSchema] of props) {
-                    const propValue = (value as Record<string, unknown>)[propKey];
-                    result[propKey] = coerce(propSchema, propValue);
-                }
+    function serializeValue(value: ObjectSchemaValue<O>) {
+        const result: Record<string, unknown> = {};
 
-                return result as ObjectSchemaValue<O>;
-            },
-            serialize(value) {
-                const result: Record<string, unknown> = {};
+        for (const [propKey, propSchema] of props) {
+            const propValue = value[propKey as keyof ObjectSchemaValue<O>];
+            result[propKey] = serialize(propSchema, propValue);
+        }
 
-                for (const [propKey, propSchema] of props) {
-                    const propValue = value[propKey as keyof ObjectSchemaValue<O>];
-                    result[propKey] = serialize(propSchema, propValue);
-                }
+        return result;
+    }
 
-                return result;
-            },
-            check(value): value is ObjectSchemaValue<O> {
-                return value != null && Object.getPrototypeOf(value) === Object.prototype;
-            },
-        };
+    function checkValue(value: unknown): value is ObjectSchemaValue<O> {
+        return value != null && Object.getPrototypeOf(value) === Object.prototype;
+    }
 
-        return createSchema<ObjectSchemaValue<O>>(
-            proto,
-            options as SchemaOptions<ObjectSchemaValue<O>>,
-        ) as ObjectSchema<SchemaOptionsSimlify<O>>;
-    },
-);
+    function defaultValue() {
+        return coerceValue({});
+    }
+}

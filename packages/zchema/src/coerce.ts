@@ -1,7 +1,7 @@
-import { SCHEMA_PROTO, type SchemaAny, type SchemaValue } from './Schema.js';
+import { SCHEMA_PROTO, type SchemaAny, type SchemaProto, type SchemaValue } from './Schema.js';
 
 export function coerce<S extends SchemaAny>(schema: S, value: unknown): SchemaValue<S> {
-    const def = schema[SCHEMA_PROTO];
+    const proto = schema[SCHEMA_PROTO] as SchemaProto<SchemaValue<S>>;
 
     if (value === null) {
         if (schema.nullable) {
@@ -15,6 +15,8 @@ export function coerce<S extends SchemaAny>(schema: S, value: unknown): SchemaVa
         if (schema.optional) {
             return undefined as SchemaValue<S>;
         }
+
+        return proto.default();
     }
 
     if (value === undefined) {
@@ -29,7 +31,9 @@ export function coerce<S extends SchemaAny>(schema: S, value: unknown): SchemaVa
         if (schema.nullable) {
             return null as SchemaValue<S>;
         }
+
+        return proto.default();
     }
 
-    return def.coerce(value) as SchemaValue<S>;
+    return proto.coerce(value);
 }

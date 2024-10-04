@@ -1,8 +1,6 @@
 import type { IfAny, IfUnknown, Simplify } from '@nzyme/types';
 import type { Validator } from '@nzyme/validate';
 
-import type { SchemaFactory, SchemaProto } from './SchemaDefinition.js';
-
 export type SchemaOptions<V> = {
     nullable?: boolean;
     optional?: boolean;
@@ -15,9 +13,14 @@ export type SchemaOptionsSimlify<O extends SchemaOptions<any>> = Simplify<{
     [K in Exclude<keyof O, 'validators' | 'default'>]: O[K];
 }>;
 
+export type SchemaProto<V = unknown> = {
+    coerce: (value: unknown) => V;
+    serialize: (value: V) => unknown;
+    check(value: unknown): value is V;
+    default(): V;
+};
+
 export const SCHEMA_PROTO = Symbol('SchemaProto');
-export const SCHEMA_FACTORY = Symbol('SchemaFactory');
-export const SCHEMA_OPTIONS = Symbol('SchemaOptions');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaOptionsOf<S extends SchemaAny> = S extends Schema<any, infer O> ? O : never;
@@ -28,8 +31,6 @@ export type Schema<
     O extends SchemaOptions<V> = { nullable?: boolean; optional?: boolean },
 > = {
     [SCHEMA_PROTO]: SchemaProto<V>;
-    [SCHEMA_FACTORY]: SchemaFactory<V>;
-    [SCHEMA_OPTIONS]: O;
     nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
     optional: IfAny<O, boolean, IfUnknown<O['optional'], false, Exclude<O['optional'], undefined>>>;
     default?: () => V;
