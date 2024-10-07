@@ -8,11 +8,15 @@ export * from './schemas/array.js';
 export * from './schemas/boolean.js';
 export * from './schemas/bigint.js';
 export * from './schemas/date.js';
+export * from './schemas/integer.js';
 export type * from './schemas/enum.js';
 export { enumSchema as enum } from './schemas/enum.js';
 export type * from './schemas/const.js';
 export { constSchema as const } from './schemas/const.js';
 
-export * from './utils/validate.js';
 export * from './utils/coerce.js';
+export * from './utils/extend.js';
+export * from './utils/isSchema.js';
 export * from './utils/serialize.js';
+export * from './utils/validate.js';
+export * from './utils/toJson.js';
