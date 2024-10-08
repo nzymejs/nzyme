@@ -13,7 +13,7 @@
             "path": "../utils/tsconfig.json"
         },
         {
-            "path": "../jest/tsconfig.json"
+            "path": "../vitest/tsconfig.json"
         }
     ]
 }

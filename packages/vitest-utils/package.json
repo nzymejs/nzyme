@@ -1,9 +1,9 @@
 {
-    "name": "@nzyme/jest",
+    "name": "@nzyme/vitest-utils",
     "version": "1.0.0",
     "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
     "license": "MIT",
-    "types": "./src/types.d.ts",
+    "types": "./dist/index.d.ts",
     "main": "./dist/index.js",
     "sideEffects": false,
     "scripts": {
@@ -11,12 +11,7 @@
         "build": "tsc --build"
     },
     "dependencies": {
-        "@jest/types": "^29.6.3",
-        "@types/jest": "^29.5.12",
-        "babel-jest": "^29.7.0",
-        "jest": "^29.7.0",
-        "jest-esm-transformer": "^1.0.0",
-        "ts-jest": "^29.1.5",
-        "tslib": "^2.6.3"
+        "date-fns": "^3.6.0",
+        "vitest": "^2.1.2"
     }
 }

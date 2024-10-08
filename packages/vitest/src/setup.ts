@@ -1,3 +1,5 @@
+import { expect } from 'vitest';
+
 import { expectToEqualFully } from './matchers/expectToEqualFully.js';
 import { expectToEqualPartially } from './matchers/expectToEqualPartially.js';
 
