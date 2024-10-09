@@ -9,6 +9,9 @@
     "include": ["src"],
     "references": [
         {
+            "path": "../esm/tsconfig.json"
+        },
+        {
             "path": "../logging/tsconfig.json"
         },
         {
