@@ -67,3 +67,4 @@ export * from './getTopLevelDomain.js';
 export * from './debounceAsyncFunction.js';
 export * from './trackObjectChanges.js';
 export * from './isPlainObject.js';
+export * from './parseBigint.js';
