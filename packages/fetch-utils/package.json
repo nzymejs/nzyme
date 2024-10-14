@@ -1,0 +1,24 @@
+{
+    "name": "@nzyme/fetch-utils",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "sideEffects": false,
+    "repository": "https://github.com/nzymejs/nzyme.git",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "scripts": {
+        "eslint": "eslint . --fix --cache",
+        "build": "tsc --build"
+    },
+    "dependencies": {
+        "@nzyme/ioc": "*",
+        "@nzyme/types": "*",
+        "@nzyme/xml-utils": "*",
+        "ufo": "^1.5.4"
+    },
+    "devDependencies": {
+        "@types/node": "^22.7.5"
+    }
+}
