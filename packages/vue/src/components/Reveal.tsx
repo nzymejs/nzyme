@@ -1,4 +1,4 @@
-import { getOuterHeight } from '@barebone/dom-utils';
+import { getOuterHeight } from '@nzyme/dom-utils';
 import {
     getCurrentInstance,
     defineComponent,
@@ -10,7 +10,6 @@ import {
     openBlock,
     createElementBlock,
 } from 'vue';
-
 
 import css from './Reveal.module.scss';
 import { useElement } from '../useElement.js';

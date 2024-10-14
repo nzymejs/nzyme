@@ -1,0 +1,18 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "tsBuildInfoFile": "./dist/.tsbuildinfo",
+        "rootDir": "./src",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"]
+    },
+    "include": ["src"],
+    "references": [
+        {
+            "path": "../crypto-utils/tsconfig.json"
+        },
+        {
+            "path": "../utils/tsconfig.json"
+        }
+    ]
+}

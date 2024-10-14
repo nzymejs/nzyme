@@ -1,0 +1,21 @@
+{
+    "name": "@nzyme/vue-transitions",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./src/index.ts",
+    "module": "./src/index.ts",
+    "repository": "https://github.com/nzymejs/nzyme.git",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "sideEffects": false,
+    "scripts": {
+        "eslint": "eslint . --fix --cache"
+    },
+    "dependencies": {
+        "@nzyme/dom-utils": "*",
+        "@nzyme/types": "*",
+        "@nzyme/utils": "*",
+        "@nzyme/vue": "*",
+        "@nzyme/vue-utils": "*",
+        "vue": "^3.4.38"
+    }
+}

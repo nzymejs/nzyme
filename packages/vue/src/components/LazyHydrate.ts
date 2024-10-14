@@ -1,4 +1,4 @@
-import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@barebone/dom-utils';
+import { requestIdleCallback, cancelIdleCallback, isBrowser } from '@nzyme/dom-utils';
 import {
     defineComponent,
     watch,

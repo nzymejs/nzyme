@@ -1,4 +1,4 @@
-import { isBrowser } from '@barebone/dom-utils';
+import { isBrowser } from '@nzyme/dom-utils';
 import { defineComponent, getCurrentInstance, h, Transition, withDirectives } from 'vue';
 
 import css from './Collapse.module.scss';

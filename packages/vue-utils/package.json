@@ -1,0 +1,22 @@
+{
+    "name": "@nzyme/vue-utils",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "author": "Michał Kędrzyński <m.kedrzynski@gmail.com>",
+    "sideEffects": false,
+    "scripts": {
+        "eslint": "eslint . --fix --cache",
+        "build": "tsc --build"
+    },
+    "dependencies": {
+        "@nzyme/dom-utils": "*",
+        "@nzyme/ioc": "*",
+        "@nzyme/types": "*",
+        "@nzyme/utils": "*",
+        "@nzyme/vue": "*",
+        "vue": "^3.4.38"
+    }
+}

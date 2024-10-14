@@ -1,4 +1,4 @@
-import { isBrowser } from '@barebone/dom-utils';
+import { isBrowser } from '@nzyme/dom-utils';
 import { onMounted } from 'vue';
 
 import { useElement } from './useElement.js';

@@ -1,6 +1,5 @@
-import { getScrollBarWidth, isBrowser } from '@barebone/dom-utils';
+import { getScrollBarWidth, isBrowser } from '@nzyme/dom-utils';
 import { onMounted, onUnmounted, watch } from 'vue';
-
 
 import { type RefParam, makeRef } from './reactivity/makeRef.js';
 import css from './useScrollLock.module.scss';

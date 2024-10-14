@@ -1,4 +1,4 @@
-import { isAncestorOf } from '@barebone/dom-utils';
+import { isAncestorOf } from '@nzyme/dom-utils';
 import { onBeforeUnmount, reactive, ref, computed, watch } from 'vue';
 
 import { readonly } from '@nzyme/utils';

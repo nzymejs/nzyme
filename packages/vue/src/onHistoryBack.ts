@@ -1,4 +1,4 @@
-import type { VirtualHistoryHandle } from '@barebone/dom-utils';
+import type { VirtualHistoryHandle } from '@nzyme/dom-utils';
 
 import { useVirtualHistory } from './useVirtualHistory.js';
 
