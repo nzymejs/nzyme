@@ -10,7 +10,7 @@ export function regexValidator(
 ): Validator<string | null | undefined> {
     const { regex, message } = options;
 
-    return value => {
+    return (value, ctx) => {
         if (value == null) {
             return;
         }
@@ -19,6 +19,6 @@ export function regexValidator(
             return;
         }
 
-        return message({ value });
+        return message({ ...ctx, value });
     };
 }

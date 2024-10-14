@@ -10,7 +10,7 @@ export function requiredValidator<T>(
     const message = params && params.message;
 
     return (value, ctx) => {
-        if (value != null && value !== '' && value !== false) {
+        if (isValueNonEmpty(value)) {
             return;
         }
 
@@ -20,4 +20,16 @@ export function requiredValidator<T>(
 
         return 'Pole jest wymagane';
     };
+}
+
+function isValueNonEmpty(value: unknown): boolean {
+    if (value == null || value === false) {
+        return false;
+    }
+
+    if (typeof value === 'string' && value.trim() === '') {
+        return false;
+    }
+
+    return true;
 }

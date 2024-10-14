@@ -10,6 +10,7 @@ import type {
 } from '../Schema.js';
 import { createSchema } from '../createSchema.js';
 import { coerce } from '../utils/coerce.js';
+import { isSchema } from '../utils/isSchema.js';
 import { serialize } from '../utils/serialize.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -29,12 +30,17 @@ type ForceName<T> = T & FF;
 
 export type ArraySchemaValue<O extends ArraySchemaOptions> = SchemaValue<O['of']>[];
 
-export function array<O extends ArraySchemaOptions>(options: O & ArraySchemaOptions<O['of']>) {
+export function array<S extends SchemaAny>(of: S): ArraySchema<{ of: S }>;
+export function array<O extends ArraySchemaOptions>(
+    options: O & ArraySchemaOptions<O['of']>,
+): ArraySchema<SchemaOptionsSimlify<O>>;
+export function array(optionsOrSchema: SchemaAny | ArraySchemaOptions) {
+    const options = isSchema(optionsOrSchema) ? { of: optionsOrSchema } : optionsOrSchema;
     const itemSchema = options.of;
 
-    const proto: SchemaProto<ArraySchemaValue<O>> = {
+    const proto: SchemaProto<unknown[]> = {
         coerce(value) {
-            const result: ArraySchemaValue<O> = [];
+            const result: unknown[] = [];
 
             if (!isIterable(value)) {
                 return result;
@@ -55,7 +61,7 @@ export function array<O extends ArraySchemaOptions>(options: O & ArraySchemaOpti
 
             return result;
         },
-        check(value): value is ArraySchemaValue<O> {
+        check(value): value is unknown[] {
             return Array.isArray(value);
         },
         default: () => [],
@@ -66,8 +72,5 @@ export function array<O extends ArraySchemaOptions>(options: O & ArraySchemaOpti
         },
     };
 
-    return createSchema<ArraySchemaValue<O>>(
-        proto,
-        options as SchemaOptions<ArraySchemaValue<O>>,
-    ) as ArraySchema<SchemaOptionsSimlify<O>>;
+    return createSchema<unknown[]>(proto, options) as ArraySchema<ArraySchemaOptions>;
 }
