@@ -1,12 +1,9 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "moduleResolution": "Node",
         "outDir": "./dist",
         "tsBuildInfoFile": "./dist/.tsbuildinfo",
-        "rootDir": "./src",
-        "verbatimModuleSyntax": false
+        "rootDir": "./src"
     },
     "include": ["src"],
     "references": []
