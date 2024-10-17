@@ -1,8 +1,4 @@
 import { fullDiff, formatDifferences } from '@aws-cdk/cloudformation-diff';
-import type {
-    CloudFormationStackArtifact as CloudFormationStackArtifactLegacy,
-    AssetManifestArtifact as AssetManifestArtifactLegacy,
-} from '@aws-cdk/cx-api';
 import type { SdkProvider } from 'aws-cdk/lib/api/aws-auth/index.js';
 import { Bootstrapper } from 'aws-cdk/lib/api/bootstrap/index.js';
 import { Deployments } from 'aws-cdk/lib/api/deployments.js';
@@ -86,13 +82,10 @@ export class App extends cdk.App {
             // Publish stack assets first
             for (const dep of artifact.dependencies) {
                 if (dep instanceof AssetManifestArtifact) {
-                    await this.deployments.publishAssets(
-                        dep as unknown as AssetManifestArtifactLegacy,
-                        {
-                            stack: artifact as unknown as CloudFormationStackArtifactLegacy,
-                            stackName,
-                        },
-                    );
+                    await this.deployments.publishAssets(dep as unknown as any, {
+                        stack: artifact as any,
+                        stackName,
+                    });
                 }
             }
 
@@ -102,7 +95,7 @@ export class App extends cdk.App {
             }
 
             const deployment = await this.deployments.deployStack({
-                stack: artifact as unknown as CloudFormationStackArtifactLegacy,
+                stack: artifact as any,
                 deployName: artifact.stackName,
                 resourcesToImport: params.import
                     ? await this.getResourcesToImport(artifact)
@@ -137,7 +130,7 @@ export class App extends cdk.App {
             }
 
             await this.deployments.destroyStack({
-                stack: artifact as unknown as CloudFormationStackArtifactLegacy,
+                stack: artifact as any,
                 deployName: artifact.stackName,
             });
 
@@ -154,7 +147,7 @@ export class App extends cdk.App {
 
         for (const artifact of artifacts) {
             const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
-                artifact as unknown as CloudFormationStackArtifactLegacy,
+                artifact as any,
             );
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -245,7 +238,7 @@ export class App extends cdk.App {
 
     private async getResourcesToImport(artifact: CloudFormationStackArtifact) {
         const currentTemplate = await this.deployments.readCurrentTemplateWithNestedStacks(
-            artifact as unknown as CloudFormationStackArtifactLegacy,
+            artifact as any,
         );
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -257,13 +250,13 @@ export class App extends cdk.App {
             const resource = diff.resources.get(id);
             if (resource.isAddition) {
                 const identifier = this.getResourceIdentifier(
-                    resource.resourceType,
+                    resource.resourceType!,
                     resource.newProperties || {},
                 );
                 if (identifier) {
                     toImport.push({
                         LogicalResourceId: id,
-                        ResourceType: resource.resourceType,
+                        ResourceType: resource.resourceType!,
                         ResourceIdentifier: identifier,
                     });
                 }
