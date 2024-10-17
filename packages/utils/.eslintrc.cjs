@@ -8,7 +8,4 @@ module.exports = {
             `${__dirname}/tsconfig.tests.json`,
         ],
     },
-    rules: {
-        '@typescript-eslint/no-namespace': 'off',
-    },
 };

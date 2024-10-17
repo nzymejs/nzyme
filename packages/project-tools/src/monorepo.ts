@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 import type { Package } from '@lerna/package';
@@ -8,6 +8,8 @@ import merge from 'lodash.merge';
 import prettier from 'prettier';
 
 import { isMainFile } from './isMainFile.js';
+import { fileURLToPath } from 'url';
+import fsExtra from 'fs-extra/esm';
 
 interface TsConfig {
     path: string;
@@ -15,7 +17,7 @@ interface TsConfig {
     resolved: Record<string, any>;
 }
 
-const tsConfigsCache: Record<string, TsConfig | undefined> = {};
+const tsConfigsCache = new Map<string, TsConfig | null>();
 
 if (isMainFile(import.meta)) {
     await monorepo();
@@ -25,7 +27,8 @@ export async function monorepo() {
     const cwd = process.cwd();
     const packages = await getPackages(cwd);
 
-    const tsconfig = await loadTsConfig(path.resolve(cwd, './tsconfig.json'));
+    const tsconfigPath = path.join(cwd, './tsconfig.json');
+    const tsconfig = await loadTsConfig(tsconfigPath);
     if (tsconfig) {
         tsconfig.config.references = await getTsReferences({
             tsconfig: tsconfig,
@@ -104,56 +107,57 @@ async function getTsReferences(params: { tsconfig: TsConfig; dependencies: Packa
 }
 
 async function loadTsConfigForPackage(pkg: Package) {
-    return await loadTsConfig(path.join(pkg.location, 'tsconfig.json'));
+    const filePath = path.join(pkg.location, 'tsconfig.json');
+    return await loadTsConfig(filePath);
 }
 
 async function loadTsConfig(filePath: string) {
-    if (!tsConfigsCache[filePath]) {
-        try {
-            tsConfigsCache[filePath] = await loadTsConfigCore(filePath);
-        } catch (e) {
-            console.error(`Failed to process ${filePath}`, e);
-        }
+    let tsConfig = tsConfigsCache.get(filePath);
+    if (!tsConfig) {
+        tsConfig = await loadTsConfigCore(filePath);
+        tsConfigsCache.set(filePath, tsConfig);
     }
 
-    return tsConfigsCache[filePath];
+    return tsConfig;
 }
 
 async function loadTsConfigCore(filePath: string) {
-    if (!fs.existsSync(filePath)) {
-        return;
+    if (!(await fsExtra.pathExists(filePath))) {
+        return null;
     }
 
-    try {
-        const configJson = await fs.promises.readFile(filePath, { encoding: 'utf8' });
-        const config = json.parse(configJson) as Record<string, any>;
-        let resolved = json.parse(configJson) as Record<string, any>;
-        let resolvedPath = filePath;
+    let configFile = await fs.readFile(filePath, { encoding: 'utf8' });
+    let configPath = filePath;
 
-        while (resolved.extends) {
-            const extendsPath = path.resolve(path.dirname(resolvedPath), resolved.extends);
-            const extendsJson = await fs.promises.readFile(extendsPath, {
-                encoding: 'utf8',
-            });
-            const extendsObj = json.parse(extendsJson);
+    const config = json.parse(configFile) as Record<string, any>;
+    let resolved = json.parse(configFile) as Record<string, any>;
 
-            delete resolved.extends;
+    while (resolved.extends) {
+        configPath = resolveTsConfigPath(path.dirname(configPath), resolved.extends);
+        configFile = await fs.readFile(configPath, { encoding: 'utf8' });
 
-            resolvedPath = extendsPath;
-            resolved = merge(extendsObj, resolved);
-        }
+        const extendedConfig = json.parse(configFile) as Record<string, any>;
 
-        const result: TsConfig = {
-            path: filePath,
-            config: config,
-            resolved: resolved,
-        };
+        delete resolved.extends;
 
-        return result;
-    } catch (e) {
-        console.error(`Error reading file ${filePath}`, e);
-        throw e;
+        resolved = merge(extendedConfig, resolved);
     }
+
+    const result: TsConfig = {
+        path: filePath,
+        config,
+        resolved,
+    };
+
+    return result;
+}
+
+function resolveTsConfigPath(cwd: string, filePath: string) {
+    if (filePath.startsWith('.')) {
+        return path.resolve(cwd, filePath);
+    }
+
+    return fileURLToPath(import.meta.resolve(filePath));
 }
 
 async function saveTsConfig(tsconfig: TsConfig) {
@@ -165,7 +169,7 @@ async function saveTsConfig(tsconfig: TsConfig) {
         parser: 'json',
     });
 
-    await fs.promises.writeFile(tsconfig.path, configJson, {
+    await fs.writeFile(tsconfig.path, configJson, {
         encoding: 'utf8',
     });
 }

@@ -4,6 +4,12 @@ interface ImportParams {
     name?: string;
 }
 
+interface ExportParams {
+    from: string;
+    import?: string;
+    name?: string;
+}
+
 export function createScript() {
     const imports: string[] = [];
     const statements: string[] = [];
@@ -11,6 +17,7 @@ export function createScript() {
 
     return {
         addImport,
+        addExport,
         addStatement,
         addEmptyLine,
         addComment,
@@ -19,7 +26,7 @@ export function createScript() {
     };
 
     function addImport(params: ImportParams) {
-        const importName = addVariable(params.name || 'import');
+        const importName = addVariable(params.name || params.import || 'imp');
 
         if (!params.import) {
             // Default import
@@ -29,10 +36,29 @@ export function createScript() {
             imports.push(`import * as ${importName} from "${params.from}";`);
         } else {
             // Named import
-            imports.push(`import { ${params.import} as ${importName} } from "${params.from}";`);
+            if (params.import === importName) {
+                imports.push(`import { ${params.import} } from "${params.from}";`);
+            } else {
+                imports.push(`import { ${params.import} as ${importName} } from "${params.from}";`);
+            }
         }
 
         return importName;
+    }
+
+    function addExport(params: ExportParams) {
+        const exportName = addVariable(params.name || 'export');
+
+        if (!params.import) {
+            // Default export
+            statements.push(`export default ${exportName};`);
+        } else if (params.import === '*') {
+            // Export all
+            statements.push(`export * from "${params.from}";`);
+        } else {
+            // Named export
+            statements.push(`export { ${params.import} as ${exportName} } from "${params.from}";`);
+        }
     }
 
     function addStatement(statement: string) {
@@ -54,6 +80,7 @@ export function createScript() {
     function addVariable(name: string = 'var') {
         if (!variables[name]) {
             variables[name] = 0;
+            return name;
         }
 
         variables[name]++;
@@ -64,7 +91,7 @@ export function createScript() {
         let code = '';
 
         code += imports.join('\n');
-        code += '\n';
+        code += '\n\n';
         code += statements.join('\n');
 
         return code;
