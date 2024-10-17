@@ -13,6 +13,6 @@
         "build": "tsc --build"
     },
     "dependencies": {
-        "fast-xml-parser": "^4.4.0"
+        "fast-xml-parser": "^4.5.0"
     }
 }
