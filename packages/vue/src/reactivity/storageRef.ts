@@ -73,9 +73,9 @@ export function storageRef<T>(
         options.deserialize ?? ((options.json ? JSON.parse : identity) as (value: string) => T);
     const storage = getStorage(options.storage);
 
-    const variable = options.deep
-        ? (ref<T | null>(read()) as StorageRef<T>)
-        : (shallowRef<T | null>(read()) as StorageRef<T>);
+    const variable = (
+        options.deep ? ref<T | null>(read()) : shallowRef<T | null>(read())
+    ) as StorageRef<T | null>;
 
     const watcher = options.debounce ? debounce(write, options.debounce) : write;
     watch(variable, watcher, { deep: options.deep });

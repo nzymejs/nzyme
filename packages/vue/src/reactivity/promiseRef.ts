@@ -20,7 +20,7 @@ export function promiseRef<T>(promiseOrValue?: Promise<T | undefined> | T) {
     }
 
     const promiseRef = ref(wrapPromise(promise));
-    const valueRef = ref<T | undefined>(value) as PromiseRef<T | undefined>;
+    const valueRef = ref<T | undefined>(value) as Ref<T | undefined> as PromiseRef<T | undefined>;
 
     let runWatch = true;
 

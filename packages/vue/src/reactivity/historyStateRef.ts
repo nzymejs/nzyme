@@ -34,7 +34,7 @@ export function historyStateRef<T>(
     const history = useHistory();
     const key = options.key;
 
-    const historyRef = ref<T>(read()) as HistoryStateRef<T>;
+    const historyRef = ref<T>(read()) as Ref<T> as HistoryStateRef<T>;
     historyRef.save = save;
 
     watch(historyRef, options.debounce ? debounce(write, options.debounce) : write);

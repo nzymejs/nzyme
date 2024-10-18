@@ -16,6 +16,6 @@
         "@nzyme/utils": "*",
         "@nzyme/vue": "*",
         "@nzyme/vue-utils": "*",
-        "vue": "^3.4.38"
+        "vue": "^3.5.12"
     }
 }
