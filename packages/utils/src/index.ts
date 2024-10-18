@@ -43,6 +43,7 @@ export * from './CancelError.js';
 export * from './createAsyncQueue.js';
 export * from './createCache.js';
 export * from './createEventEmitter.js';
+export * from './createNamedFunction.js';
 export * from './createParalellRunner.js';
 export * from './createSingleEventEmitter.js';
 export * from './createMemo.js';
