@@ -16,7 +16,7 @@
         "@nzyme/esm": "*",
         "@nzyme/logging": "*",
         "@nzyme/utils": "*",
-        "@rollup/plugin-commonjs": "^28.0.1",
+        "@rollup/plugin-commonjs": "^26.0.1",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.3.0",
         "@rollup/plugin-typescript": "^12.1.1",
