@@ -10,8 +10,8 @@ import type {
     SchemaValue,
     SchemaVisitor,
 } from '../Schema.js';
-import { coerce } from '../utils/coerce.js';
 import { createSchema } from '../createSchema.js';
+import { coerce } from '../utils/coerce.js';
 import { serialize } from '../utils/serialize.js';
 
 export type ObjectSchemaProps = {
@@ -30,7 +30,6 @@ export type ObjectSchemaPropsValue<TProps extends ObjectSchemaProps> = Flatten<
     }
 >;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type ObjectSchemaOptions<TProps extends ObjectSchemaProps = ObjectSchemaProps> =
     SchemaOptions<ObjectSchemaPropsValue<TProps>> & {
         props: TProps;
@@ -40,11 +39,15 @@ type ObjectSchemaOptionsProps<O extends ObjectSchemaOptions> =
     O extends ObjectSchemaOptions<infer P extends ObjectSchemaProps> ? P : never;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ObjectSchema<O extends ObjectSchemaOptions> = ForceName<
+export type ObjectSchema<O extends ObjectSchemaOptions = ObjectSchemaOptions> = ForceName<
     O extends ObjectSchemaOptions<infer P extends ObjectSchemaProps>
         ? Schema<ObjectSchemaPropsValue<P>, O>
         : never
 >;
+
+export type ObjectSchemaAny = Schema<Record<string, unknown>> & {
+    props: ObjectSchemaProps;
+};
 
 declare class FF {}
 type ForceName<T> = T & FF;

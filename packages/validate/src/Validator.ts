@@ -8,6 +8,6 @@ export interface ValidationErrors {
 
 export type ValidationResult = ValidationErrors | string[] | string | null | void | undefined;
 
-export interface Validator<T> {
+export interface Validator<T = unknown> {
     (value: T, ctx: ValidationContext): ValidationResult;
 }

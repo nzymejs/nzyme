@@ -9,8 +9,8 @@ export function createSchema<V, O extends SchemaOptions<V> = SchemaOptions<V>>(
         ...options,
         nullable: (options.nullable ?? false) as S['nullable'],
         optional: (options.optional ?? false) as S['optional'],
-        validators: options.validators ?? [],
-        [SCHEMA_PROTO]: proto,
+        validators: (options.validators ?? []) as S['validators'],
+        [SCHEMA_PROTO]: proto as S[typeof SCHEMA_PROTO],
     };
 
     return schema;
