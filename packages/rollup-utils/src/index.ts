@@ -1,4 +1,5 @@
 export * from './devServerConfig.js';
+export * from './devServerMiddleware.js';
 export * from './devServerRuntime.js';
 export * from './devServerStart.js';
 export * from './onRollupWarning.js';

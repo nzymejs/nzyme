@@ -78,7 +78,7 @@ export function createScript() {
     }
 
     function addVariable(name: string = 'var') {
-        if (!variables[name]) {
+        if (variables[name] == null) {
             variables[name] = 0;
             return name;
         }

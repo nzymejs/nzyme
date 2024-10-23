@@ -13,7 +13,6 @@ import { coerce } from '../utils/coerce.js';
 import { isSchema } from '../utils/isSchema.js';
 import { serialize } from '../utils/serialize.js';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type ArraySchemaOptions<T extends SchemaAny = SchemaAny> = SchemaOptions<
     SchemaValue<T>[]
 > & {
