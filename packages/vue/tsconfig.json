@@ -29,6 +29,9 @@
         },
         {
             "path": "../utils/tsconfig.json"
+        },
+        {
+            "path": "../vue-utils/tsconfig.json"
         }
     ]
 }

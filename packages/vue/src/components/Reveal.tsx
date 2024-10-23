@@ -1,4 +1,3 @@
-import { getOuterHeight } from '@nzyme/dom-utils';
 import {
     getCurrentInstance,
     defineComponent,
@@ -11,8 +10,10 @@ import {
     createElementBlock,
 } from 'vue';
 
+import { getOuterHeight } from '@nzyme/dom-utils';
+import { useElement } from '@nzyme/vue-utils';
+
 import css from './Reveal.module.scss';
-import { useElement } from '../useElement.js';
 
 const fallbackKey = Symbol('fallback');
 

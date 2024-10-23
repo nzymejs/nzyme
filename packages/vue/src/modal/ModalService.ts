@@ -1,9 +1,10 @@
-import { clearFocus, virtualHistory } from '@nzyme/dom-utils';
 import { type Ref, defineComponent, h, ref, type ComponentInternalInstance, nextTick } from 'vue';
 
+import { clearFocus, virtualHistory } from '@nzyme/dom-utils';
 import { defineService } from '@nzyme/ioc';
 import type { Writable } from '@nzyme/types';
 import { arrayRemove, createPromise } from '@nzyme/utils';
+import { reactive } from '@nzyme/vue-utils';
 
 import type {
     ModalComponent,
@@ -16,7 +17,6 @@ import type {
     ModalHandler,
 } from './ModalTypes.js';
 import { onKeyUp } from '../onKeyUp.js';
-import { reactive } from '../reactivity/reactive.js';
 
 interface ModalServiceOpenOptions {
     /**

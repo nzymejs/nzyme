@@ -25,6 +25,7 @@
         "@nzyme/ioc": "*",
         "@nzyme/types": "*",
         "@nzyme/utils": "*",
+        "@nzyme/vue-utils": "*",
         "lodash.debounce": "^4.0.8",
         "vue": "^3.5.12"
     },

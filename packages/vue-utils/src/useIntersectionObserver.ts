@@ -1,4 +1,3 @@
-import { isBrowser } from '@nzyme/dom-utils';
 import {
     onMounted,
     ref,
@@ -10,6 +9,8 @@ import {
     watch,
     reactive,
 } from 'vue';
+
+import { isBrowser } from '@nzyme/dom-utils';
 
 type Options = IntersectionObserverInit & {
     immediate?: boolean;

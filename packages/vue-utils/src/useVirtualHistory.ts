@@ -1,5 +1,6 @@
-import { virtualHistory, type VirtualHistoryHandle } from '@nzyme/dom-utils';
 import { onBeforeUnmount } from 'vue';
+
+import { virtualHistory, type VirtualHistoryHandle } from '@nzyme/dom-utils';
 
 type Callback = () => void;
 
