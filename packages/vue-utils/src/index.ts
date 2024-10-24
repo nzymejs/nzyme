@@ -1,5 +1,6 @@
 export * from './context.js';
 export * from './component.js';
+export * from './classProp.js';
 export * from './slots.js';
 export * from './defineProps.js';
 export * from './defineProp.js';

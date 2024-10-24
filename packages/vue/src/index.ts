@@ -2,7 +2,6 @@ export * from './App.js';
 export * from './asyncImport.js';
 export * from './prop.js';
 export * from './useEventBus.js';
-export * from './classProp.js';
 export * from './vmodel.js';
 export * from './Format.js';
 export { useContainer, useChildContainer } from './useContainer.js';
