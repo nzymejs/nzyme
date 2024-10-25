@@ -34,7 +34,7 @@ export interface SchemaBase<
     V = unknown,
     O extends SchemaOptions<V> = { nullable?: boolean; optional?: boolean },
 > {
-    [SCHEMA_PROTO]: SchemaProto;
+    [SCHEMA_PROTO]: SchemaProto<V>;
     nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
     optional: IfAny<O, boolean, IfUnknown<O['optional'], false, Exclude<O['optional'], undefined>>>;
     default?: () => V;

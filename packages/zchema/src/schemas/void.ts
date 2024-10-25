@@ -17,7 +17,9 @@ const proto: SchemaProto<void> = {
     default: () => undefined,
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function voidSchema<O extends SchemaOptions<void> = {}>(options?: O & SchemaOptions<void>) {
-    return createSchema<void>(proto, options) as VoidSchema<SchemaOptionsSimlify<O>>;
+    return createSchema<void>(proto, {
+        ...options,
+        optional: true,
+    }) as VoidSchema<SchemaOptionsSimlify<O>>;
 }

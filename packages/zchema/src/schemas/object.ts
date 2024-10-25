@@ -45,7 +45,8 @@ export type ObjectSchema<O extends ObjectSchemaOptions = ObjectSchemaOptions> = 
         : never
 >;
 
-export type ObjectSchemaAny = Schema<Record<string, unknown>> & {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ObjectSchemaAny = Schema<any> & {
     props: ObjectSchemaProps;
 };
 
