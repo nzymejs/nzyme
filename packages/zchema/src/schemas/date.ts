@@ -1,5 +1,5 @@
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 
 export type DateSchema<O extends SchemaOptions<Date>> = Schema<Date, O>;
 
@@ -10,7 +10,13 @@ const proto: SchemaProto<Date> = {
     default: () => new Date(0),
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function date<O extends SchemaOptions<Date> = {}>(options?: O & SchemaOptions<Date>) {
-    return createSchema(proto, options) as DateSchema<SchemaOptionsSimlify<O>>;
-}
+type DateSchemaFactory = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    <O extends SchemaOptions<Date> = {}>(
+        options?: O & SchemaOptions<Date>,
+    ): DateSchema<SchemaOptionsSimlify<O>>;
+};
+
+export const date = defineSchema<DateSchemaFactory>({
+    proto: () => proto,
+});

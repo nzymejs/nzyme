@@ -1,5 +1,5 @@
 export * from './Schema.js';
-export * from './createSchema.js';
+export * from './defineSchema.js';
 
 export * from './schemas/number.js';
 export * from './schemas/string.js';

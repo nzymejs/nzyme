@@ -1,7 +1,7 @@
 import { identity } from '@nzyme/utils';
 
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 
 export type StringSchema<O extends SchemaOptions<string>> = Schema<string, O>;
 
@@ -12,7 +12,13 @@ const proto: SchemaProto<string> = {
     default: () => '',
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function string<O extends SchemaOptions<string> = {}>(options?: O & SchemaOptions<string>) {
-    return createSchema(proto, options) as StringSchema<SchemaOptionsSimlify<O>>;
-}
+type StringSchemaFactory = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    <O extends SchemaOptions<string> = {}>(
+        options?: O & SchemaOptions<string>,
+    ): StringSchema<SchemaOptionsSimlify<O>>;
+};
+
+export const string = defineSchema<StringSchemaFactory>({
+    proto: () => proto,
+});

@@ -10,7 +10,7 @@ import type {
     SchemaValue,
     SchemaVisitor,
 } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 import { coerce } from '../utils/coerce.js';
 import { serialize } from '../utils/serialize.js';
 
@@ -55,63 +55,67 @@ type ForceName<T> = T & FF;
 
 export type ObjectSchemaValue<O extends ObjectSchemaOptions> = ObjectSchemaPropsValue<O['props']>;
 
-export function object<O extends ObjectSchemaOptions>(
-    options: O & ObjectSchemaOptions<ObjectSchemaOptionsProps<O>>,
-) {
-    const props: [name: string, schema: Schema][] = [];
+type ObjectSchemaFactory = {
+    <O extends ObjectSchemaOptions>(
+        options: O & ObjectSchemaOptions<ObjectSchemaOptionsProps<O>>,
+    ): ObjectSchema<SchemaOptionsSimlify<O>>;
+};
 
-    for (const propKey in options.props) {
-        const propSchema = options.props[propKey];
-        props.push([propKey, propSchema]);
-    }
+export const object = defineSchema<ObjectSchemaFactory, ObjectSchemaOptions>({
+    proto: options => {
+        const props: [name: string, schema: Schema][] = [];
+        type ObjectType = Record<string, unknown>;
 
-    const proto: SchemaProto<ObjectSchemaValue<O>> = {
-        coerce: coerceValue,
-        serialize: serializeValue,
-        check: checkValue,
-        default: defaultValue,
-        visit: visitValue,
-    };
-
-    return createSchema<ObjectSchemaValue<O>>(
-        proto,
-        options as SchemaOptions<ObjectSchemaValue<O>>,
-    ) as ObjectSchema<SchemaOptionsSimlify<O>>;
-
-    function coerceValue(value: unknown) {
-        const result: Record<string, unknown> = {};
-
-        for (const [propKey, propSchema] of props) {
-            const propValue = (value as Record<string, unknown>)[propKey];
-            result[propKey] = coerce(propSchema, propValue);
+        for (const propKey in options.props) {
+            const propSchema = options.props[propKey];
+            props.push([propKey, propSchema]);
         }
 
-        return result as ObjectSchemaValue<O>;
-    }
+        const proto: SchemaProto<ObjectType> = {
+            coerce: coerceValue,
+            serialize: serializeValue,
+            check: checkValue,
+            default: defaultValue,
+            visit: visitValue,
+        };
 
-    function serializeValue(value: ObjectSchemaValue<O>) {
-        const result: Record<string, unknown> = {};
+        return proto;
 
-        for (const [propKey, propSchema] of props) {
-            const propValue = value[propKey as keyof ObjectSchemaValue<O>];
-            result[propKey] = serialize(propSchema, propValue);
+        function coerceValue(value: unknown) {
+            const result: ObjectType = {};
+
+            for (const [propKey, propSchema] of props) {
+                const propValue = (value as ObjectType)[propKey];
+                result[propKey] = coerce(propSchema, propValue);
+            }
+
+            return result;
         }
 
-        return result;
-    }
+        function serializeValue(value: ObjectType) {
+            const result: ObjectType = {};
 
-    function checkValue(value: unknown): value is ObjectSchemaValue<O> {
-        return isPlainObject(value);
-    }
+            for (const [propKey, propSchema] of props) {
+                const propValue = value[propKey];
+                result[propKey] = serialize(propSchema, propValue);
+            }
 
-    function defaultValue() {
-        return coerceValue({});
-    }
-
-    function visitValue(value: ObjectSchemaValue<O>, visitor: SchemaVisitor) {
-        for (const [propKey, propSchema] of props) {
-            const propValue = value[propKey as keyof ObjectSchemaValue<O>];
-            visitor(propSchema, propValue, propKey);
+            return result;
         }
-    }
-}
+
+        function checkValue(value: unknown): value is ObjectType {
+            return isPlainObject(value);
+        }
+
+        function defaultValue() {
+            return coerceValue({});
+        }
+
+        function visitValue(value: ObjectType, visitor: SchemaVisitor) {
+            for (const [propKey, propSchema] of props) {
+                const propValue = value[propKey];
+                visitor(propSchema, propValue, propKey);
+            }
+        }
+    },
+});

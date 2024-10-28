@@ -1,7 +1,7 @@
 import { identity } from '@nzyme/utils';
 
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 
 export type UnknownSchema<V, O extends SchemaOptions<V>> = ForceName<Schema<V, O>>;
 
@@ -17,12 +17,13 @@ const proto: SchemaProto<unknown> = {
     default: () => null,
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function unknown<V = unknown, O extends SchemaOptions<V> = {}>(
-    options?: O & SchemaOptions<V>,
-) {
-    return createSchema<V>(proto as SchemaProto<V>, options) as UnknownSchema<
-        V,
-        SchemaOptionsSimlify<O>
-    >;
-}
+type UnknownSchemaFactory = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    <V = unknown, O extends SchemaOptions<V> = {}>(
+        options?: O & SchemaOptions<unknown>,
+    ): UnknownSchema<V, SchemaOptionsSimlify<O>>;
+};
+
+export const unknown = defineSchema<UnknownSchemaFactory>({
+    proto: () => proto,
+});

@@ -2,9 +2,8 @@ import type { Primitive } from '@nzyme/types';
 import { identity } from '@nzyme/utils';
 
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type EnumSchemaOptions<V extends Primitive[] = Primitive[]> = SchemaOptions<V[number]> & {
     values: V;
 };
@@ -17,30 +16,40 @@ type ForceName<T> = T & FF;
 
 export type EnumSchemaValue<O extends EnumSchemaOptions> = O['values'][number];
 
-export function enumSchema<const V extends Primitive[]>(values: V): EnumSchema<{ values: V }>;
-export function enumSchema<const V extends Primitive[], O extends EnumSchemaOptions<V>>(
-    options: O & EnumSchemaOptions<V>,
-): EnumSchema<SchemaOptionsSimlify<O>>;
-export function enumSchema(optionsOrValues: EnumSchemaOptions | Primitive[]) {
-    const options = Array.isArray(optionsOrValues) ? { values: optionsOrValues } : optionsOrValues;
-    const values = options.values;
-    const valuesSet = new Set(values);
+type EnumSchemaFactory = {
+    <const V extends Primitive[]>(values: V): EnumSchema<{ values: V }>;
+    <const V extends Primitive[], O extends EnumSchemaOptions<V>>(
+        options: O & EnumSchemaOptions<V>,
+    ): EnumSchema<SchemaOptionsSimlify<O>>;
+};
 
-    const proto: SchemaProto<Primitive> = {
-        coerce(value) {
-            if (valuesSet.has(value as Primitive)) {
-                return value as Primitive;
-            }
+export const enumSchema = defineSchema<EnumSchemaFactory, EnumSchemaOptions>({
+    options: (optionsOrValues: EnumSchemaOptions | Primitive[]) => {
+        const options: EnumSchemaOptions = Array.isArray(optionsOrValues)
+            ? { values: optionsOrValues }
+            : optionsOrValues;
 
-            return values[0];
-        },
-        serialize: identity,
-        check(value): value is Primitive {
-            return valuesSet.has(value as Primitive);
-        },
-        default: () => values[0],
-    };
+        return options;
+    },
+    proto: options => {
+        const values = options.values;
+        const valuesSet = new Set(values);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return createSchema<Primitive>(proto, options) as EnumSchema<any>;
-}
+        const proto: SchemaProto<Primitive> = {
+            coerce(value) {
+                if (valuesSet.has(value as Primitive)) {
+                    return value as Primitive;
+                }
+
+                return values[0];
+            },
+            serialize: identity,
+            check(value): value is Primitive {
+                return valuesSet.has(value as Primitive);
+            },
+            default: () => values[0],
+        };
+
+        return proto;
+    },
+});

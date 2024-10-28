@@ -13,12 +13,12 @@ export type SchemaOptionsSimlify<O extends SchemaOptions<any>> = Simplify<{
     [K in Exclude<keyof O, 'validators' | 'default'>]: O[K];
 }>;
 
-export interface SchemaProto<V = unknown> {
+export interface SchemaProto<V = unknown, U = V> {
     coerce: (value: unknown) => V;
-    serialize: (value: V) => unknown;
+    serialize: (value: U) => unknown;
     check: (value: unknown) => value is V;
     default: () => V;
-    visit?: (value: V, visitor: SchemaVisitor) => void;
+    visit?: (value: U, visitor: SchemaVisitor) => void;
 }
 
 export interface SchemaVisitor {
@@ -34,7 +34,7 @@ export interface SchemaBase<
     V = unknown,
     O extends SchemaOptions<V> = { nullable?: boolean; optional?: boolean },
 > {
-    [SCHEMA_PROTO]: SchemaProto<V>;
+    [SCHEMA_PROTO]: SchemaProto<V, unknown>;
     nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
     optional: IfAny<O, boolean, IfUnknown<O['optional'], false, Exclude<O['optional'], undefined>>>;
     default?: () => V;

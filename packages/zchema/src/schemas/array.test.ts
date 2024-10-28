@@ -4,10 +4,10 @@ import { minValidator, regexValidator } from '@nzyme/validate';
 
 import { array } from './array.js';
 import { number } from './number.js';
+import { object } from './object.js';
 import { string } from './string.js';
 import { coerce } from '../utils/coerce.js';
 import { validate } from '../utils/validate.js';
-import { object } from './object.js';
 
 test('array of numbers', () => {
     const schema = array({

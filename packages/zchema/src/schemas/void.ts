@@ -1,5 +1,5 @@
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 
 export type VoidSchema<O extends SchemaOptions<void> = SchemaOptions<void>> = ForceName<
     Schema<void, O>
@@ -17,9 +17,13 @@ const proto: SchemaProto<void> = {
     default: () => undefined,
 };
 
-export function voidSchema<O extends SchemaOptions<void> = {}>(options?: O & SchemaOptions<void>) {
-    return createSchema<void>(proto, {
-        ...options,
-        optional: true,
-    }) as VoidSchema<SchemaOptionsSimlify<O>>;
-}
+type VoidSchemaFactory = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    <O extends SchemaOptions<void> = {}>(
+        options?: O & SchemaOptions<void>,
+    ): VoidSchema<SchemaOptionsSimlify<O>>;
+};
+
+export const voidSchema = defineSchema<VoidSchemaFactory>({
+    proto: () => proto,
+});

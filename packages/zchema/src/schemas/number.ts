@@ -1,7 +1,7 @@
 import { identity } from '@nzyme/utils';
 
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 
 export type NumberSchema<O extends SchemaOptions<number>> = Schema<number, O>;
 
@@ -12,9 +12,13 @@ const proto: SchemaProto<number> = {
     default: () => 0,
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function number<O extends SchemaOptions<number> = {}>(
-    options?: O & SchemaOptions<number>,
-): NumberSchema<SchemaOptionsSimlify<O>> {
-    return createSchema(proto, options) as NumberSchema<SchemaOptionsSimlify<O>>;
-}
+type NumberSchemaFactory = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    <O extends SchemaOptions<number> = {}>(
+        options?: O & SchemaOptions<number>,
+    ): NumberSchema<SchemaOptionsSimlify<O>>;
+};
+
+export const number = defineSchema<NumberSchemaFactory>({
+    proto: () => proto,
+});

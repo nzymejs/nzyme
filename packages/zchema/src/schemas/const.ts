@@ -1,10 +1,9 @@
 import type { Primitive } from '@nzyme/types';
 
-import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import type { Schema, SchemaOptions } from '../Schema.js';
+import { defineSchema } from '../defineSchema.js';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type ConstSchemaOptions<V = unknown> = SchemaOptions<V> & {
+export type ConstSchemaOptions<V extends Primitive = Primitive> = SchemaOptions<V> & {
     value: V;
 };
 
@@ -14,21 +13,20 @@ export type ConstSchema<O extends ConstSchemaOptions> = ForceName<Schema<O['valu
 declare class FF {}
 type ForceName<T> = T & FF;
 
-export function constSchema<const V extends Primitive[], O extends ConstSchemaOptions<V>>(
-    options: O & ConstSchemaOptions<V>,
-) {
-    const value = options.value;
+type ConstSchemaFactory = {
+    <V extends Primitive>(value: V): ConstSchema<{ value: V }>;
+};
 
-    const proto: SchemaProto<O['value']> = {
-        coerce: () => value,
-        serialize: () => value,
-        check(value): value is O['value'] {
-            return value === value;
-        },
-        default: () => value,
-    };
+export const constSchema = defineSchema<ConstSchemaFactory, ConstSchemaOptions>({
+    proto: (options: ConstSchemaOptions) => {
+        const value = options.value;
+        const getter = () => value;
 
-    return createSchema<O['value']>(proto, options as SchemaOptions<O['value']>) as ConstSchema<
-        SchemaOptionsSimlify<O>
-    >;
-}
+        return {
+            coerce: getter,
+            serialize: getter,
+            check: (v): v is Primitive => v === value,
+            default: getter,
+        };
+    },
+});
