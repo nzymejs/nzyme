@@ -12,13 +12,13 @@ const proto: SchemaProto<string> = {
     default: () => '',
 };
 
-type StringSchemaFactory = {
+type StringSchemaBase = {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     <O extends SchemaOptions<string> = {}>(
         options?: O & SchemaOptions<string>,
     ): StringSchema<SchemaOptionsSimlify<O>>;
 };
 
-export const string = defineSchema<StringSchemaFactory>({
+export const string = defineSchema<StringSchemaBase>({
     proto: () => proto,
 });

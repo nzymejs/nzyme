@@ -19,6 +19,7 @@ export { voidSchema as void } from './schemas/void.js';
 
 export * from './utils/coerce.js';
 export * from './utils/extend.js';
+export * from './utils/getBase.js';
 export * from './utils/isSchema.js';
 export * from './utils/nullable.js';
 export * from './utils/optional.js';

@@ -17,13 +17,13 @@ const proto: SchemaProto<unknown> = {
     default: () => null,
 };
 
-type UnknownSchemaFactory = {
+type UnknownSchemaBase = {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     <V = unknown, O extends SchemaOptions<V> = {}>(
         options?: O & SchemaOptions<unknown>,
     ): UnknownSchema<V, SchemaOptionsSimlify<O>>;
 };
 
-export const unknown = defineSchema<UnknownSchemaFactory>({
+export const unknown = defineSchema<UnknownSchemaBase>({
     proto: () => proto,
 });

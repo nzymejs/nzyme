@@ -10,13 +10,13 @@ const proto: SchemaProto<Date> = {
     default: () => new Date(0),
 };
 
-type DateSchemaFactory = {
+type DateSchemaBase = {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     <O extends SchemaOptions<Date> = {}>(
         options?: O & SchemaOptions<Date>,
     ): DateSchema<SchemaOptionsSimlify<O>>;
 };
 
-export const date = defineSchema<DateSchemaFactory>({
+export const date = defineSchema<DateSchemaBase>({
     proto: () => proto,
 });

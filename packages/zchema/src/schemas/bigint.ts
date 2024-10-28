@@ -1,5 +1,5 @@
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
-import { createSchema } from '../createSchema.js';
+import { defineSchema } from '../defineSchema.js';
 
 export type BigintSchema<O extends SchemaOptions<bigint>> = Schema<bigint, O>;
 
@@ -10,7 +10,13 @@ const proto: SchemaProto<bigint> = {
     default: () => 0n,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export function bigint<O extends SchemaOptions<bigint> = {}>(options?: O & SchemaOptions<bigint>) {
-    return createSchema(proto, options) as BigintSchema<SchemaOptionsSimlify<O>>;
-}
+type BigintSchemaBase = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    <O extends SchemaOptions<bigint> = {}>(
+        options?: O & SchemaOptions<bigint>,
+    ): BigintSchema<SchemaOptionsSimlify<O>>;
+};
+
+export const bigint = defineSchema<BigintSchemaBase>({
+    proto: () => proto,
+});

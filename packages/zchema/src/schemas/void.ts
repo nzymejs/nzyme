@@ -17,13 +17,17 @@ const proto: SchemaProto<void> = {
     default: () => undefined,
 };
 
-type VoidSchemaFactory = {
+type VoidSchemaBase = {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     <O extends SchemaOptions<void> = {}>(
         options?: O & SchemaOptions<void>,
     ): VoidSchema<SchemaOptionsSimlify<O>>;
 };
 
-export const voidSchema = defineSchema<VoidSchemaFactory>({
+export const voidSchema = defineSchema<VoidSchemaBase>({
+    options: (options?: SchemaOptions<void>) => ({
+        ...options,
+        optional: true,
+    }),
     proto: () => proto,
 });

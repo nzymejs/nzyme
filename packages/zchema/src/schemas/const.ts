@@ -13,11 +13,11 @@ export type ConstSchema<O extends ConstSchemaOptions> = ForceName<Schema<O['valu
 declare class FF {}
 type ForceName<T> = T & FF;
 
-type ConstSchemaFactory = {
+type ConstSchemaBase = {
     <V extends Primitive>(value: V): ConstSchema<{ value: V }>;
 };
 
-export const constSchema = defineSchema<ConstSchemaFactory, ConstSchemaOptions>({
+export const constSchema = defineSchema<ConstSchemaBase, ConstSchemaOptions>({
     proto: (options: ConstSchemaOptions) => {
         const value = options.value;
         const getter = () => value;

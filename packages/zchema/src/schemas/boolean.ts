@@ -12,13 +12,13 @@ const proto: SchemaProto<boolean> = {
     default: () => false,
 };
 
-type BooleanSchemaFactory = {
+type BooleanSchemaBase = {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     <O extends SchemaOptions<boolean> = {}>(
         options?: O & SchemaOptions<boolean>,
     ): BooleanSchema<SchemaOptionsSimlify<O>>;
 };
 
-export const boolean = defineSchema<BooleanSchemaFactory>({
+export const boolean = defineSchema<BooleanSchemaBase>({
     proto: () => proto,
 });

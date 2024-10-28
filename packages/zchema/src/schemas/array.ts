@@ -29,14 +29,14 @@ type ForceName<T> = T & FF;
 
 export type ArraySchemaValue<O extends ArraySchemaOptions> = SchemaValue<O['of']>[];
 
-type ArraySchemaFactory = {
+type ArraySchemaBase = {
     <S extends SchemaAny>(of: S): ArraySchema<{ of: S }>;
     <O extends ArraySchemaOptions>(
         options: O & ArraySchemaOptions<O['of']>,
     ): ArraySchema<SchemaOptionsSimlify<O>>;
 };
 
-export const array = defineSchema<ArraySchemaFactory, ArraySchemaOptions>({
+export const array = defineSchema<ArraySchemaBase, ArraySchemaOptions>({
     options: (optionsOrSchema: SchemaAny | ArraySchemaOptions) => {
         const options: ArraySchemaOptions = isSchema(optionsOrSchema)
             ? { of: optionsOrSchema }

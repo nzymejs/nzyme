@@ -55,13 +55,13 @@ type ForceName<T> = T & FF;
 
 export type ObjectSchemaValue<O extends ObjectSchemaOptions> = ObjectSchemaPropsValue<O['props']>;
 
-type ObjectSchemaFactory = {
+type ObjectSchemaBase = {
     <O extends ObjectSchemaOptions>(
         options: O & ObjectSchemaOptions<ObjectSchemaOptionsProps<O>>,
     ): ObjectSchema<SchemaOptionsSimlify<O>>;
 };
 
-export const object = defineSchema<ObjectSchemaFactory, ObjectSchemaOptions>({
+export const object = defineSchema<ObjectSchemaBase, ObjectSchemaOptions>({
     proto: options => {
         const props: [name: string, schema: Schema][] = [];
         type ObjectType = Record<string, unknown>;

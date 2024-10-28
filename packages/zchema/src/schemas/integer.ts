@@ -12,13 +12,13 @@ const proto: SchemaProto<number> = {
     default: () => 0,
 };
 
-type IntegerSchemaFactory = {
+type IntegerSchemaBase = {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     <O extends SchemaOptions<number> = {}>(
         options?: O & SchemaOptions<number>,
     ): IntegerSchema<SchemaOptionsSimlify<O>>;
 };
 
-export const integer = defineSchema<IntegerSchemaFactory>({
+export const integer = defineSchema<IntegerSchemaBase>({
     proto: () => proto,
 });

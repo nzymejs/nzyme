@@ -21,20 +21,27 @@ export interface SchemaProto<V = unknown, U = V> {
     visit?: (value: U, visitor: SchemaVisitor) => void;
 }
 
+export type SchemaBase = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (...args: any[]): Schema;
+};
+
 export interface SchemaVisitor {
     (schema: Schema, value: unknown, key: string | number): unknown;
 }
 
 export const SCHEMA_PROTO = Symbol('SchemaProto');
+export const SCHEMA_BASE = Symbol('SchemaBase');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaOptionsOf<S extends SchemaAny> = S extends Schema<any, infer O> ? O : never;
 
-export interface SchemaBase<
+export interface SchemaProps<
     V = unknown,
     O extends SchemaOptions<V> = { nullable?: boolean; optional?: boolean },
 > {
     [SCHEMA_PROTO]: SchemaProto<V, unknown>;
+    [SCHEMA_BASE]: SchemaBase;
     nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
     optional: IfAny<O, boolean, IfUnknown<O['optional'], false, Exclude<O['optional'], undefined>>>;
     default?: () => V;
@@ -44,7 +51,7 @@ export interface SchemaBase<
 export type Schema<
     V = unknown,
     O extends SchemaOptions<V> = { nullable?: boolean; optional?: boolean },
-> = SchemaBase<V, O> & {
+> = SchemaProps<V, O> & {
     [K in Exclude<keyof O, keyof SchemaOptions<V>>]: O[K];
 };
 

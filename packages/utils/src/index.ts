@@ -35,6 +35,7 @@ export * from './url/queryTypes.js';
 export * from './functions/identity.js';
 export * from './functions/noop.js';
 
+export * from './assignProps.js';
 export * from './assert.js';
 export * from './cachedGetter.js';
 export * from './cachedProp.js';
