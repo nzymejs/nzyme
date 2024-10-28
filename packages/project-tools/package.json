@@ -29,7 +29,7 @@
         "@oclif/plugin-help": "^6.2.16",
         "@oclif/plugin-version": "^2.2.15",
         "@types/fs-extra": "^11.0.4",
-        "@vue/compiler-sfc": "^3.4.31",
+        "@vue/compiler-sfc": "^3.5.12",
         "chalk": "^5.3.0",
         "comment-json": "^4.2.3",
         "compare-versions": "^6.1.0",
