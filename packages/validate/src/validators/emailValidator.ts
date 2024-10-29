@@ -8,11 +8,11 @@ const EMAIL_REGEX =
 const EMAIL_MESSAGE = () => 'Adres e-mail jest nieprawidłowy';
 
 export function emailValidator(
-    options: ValidatorOptions<string>,
+    options?: ValidatorOptions<string>,
 ): Validator<string | null | undefined> {
     return defineValidator({
         validator: isEmailValid,
-        message: options.message ?? EMAIL_MESSAGE,
+        message: options?.message ?? EMAIL_MESSAGE,
     });
 }
 

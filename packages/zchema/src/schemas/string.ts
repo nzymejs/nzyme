@@ -3,7 +3,10 @@ import { identity } from '@nzyme/utils';
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
 import { defineSchema } from '../defineSchema.js';
 
-export type StringSchema<O extends SchemaOptions<string>> = Schema<string, O>;
+export type StringSchema<O extends SchemaOptions<string> = SchemaOptions<string>> = Schema<
+    string,
+    O
+>;
 
 const proto: SchemaProto<string> = {
     coerce: String,

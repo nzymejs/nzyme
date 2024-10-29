@@ -1,7 +1,15 @@
-import { SCHEMA_PROTO, type SchemaAny, type SchemaProto, type SchemaValue } from '../Schema.js';
+import {
+    SCHEMA_PROTO,
+    type Schema,
+    type SchemaProto,
+    type SchemaValue,
+    type SchemaValueNonNull,
+} from '../Schema.js';
 
-export function coerce<S extends SchemaAny>(schema: S, value: unknown): SchemaValue<S> {
-    const proto = schema[SCHEMA_PROTO] as SchemaProto<SchemaValue<S>>;
+export function coerce<S extends Schema>(schema: S, value: Partial<SchemaValue<S>>): SchemaValue<S>;
+export function coerce<S extends Schema>(schema: S, value?: unknown): SchemaValue<S>;
+export function coerce<S extends Schema>(schema: S, value?: unknown): SchemaValue<S> {
+    const proto = schema[SCHEMA_PROTO] as SchemaProto<SchemaValueNonNull<S>>;
 
     if (value === null) {
         if (schema.nullable) {

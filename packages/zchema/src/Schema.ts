@@ -21,9 +21,9 @@ export interface SchemaProto<V = unknown, U = V> {
     visit?: (value: U, visitor: SchemaVisitor) => void;
 }
 
-export type SchemaBase = {
+export type SchemaBase<S extends Schema = Schema> = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (...args: any[]): Schema;
+    (...args: any[]): S;
 };
 
 export interface SchemaVisitor {
@@ -57,6 +57,10 @@ export type Schema<
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaAny = Schema<any, any>;
+
+export type SchemaValueNonNull<TSchema extends SchemaAny> =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    TSchema extends Schema<infer V, any> ? V : never;
 
 export type SchemaValue<TSchema extends SchemaAny> =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
