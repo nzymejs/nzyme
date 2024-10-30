@@ -1,5 +1,5 @@
 import type { FunctionParams } from '@nzyme/types';
-import { identity } from '@nzyme/utils';
+import { createNamedFunction, identity } from '@nzyme/utils';
 
 import {
     SCHEMA_BASE,
@@ -29,6 +29,7 @@ type SchemaDefinition<
 > = {
     options?: SchemaOptionsFactory<F, O>;
     proto: SchemaProtoFactory<F, O>;
+    name: string;
 };
 
 export function defineSchema<
@@ -37,7 +38,7 @@ export function defineSchema<
 >(definition: SchemaDefinition<F, O>) {
     const optionsFactory = (definition.options ?? identity) as SchemaOptionsFactory<F, O>;
     const protoFactory = definition.proto;
-    const SchemaBase: SchemaBase = (...args) => {
+    const SchemaBase: SchemaBase = createNamedFunction(definition.name, (...args) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const options = optionsFactory(...(args as FunctionParams<F>)) ?? ({} as O);
 
@@ -51,7 +52,7 @@ export function defineSchema<
         };
 
         return schema;
-    };
+    });
 
     return SchemaBase as F;
 }

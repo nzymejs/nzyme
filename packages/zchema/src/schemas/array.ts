@@ -37,6 +37,7 @@ type ArraySchemaBase = {
 };
 
 export const array = defineSchema<ArraySchemaBase, ArraySchemaOptions>({
+    name: 'array',
     options: (optionsOrSchema: SchemaAny | ArraySchemaOptions) => {
         const options: ArraySchemaOptions = isSchema(optionsOrSchema)
             ? { of: optionsOrSchema }

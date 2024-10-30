@@ -18,5 +18,6 @@ type BigintSchemaBase = {
 };
 
 export const bigint = defineSchema<BigintSchemaBase>({
+    name: 'bigint',
     proto: () => proto,
 });

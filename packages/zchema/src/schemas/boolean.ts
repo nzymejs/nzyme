@@ -20,5 +20,6 @@ type BooleanSchemaBase = {
 };
 
 export const boolean = defineSchema<BooleanSchemaBase>({
+    name: 'boolean',
     proto: () => proto,
 });

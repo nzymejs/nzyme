@@ -25,6 +25,7 @@ type VoidSchemaBase = {
 };
 
 export const voidSchema = defineSchema<VoidSchemaBase>({
+    name: 'void',
     options: (options?: SchemaOptions<void>) => ({
         ...options,
         optional: true,

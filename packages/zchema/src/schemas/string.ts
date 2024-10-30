@@ -23,5 +23,6 @@ type StringSchemaBase = {
 };
 
 export const string = defineSchema<StringSchemaBase>({
+    name: 'string',
     proto: () => proto,
 });

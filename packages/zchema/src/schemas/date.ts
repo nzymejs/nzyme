@@ -18,5 +18,6 @@ type DateSchemaBase = {
 };
 
 export const date = defineSchema<DateSchemaBase>({
+    name: 'date',
     proto: () => proto,
 });

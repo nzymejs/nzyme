@@ -24,6 +24,7 @@ type EnumSchemaBase = {
 };
 
 export const enumSchema = defineSchema<EnumSchemaBase, EnumSchemaOptions>({
+    name: 'enum',
     options: (optionsOrValues: EnumSchemaOptions | Primitive[]) => {
         const options: EnumSchemaOptions = Array.isArray(optionsOrValues)
             ? { values: optionsOrValues }

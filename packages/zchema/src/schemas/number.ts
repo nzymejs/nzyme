@@ -20,5 +20,6 @@ type NumberSchemaBase = {
 };
 
 export const number = defineSchema<NumberSchemaBase>({
+    name: 'number',
     proto: () => proto,
 });

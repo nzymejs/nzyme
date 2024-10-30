@@ -20,5 +20,6 @@ type IntegerSchemaBase = {
 };
 
 export const integer = defineSchema<IntegerSchemaBase>({
+    name: 'integer',
     proto: () => proto,
 });

@@ -62,6 +62,7 @@ type ObjectSchemaBase = {
 };
 
 export const object = defineSchema<ObjectSchemaBase, ObjectSchemaOptions>({
+    name: 'object',
     proto: options => {
         const props: [name: string, schema: Schema][] = [];
         type ObjectType = Record<string, unknown>;

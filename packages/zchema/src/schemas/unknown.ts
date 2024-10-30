@@ -19,11 +19,16 @@ const proto: SchemaProto<unknown> = {
 
 type UnknownSchemaBase = {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    (): UnknownSchema<unknown, {}>;
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    <O extends SchemaOptions<unknown> = {}>(options: O): UnknownSchema<unknown, O>;
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     <V = unknown, O extends SchemaOptions<V> = {}>(
-        options?: O & SchemaOptions<unknown>,
+        options?: O & SchemaOptions<V>,
     ): UnknownSchema<V, SchemaOptionsSimlify<O>>;
 };
 
 export const unknown = defineSchema<UnknownSchemaBase>({
+    name: 'unknown',
     proto: () => proto,
 });
