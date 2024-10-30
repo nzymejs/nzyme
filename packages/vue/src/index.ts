@@ -14,6 +14,7 @@ export * from './useScrollLock.js';
 
 export * from './modal/ModalHost.js';
 export * from './modal/ModalService.js';
+export * from './modal/ModalContext.js';
 export * from './modal/useModalProps.js';
 export * from './modal/useModal.js';
 export type {

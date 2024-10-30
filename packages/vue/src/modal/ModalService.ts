@@ -1,10 +1,18 @@
-import { type Ref, defineComponent, h, ref, type ComponentInternalInstance, nextTick } from 'vue';
+import {
+    type Ref,
+    defineComponent,
+    h,
+    ref,
+    type ComponentInternalInstance,
+    nextTick,
+    watch,
+} from 'vue';
 
 import { clearFocus, virtualHistory } from '@nzyme/dom-utils';
 import { defineService } from '@nzyme/ioc';
 import type { Writable } from '@nzyme/types';
 import { arrayRemove, createPromise } from '@nzyme/utils';
-import { reactive } from '@nzyme/vue-utils';
+import { provideContext, reactive } from '@nzyme/vue-utils';
 
 import type {
     ModalComponent,
@@ -17,6 +25,7 @@ import type {
     ModalHandler,
 } from './ModalTypes.js';
 import { onKeyUp } from '../onKeyUp.js';
+import { ModalContext } from './ModalContext.js';
 
 interface ModalServiceOpenOptions {
     /**
@@ -54,10 +63,10 @@ export const ModalService = defineService({
             modal.props = options.props as ModalProps<T>;
             modal.handler = reactive<ModalHandler<ModalResult<T>>>({
                 open,
-                setResult(result: ModalResult<T>) {
+                setResult: result => {
                     modalResult = result;
                 },
-                done(result) {
+                done: result => {
                     if (!open.value) {
                         return;
                     }
@@ -66,7 +75,7 @@ export const ModalService = defineService({
                     closeModal();
                 },
                 close: closeModal,
-                cancel() {
+                cancel: () => {
                     if (!open.value) {
                         return;
                     }
@@ -76,6 +85,20 @@ export const ModalService = defineService({
                 },
             });
 
+            watch(open, value => {
+                if (value) {
+                    return;
+                }
+
+                // Destroy the modal after a slight delay
+                // This way you can use customized transitions.
+                void nextTick(() => arrayRemove(modals.value, modal as Modal));
+
+                historyHandle.cancel();
+
+                result.resolve(modalResult);
+            });
+
             modal.component = defineComponent({
                 async setup() {
                     const props: ModalHandlerProps<ModalResult<T>> = {
@@ -83,6 +106,7 @@ export const ModalService = defineService({
                         modal: modal.handler,
                     };
 
+                    provideContext(ModalContext, modal.handler);
                     onKeyUp('Escape', closeModal);
 
                     const view = await unwrapModalComponent(options.modal);
@@ -100,23 +124,11 @@ export const ModalService = defineService({
 
             modals.value.push(modal as Modal);
 
-            return modal;
-
             function closeModal() {
-                if (!open.value) {
-                    return;
-                }
-
                 open.value = false;
-
-                // Destroy the modal after a slight delay
-                // This way you can use customized transitions.
-                void nextTick(() => arrayRemove(modals.value, modal as Modal));
-
-                historyHandle.cancel();
-
-                result.resolve(modalResult);
             }
+
+            return modal;
         }
 
         function closeAll() {
