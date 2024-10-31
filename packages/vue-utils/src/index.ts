@@ -9,6 +9,7 @@ export * from './useProps.js';
 export * from './useInstance.js';
 export * from './computedAsync.js';
 export * from './nestedRef.js';
+export * from './onEventEmitter.js';
 export * from './onHistoryBack.js';
 export * from './onElementScroll.js';
 export * from './onMountedInScope.js';
