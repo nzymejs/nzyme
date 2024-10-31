@@ -66,7 +66,7 @@ function validateInner<S extends SchemaAny>(
 
     for (const validator of schema.validators) {
         const result = validator(value, ctx);
-        if (result !== null) {
+        if (result != null) {
             if (errors === undefined) {
                 errors = {};
             }
