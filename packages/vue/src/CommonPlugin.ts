@@ -1,6 +1,6 @@
 import type { Plugin } from 'vue';
 
-import type { VueContainer } from './VueContainer.js';
+import type { VueContainer } from './createContainer.js';
 import { containerSymbol } from './useContainer.js';
 
 export interface CommonPluginOptions {

@@ -2,83 +2,79 @@ import type { Injectable } from './Injectable.js';
 import type { Module } from './Module.js';
 import { isResolvable, Resolvable } from './Resolvable.js';
 
-export class Container {
-    private readonly instances = new Map<symbol, unknown>();
-    private readonly resolvers = new Map<symbol, Resolvable>();
-    private readonly parent?: Container;
+export type ContainerOptions = {
+    parent?: Container;
+    resolve?: (resolvable: Resolvable, scope?: Injectable) => unknown;
+    child?: () => Container;
+};
 
-    constructor(parent?: Container) {
-        this.parent = parent;
-    }
-
-    public addModule<TParams extends unknown[], TResult>(
+export type Container = {
+    readonly parent?: Container;
+    addModule<TParams extends unknown[], TResult>(
+        this: void,
         module: Module<TParams, TResult>,
         ...params: TParams
-    ) {
-        return module(this, ...params);
-    }
+    ): void;
+    createChild(this: void): Container;
+    get<T>(this: void, injectable: Injectable<T>): T | undefined;
+    set<T>(this: void, injectable: Injectable<T>, instance: T): void;
+    set<T>(this: void, injectable: Injectable<T>, service: Resolvable<T>): void;
+    resolve<T>(this: void, injectable: Injectable<T>, scope?: Injectable): T;
+    tryResolve<T>(this: void, injectable: Injectable<T>, scope?: Injectable): T | undefined;
+};
 
-    public createChild() {
-        return new Container(this);
-    }
+export function createContainer(options?: ContainerOptions) {
+    const instances = new Map<symbol, unknown>();
+    const resolvers = new Map<symbol, Resolvable>();
+    const parent = options?.parent;
+    const doResolve =
+        options?.resolve ?? ((resolvable, scope) => resolvable.resolve(container, scope));
+    const createChild = options?.child ?? (() => createContainer({ parent }));
 
-    public get<T>(injectable: Injectable<T>) {
-        const instance = this.instances.get(injectable.symbol);
-        return instance as T | undefined;
-    }
-
-    public set<T>(injectable: Injectable<T>, instance: T): void;
-    public set<T>(injectable: Injectable<T>, service: Resolvable<T>): void;
-    public set<T>(injectable: Injectable<T>, instanceOrService: T | Resolvable<T>): void {
-        if (instanceOrService instanceof Resolvable) {
-            if (instanceOrService.for !== injectable) {
-                const injectableName = injectable.name ?? '';
-                const serviceName = instanceOrService.name ?? '';
-                throw new Error(
-                    `Service ${serviceName} is not cannot be resolved as ${injectableName}`,
-                );
+    const container: Container = {
+        addModule: (module, ...params) => module(container, ...params),
+        createChild,
+        get: <T>(injectable: Injectable<T>) => instances.get(injectable.symbol) as T | undefined,
+        set: (injectable, instanceOrService) => {
+            if (instanceOrService instanceof Resolvable) {
+                resolvers.set(injectable.symbol, instanceOrService);
+            } else {
+                instances.set(injectable.symbol, instanceOrService);
+            }
+        },
+        resolve: <T>(injectable: Injectable<T>, scope?: Injectable) => {
+            const instance = tryResolve(injectable, scope);
+            if (instance == null) {
+                throw new Error(`Service ${injectable.name ?? ''} was not registered`);
             }
 
-            this.resolvers.set(injectable.symbol, instanceOrService);
-        } else {
-            this.instances.set(injectable.symbol, instanceOrService);
-        }
-    }
+            return instance;
+        },
+        tryResolve,
+    };
 
-    /**
-     * Resolves a single injectable.
-     * @param injectable Injectable to be resolved.
-     * @returns Resolved value of the injectable.
-     */
-    public resolve<T>(injectable: Injectable<T>, scope?: Injectable): T {
-        const instance = this.tryResolve(injectable, scope);
-        if (instance == null) {
-            throw new Error(`Service ${injectable.name ?? ''} was not registered`);
-        }
+    return container;
 
-        return instance;
-    }
-
-    public tryResolve<T>(injectable: Injectable<T>, scope?: Injectable): T | undefined {
-        let instance = this.instances.get(injectable.symbol) as T | undefined;
+    function tryResolve<T>(injectable: Injectable<T>, scope?: Injectable): T | undefined {
+        let instance = instances.get(injectable.symbol) as T | undefined;
         if (instance) {
             return instance;
         }
 
         // Try to resolve as a registered service
-        const resolver = this.resolvers.get(injectable.symbol) as Resolvable<T> | undefined;
+        const resolver = resolvers.get(injectable.symbol) as Resolvable<T> | undefined;
         if (resolver) {
-            instance = this.instances.get(resolver.symbol) as T | undefined;
+            instance = instances.get(resolver.symbol) as T | undefined;
             if (instance) {
                 // Cache it for later
-                this.instances.set(injectable.symbol, instance);
+                instances.set(injectable.symbol, instance);
                 return instance;
             }
 
-            instance = this.doResolve(resolver, scope);
+            instance = doResolve(resolver, scope) as T | undefined;
             if (resolver.cached) {
-                this.instances.set(injectable.symbol, instance);
-                this.instances.set(resolver.symbol, instance);
+                instances.set(injectable.symbol, instance);
+                instances.set(resolver.symbol, instance);
             }
 
             return instance;
@@ -86,33 +82,30 @@ export class Container {
 
         if (isResolvable(injectable)) {
             if (injectable.scope === 'root') {
-                if (this.parent) {
-                    instance = this.parent.tryResolve(injectable, scope);
+                if (parent) {
+                    instance = parent.tryResolve(injectable, scope);
                 } else {
-                    instance = this.doResolve(injectable, scope);
+                    instance = doResolve(injectable, scope) as T | undefined;
                 }
-            } else if (!this.parent) {
+            } else if (!parent) {
                 // Not possible to resolve a child service in a root container
                 return undefined;
-            } else if (this.parent.parent) {
-                instance = this.parent.get(injectable) ?? this.doResolve(injectable, scope);
+            } else if (parent.parent) {
+                instance =
+                    parent.get(injectable) ?? (doResolve(injectable, scope) as T | undefined);
             } else {
-                instance = this.doResolve(injectable, scope);
+                instance = doResolve(injectable, scope) as T | undefined;
             }
 
             if (instance && injectable.cached) {
-                this.instances.set(injectable.symbol, instance);
+                instances.set(injectable.symbol, instance);
             }
         }
 
-        if (instance == null && this.parent) {
-            return this.parent.tryResolve(injectable, scope);
+        if (instance == null && parent) {
+            return parent.tryResolve(injectable, scope);
         }
 
         return instance;
-    }
-
-    protected doResolve<T>(resolvable: Resolvable<T>, scope?: Injectable): T | undefined {
-        return resolvable.resolve(this, scope);
     }
 }

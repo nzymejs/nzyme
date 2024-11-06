@@ -1,6 +1,6 @@
 import { getCurrentInstance, inject, provide, type InjectionKey } from 'vue';
 
-import type { VueContainer } from './VueContainer.js';
+import type { VueContainer } from './createContainer.js';
 
 export const containerSymbol = Symbol('container') as InjectionKey<VueContainer> & symbol;
 
