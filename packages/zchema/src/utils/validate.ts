@@ -50,19 +50,21 @@ function validateInner<S extends SchemaAny>(
 
     let errors: ValidationErrors | undefined;
 
-    proto.visit?.(value, (schema, value, key) => {
-        const result = validateInner(schema, value, ctx);
+    if (value != null && proto.visit != null) {
+        proto.visit(value, (schema, value, key) => {
+            const result = validateInner(schema, value, ctx);
 
-        if (!result) {
-            return;
-        }
+            if (!result) {
+                return;
+            }
 
-        if (errors === undefined) {
-            errors = {};
-        }
+            if (errors === undefined) {
+                errors = {};
+            }
 
-        mergeErrors(errors, result, key);
-    });
+            mergeErrors(errors, result, key);
+        });
+    }
 
     for (const validator of schema.validators) {
         const result = validator(value, ctx);

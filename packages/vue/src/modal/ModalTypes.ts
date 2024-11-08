@@ -27,7 +27,7 @@ export type ModalResult<T extends ModalComponent> =
 
 export interface ModalHandler<T = unknown> {
     setResult(this: void, result: T): void;
-    done(this: void, result: T): void;
+    done: T extends void ? () => void : (result: T) => void;
     close(this: void): void;
     cancel(this: void): void;
     open: boolean;
