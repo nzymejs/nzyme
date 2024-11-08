@@ -22,11 +22,8 @@ export type ModalProps<T extends ModalComponent> = keyof ModalPropsWithoutHandle
     ? undefined
     : ModalPropsWithoutHandler<T>;
 
-export type ModalResult<T extends ModalComponent> = ComponentProps<T> extends ModalHandlerProps<
-    infer R
->
-    ? R
-    : void;
+export type ModalResult<T extends ModalComponent> =
+    ComponentProps<T> extends ModalHandlerProps<infer R> ? R : void;
 
 export interface ModalHandler<T = unknown> {
     setResult(this: void, result: T): void;
@@ -36,9 +33,8 @@ export interface ModalHandler<T = unknown> {
     open: boolean;
 }
 
-export type OpenModalOptions<T extends ModalComponent = ModalComponent> = ModalProps<T> extends void
-    ? OpenModalOptionsWithoutProps<T>
-    : OpenModalOptionsWithProps<T>;
+export type OpenModalOptions<T extends ModalComponent = ModalComponent> =
+    ModalProps<T> extends void ? OpenModalOptionsWithoutProps<T> : OpenModalOptionsWithProps<T>;
 
 type OpenModalOptionsBase<T extends ModalComponent = ModalComponent> = {
     /**
@@ -57,8 +53,7 @@ interface OpenModalOptionsWithProps<T extends ModalComponent> extends OpenModalO
     props: ModalProps<T>;
 }
 
-export interface Modal<T extends ModalComponent = ModalComponent>
-    extends Promise<ModalResult<T> | undefined> {
+export interface Modal<T extends ModalComponent = ModalComponent> extends Promise<ModalResult<T>> {
     readonly id: symbol;
     readonly handler: ModalHandler<ModalResult<T>>;
     readonly props: ModalProps<T>;

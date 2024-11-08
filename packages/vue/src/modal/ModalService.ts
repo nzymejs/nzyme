@@ -11,7 +11,7 @@ import {
 import { clearFocus, virtualHistory } from '@nzyme/dom-utils';
 import { defineService } from '@nzyme/ioc';
 import type { Writable } from '@nzyme/types';
-import { arrayRemove, createPromise } from '@nzyme/utils';
+import { arrayRemove, CancelError, createPromise } from '@nzyme/utils';
 import { provideContext, reactive } from '@nzyme/vue-utils';
 
 import type {
@@ -49,9 +49,13 @@ export const ModalService = defineService({
             options: OpenModalOptions<T> & ModalServiceOpenOptions,
         ): Modal<T> {
             const open = ref(true);
-            const result = createPromise<ModalResult<T> | undefined>();
+            const result = createPromise<ModalResult<T>>();
 
-            let modalResult: ModalResult<T> | undefined;
+            type ModalResultState = {
+                result: ModalResult<T>;
+            };
+
+            let modalResult: ModalResultState | undefined;
 
             const modal = result.promise as Writable<Modal<T>>;
             const historyHandle = virtualHistory.pushState(() => modal.handler.close());
@@ -64,14 +68,14 @@ export const ModalService = defineService({
             modal.handler = reactive<ModalHandler<ModalResult<T>>>({
                 open,
                 setResult: result => {
-                    modalResult = result;
+                    modalResult = { result };
                 },
                 done: result => {
                     if (!open.value) {
                         return;
                     }
 
-                    modalResult = result;
+                    modalResult = { result };
                     closeModal();
                 },
                 close: closeModal,
@@ -96,7 +100,11 @@ export const ModalService = defineService({
 
                 historyHandle.cancel();
 
-                result.resolve(modalResult);
+                if (modalResult) {
+                    result.resolve(modalResult.result);
+                } else {
+                    result.reject(new CancelError());
+                }
             });
 
             modal.component = defineComponent({
