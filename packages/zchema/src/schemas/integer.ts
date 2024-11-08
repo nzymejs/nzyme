@@ -3,7 +3,10 @@ import { identity } from '@nzyme/utils';
 import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto } from '../Schema.js';
 import { defineSchema } from '../defineSchema.js';
 
-export type IntegerSchema<O extends SchemaOptions<number>> = Schema<number, O>;
+export type IntegerSchema<O extends SchemaOptions<number> = SchemaOptions<number>> = Schema<
+    number,
+    O
+>;
 
 const proto: SchemaProto<number> = {
     coerce: v => Math.ceil(Number(v)),

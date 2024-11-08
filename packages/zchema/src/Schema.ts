@@ -1,7 +1,10 @@
 import type { IfAny, IfUnknown, Simplify } from '@nzyme/types';
 import type { Validator } from '@nzyme/validate';
 
-export interface SchemaOptions<V> {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+export interface SchemaProps<V> {}
+
+export interface SchemaOptions<V> extends SchemaProps<V> {
     nullable?: boolean;
     optional?: boolean;
     default?: () => V;
@@ -36,22 +39,14 @@ export const SCHEMA_BASE = Symbol('SchemaBase');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaOptionsOf<S extends SchemaAny> = S extends Schema<any, infer O> ? O : never;
 
-export interface SchemaProps<
-    V = unknown,
-    O extends SchemaOptions<V> = { nullable?: boolean; optional?: boolean },
-> {
+export type Schema<V = unknown, O extends SchemaOptions<V> = SchemaOptions<V>> = SchemaProps<V> & {
     [SCHEMA_PROTO]: SchemaProto<V, unknown>;
     [SCHEMA_BASE]: SchemaBase;
     nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
     optional: IfAny<O, boolean, IfUnknown<O['optional'], false, Exclude<O['optional'], undefined>>>;
     default?: () => V;
     validators: Validator[];
-}
-
-export type Schema<
-    V = unknown,
-    O extends SchemaOptions<V> = { nullable?: boolean; optional?: boolean },
-> = SchemaProps<V, O> & {
+} & {
     [K in Exclude<keyof O, keyof SchemaOptions<V>>]: O[K];
 };
 
