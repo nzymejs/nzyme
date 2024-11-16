@@ -65,3 +65,11 @@ export type SchemaValue<TSchema extends SchemaAny> =
 
 type NullableValue<N extends boolean> = N extends false ? never : null;
 type OptionalValue<N extends boolean> = N extends false ? never : undefined;
+
+export type SchemaOf<T> = Schema<
+    Exclude<T, undefined | null>,
+    {
+        nullable: null extends T ? true : false;
+        optional: undefined extends T ? true : false;
+    }
+>;
