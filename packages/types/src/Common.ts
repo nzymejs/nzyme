@@ -19,7 +19,7 @@ export type Flatten<T> = Exclude<
 >;
 
 export type PropertyNames<T> = {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     [K in keyof T]: T[K] extends Function ? never : K;
 }[keyof T];
 
@@ -53,7 +53,7 @@ export type Item<T> = T[keyof T];
 
 export type Writable<T> = { -readonly [P in keyof T]: T[P] };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type SomeObject = {};
 
 export type Getter<T> = () => T;

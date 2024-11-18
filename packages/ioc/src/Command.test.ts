@@ -1,12 +1,12 @@
 import { test, expect } from 'vitest';
 
 import { defineCommand } from './Command.js';
-import { Container } from './Container.js';
+import { createContainer } from './Container.js';
 import { defineInjectable } from './Injectable.js';
 import { defineService } from './Service.js';
 
 test('resolve command with no deps', () => {
-    const container = new Container();
+    const container = createContainer();
 
     let count = 0;
 
@@ -28,7 +28,7 @@ test('resolve command with no deps', () => {
 
     // Resolved commands are cached
     const other = container.resolve(command);
-    expect(other).toBe(resolved);
+    expect(other).not.toBe(resolved); // Cached function is a different instance
     expect(count).toBe(1);
 
     expect(other(4)).toBe(4);
@@ -36,7 +36,7 @@ test('resolve command with no deps', () => {
 });
 
 test('resolve command registered as injectable', () => {
-    const container = new Container();
+    const container = createContainer();
 
     let count = 0;
 
@@ -63,7 +63,7 @@ test('resolve command registered as injectable', () => {
 
     // Resolved commands are cached
     const other = container.resolve(injectable);
-    expect(other).toBe(resolved);
+    expect(other).not.toBe(resolved); // Cached function is a different instance
     expect(count).toBe(1);
 
     expect(other(5)).toBe(5);
@@ -71,13 +71,13 @@ test('resolve command registered as injectable', () => {
 
     // Resolve command directly
     const direct = container.resolve(command);
-    expect(direct).toBe(resolved);
+    expect(direct).not.toBe(resolved); // Cached function is a different instance
     expect(direct(6)).toBe(6);
     expect(count).toBe(1);
 });
 
 test('resolve command with service dependency', () => {
-    const container = new Container();
+    const container = createContainer();
 
     let serviceCount = 0;
     const service = defineService({
@@ -110,7 +110,7 @@ test('resolve command with service dependency', () => {
 
     // Resolved commands are cached
     const resolvedCommand2 = container.resolve(command);
-    expect(resolvedCommand2).toBe(resolvedCommand);
+    expect(resolvedCommand2).not.toBe(resolvedCommand); // Cached function is a different instance
     expect(serviceCount).toBe(1);
     expect(commandCount).toBe(1);
 
@@ -120,7 +120,7 @@ test('resolve command with service dependency', () => {
 });
 
 test('resolve service with command dependency', () => {
-    const container = new Container();
+    const container = createContainer();
 
     let commandCount = 0;
     const command = defineCommand({
@@ -153,7 +153,7 @@ test('resolve service with command dependency', () => {
 
     // Resolved commands are cached
     const resolvedCommand = container.resolve(command);
-    expect(resolvedCommand).toBe(resolvedService);
+    expect(resolvedCommand).not.toBe(resolvedService); // Cached function is a different instance
     expect(serviceCount).toBe(1);
     expect(commandCount).toBe(1);
 

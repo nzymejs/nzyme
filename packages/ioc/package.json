@@ -12,6 +12,10 @@
         "eslint": "eslint . --fix --cache",
         "build": "tsc --build"
     },
+    "dependencies": {
+        "@nzyme/types": "*",
+        "@nzyme/utils": "*"
+    },
     "devDependencies": {
         "vitest": "^2.1.3"
     },

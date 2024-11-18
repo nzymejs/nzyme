@@ -22,6 +22,7 @@ export * from './utils/coerceNonNull.js';
 export * from './utils/extend.js';
 export * from './utils/getBase.js';
 export * from './utils/isSchema.js';
+export * from './utils/nonNullable.js';
 export * from './utils/nullable.js';
 export * from './utils/optional.js';
 export * from './utils/parseJson.js';

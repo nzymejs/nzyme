@@ -4,9 +4,12 @@ import type { Validator } from '@nzyme/validate';
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
 export interface SchemaProps<V> {}
 
-export interface SchemaOptions<V> extends SchemaProps<V> {
+export interface SchemaOptionsBase {
     nullable?: boolean;
     optional?: boolean;
+}
+
+export interface SchemaOptions<V = unknown> extends SchemaProps<V>, SchemaOptionsBase {
     default?: () => V;
     validators?: Validator<V>[];
 }

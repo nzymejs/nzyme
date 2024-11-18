@@ -1,10 +1,11 @@
 import { test, expect } from 'vitest';
 
-import { Container } from './Container.js';
+import { createContainer } from './Container.js';
+import { defineScope } from './ContainerScope.js';
 import { defineInjectable } from './Injectable.js';
 
 test('register and get injectable', () => {
-    const container = new Container();
+    const container = createContainer();
     const injectable = defineInjectable<string>();
 
     container.set(injectable, 'test');
@@ -12,7 +13,7 @@ test('register and get injectable', () => {
 });
 
 test('register and get named injectable', () => {
-    const container = new Container();
+    const container = createContainer();
     const injectable = defineInjectable<string>({
         name: 'test',
     });
@@ -22,7 +23,7 @@ test('register and get named injectable', () => {
 });
 
 test('get non registered injectable', () => {
-    const container = new Container();
+    const container = createContainer();
     const injectable = defineInjectable<string>({
         name: 'test',
     });
@@ -31,8 +32,9 @@ test('get non registered injectable', () => {
 });
 
 test('resolve injectable from parent container', () => {
-    const parent = new Container();
-    const child = new Container(parent);
+    const parent = createContainer();
+    const childScope = defineScope('child');
+    const child = parent.createChild(childScope);
 
     const injectable = defineInjectable<string>({
         name: 'test',

@@ -1,4 +1,4 @@
-import { defineFactory } from '@nzyme/ioc';
+import { defineService } from '@nzyme/ioc';
 
 import type { LoggerArgs, LoggerErrorArgs } from './Logger.js';
 import { Logger } from './Logger.js';
@@ -76,10 +76,11 @@ export class ConsoleLogger implements Logger {
     }
 }
 
-export const ConsoleLoggerFactory = defineFactory({
+export const ConsoleLoggerFactory = defineService({
     name: 'ConsoleLogger',
     for: Logger,
-    setup({ scope }) {
-        return new ConsoleLogger(scope?.name);
+    resolution: 'transient',
+    setup({ source }) {
+        return new ConsoleLogger(source?.name);
     },
 });

@@ -1,9 +1,8 @@
-import type { Override } from '@nzyme/types';
-
 import type { SchemaAny } from '../Schema.js';
+import type { Extend } from './extend.js';
 
 declare class ForceName {}
-export type Nullable<S extends SchemaAny> = Override<S, { nullable: true }> & ForceName;
+export type Nullable<S extends SchemaAny> = Extend<S, { nullable: true }> & ForceName;
 
 export function nullable<S extends SchemaAny>(schema: S) {
     return {

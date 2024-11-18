@@ -7,5 +7,12 @@
     },
     "include": ["src"],
     "exclude": ["src/**/*.test.ts"],
-    "references": []
+    "references": [
+        {
+            "path": "../types/tsconfig.json"
+        },
+        {
+            "path": "../utils/tsconfig.json"
+        }
+    ]
 }

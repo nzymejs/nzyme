@@ -1,11 +1,12 @@
-import { test, expect } from 'vitest';
+import { test, expect, describe } from 'vitest';
 
-import { Container } from './Container.js';
+import { createContainer } from './Container.js';
+import { defineScope } from './ContainerScope.js';
 import { defineInjectable } from './Injectable.js';
 import { defineService } from './Service.js';
 
 test('resolve service with no deps', () => {
-    const container = new Container();
+    const container = createContainer();
 
     let count = 0;
 
@@ -63,7 +64,7 @@ test('resolve service with deps', () => {
         },
     });
 
-    const container = new Container();
+    const container = createContainer();
 
     expect(service1Count).toBe(0);
     expect(service2Count).toBe(0);
@@ -105,7 +106,7 @@ test('register service as injectable - resolve injectable first', () => {
         },
     });
 
-    const container = new Container();
+    const container = createContainer();
 
     container.set(injectable, service);
     const injectableInstance1 = container.resolve(injectable);
@@ -137,7 +138,7 @@ test('register service as injectable - resolve service first', () => {
         },
     });
 
-    const container = new Container();
+    const container = createContainer();
 
     container.set(Injectable, Service);
     const serviceInstance1 = container.resolve(Service);
@@ -152,15 +153,102 @@ test('register service as injectable - resolve service first', () => {
     expect(serviceCount).toBe(1);
 });
 
+describe('transient services', () => {
+    test('resolve factory with no deps', () => {
+        const container = createContainer();
+
+        let count = 0;
+
+        const factory = defineService({
+            resolution: 'transient',
+            setup() {
+                count++;
+                return 'foo';
+            },
+        });
+
+        let resolved = container.resolve(factory);
+        expect(resolved).toBe('foo');
+        expect(count).toBe(1);
+
+        resolved = container.resolve(factory);
+        expect(resolved).toBe('foo');
+        expect(count).toBe(2);
+
+        resolved = container.resolve(factory);
+        expect(resolved).toBe('foo');
+        expect(count).toBe(3);
+    });
+
+    test('resolve factory registered as injectable', () => {
+        const container = createContainer();
+
+        let count = 0;
+
+        const injectable = defineInjectable<string>();
+
+        const factory = defineService({
+            resolution: 'transient',
+            for: injectable,
+            setup() {
+                count++;
+                return 'foo';
+            },
+        });
+
+        container.set(injectable, factory);
+
+        let resolved = container.resolve(injectable);
+        expect(resolved).toBe('foo');
+        expect(count).toBe(1);
+
+        resolved = container.resolve(injectable);
+        expect(resolved).toBe('foo');
+        expect(count).toBe(2);
+
+        resolved = container.resolve(injectable);
+        expect(resolved).toBe('foo');
+        expect(count).toBe(3);
+    });
+
+    test('resolve service with factory dep', () => {
+        const container = createContainer();
+
+        let count = 0;
+
+        const factory = defineService({
+            resolution: 'transient',
+            setup() {
+                count++;
+                return 'foo';
+            },
+        });
+
+        const service = defineService({
+            setup({ inject }) {
+                return inject(factory) + 'bar';
+            },
+        });
+
+        let resolved = container.resolve(service);
+        expect(resolved).toBe('foobar');
+        expect(count).toBe(1);
+
+        resolved = container.resolve(service);
+        expect(resolved).toBe('foobar');
+        expect(count).toBe(1);
+    });
+});
+
 describe('child containers', () => {
     test('service with root scope with no deps', () => {
-        const parent = new Container();
-        const child = parent.createChild();
+        const parent = createContainer();
+        const scope = defineScope('child');
+        const child = parent.createChild(scope);
 
         let count = 0;
 
         const service = defineService({
-            scope: 'root',
             setup() {
                 count++;
                 return {
@@ -179,13 +267,14 @@ describe('child containers', () => {
     });
 
     test('service with child scope with no deps', () => {
-        const parent = new Container();
-        const child = parent.createChild();
+        const parent = createContainer();
+        const scope = defineScope('child');
+        const child = parent.createChild(scope);
 
         let count = 0;
 
         const service = defineService({
-            scope: 'child',
+            scope,
             setup() {
                 count++;
                 return {
@@ -204,13 +293,14 @@ describe('child containers', () => {
     });
 
     test('service with child scope with deps', () => {
+        const scope = defineScope('child');
+
         let service1Count = 0;
         let service2Count = 0;
         let service3Count = 0;
 
         const Service1 = defineService({
             name: 'service1',
-            scope: 'root',
             setup() {
                 service1Count++;
                 return { name: 'service1' };
@@ -219,7 +309,7 @@ describe('child containers', () => {
 
         const Service2 = defineService({
             name: 'service2',
-            scope: 'child',
+            scope,
             setup({ inject }) {
                 const service1 = inject(Service1);
                 service2Count++;
@@ -230,7 +320,7 @@ describe('child containers', () => {
 
         const Service3 = defineService({
             name: 'service3',
-            scope: 'child',
+            scope,
             setup({ inject }) {
                 const service1 = inject(Service1);
                 const service2 = inject(Service2);
@@ -241,8 +331,8 @@ describe('child containers', () => {
             },
         });
 
-        const parent = new Container();
-        const child = parent.createChild();
+        const parent = createContainer();
+        const child = parent.createChild(scope);
 
         expect(service1Count).toBe(0);
         expect(service2Count).toBe(0);
@@ -272,13 +362,15 @@ describe('child containers', () => {
     });
 
     test('service with child scope with deps in nested container', () => {
+        const childScope = defineScope('child');
+        const grandchildScope = defineScope('grandchild');
+
         let service1Count = 0;
         let service2Count = 0;
         let service3Count = 0;
 
         const Service1 = defineService({
             name: 'service1',
-            scope: 'root',
             setup() {
                 service1Count++;
                 return { name: 'service1' };
@@ -287,7 +379,7 @@ describe('child containers', () => {
 
         const Service2 = defineService({
             name: 'service2',
-            scope: 'child',
+            scope: childScope,
             setup({ inject }) {
                 const service1 = inject(Service1);
                 service2Count++;
@@ -298,7 +390,7 @@ describe('child containers', () => {
 
         const Service3 = defineService({
             name: 'service3',
-            scope: 'child',
+            scope: childScope,
             setup({ inject }) {
                 const service1 = inject(Service1);
                 const service2 = inject(Service2);
@@ -309,9 +401,9 @@ describe('child containers', () => {
             },
         });
 
-        const parent = new Container();
-        const child = parent.createChild();
-        const grandchild = child.createChild();
+        const parent = createContainer();
+        const child = parent.createChild(childScope);
+        const grandchild = child.createChild(grandchildScope);
 
         expect(service1Count).toBe(0);
         expect(service2Count).toBe(0);
@@ -340,12 +432,12 @@ describe('child containers', () => {
         expect(parent.get(Service2)).toBeUndefined();
         expect(parent.get(Service3)).toBeUndefined();
 
-        expect(child.get(Service1)).toBe(service1Resolved);
+        expect(child.get(Service1)).toBeUndefined();
         expect(child.get(Service2)).toBe(service2Resolved);
-        expect(child.get(Service3)).toBeUndefined();
+        expect(child.get(Service3)).toBe(service3Resolved);
 
-        expect(grandchild.get(Service1)).toBe(service1Resolved);
-        expect(grandchild.get(Service2)).toBe(service2Resolved);
-        expect(grandchild.get(Service3)).toBe(service3Resolved);
+        expect(grandchild.get(Service1)).toBeUndefined();
+        expect(grandchild.get(Service2)).toBeUndefined();
+        expect(grandchild.get(Service3)).toBeUndefined();
     });
 });
