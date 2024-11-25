@@ -1,7 +1,8 @@
 import { defineComponent, h } from 'vue';
 
+import { useService } from '@nzyme/vue-ioc';
+
 import { ModalService } from './ModalService.js';
-import { useService } from '../useService.js';
 
 export const ModalHost = defineComponent({
     name: 'ModalHost',

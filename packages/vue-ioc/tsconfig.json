@@ -9,13 +9,7 @@
     "include": ["src/**/*.ts", "src/**/*.json"],
     "references": [
         {
-            "path": "../dom-utils/tsconfig.json"
-        },
-        {
-            "path": "../types/tsconfig.json"
-        },
-        {
-            "path": "../utils/tsconfig.json"
+            "path": "../ioc/tsconfig.json"
         }
     ]
 }

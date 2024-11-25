@@ -4,9 +4,6 @@ export * from './prop.js';
 export * from './useEventBus.js';
 export * from './vmodel.js';
 export * from './Format.js';
-export { useContainer, useChildContainer } from './useContainer.js';
-export * from './createContainer.js';
-export * from './useService.js';
 export { CommonPlugin } from './CommonPlugin.js';
 
 export * from './onKeyUp.js';

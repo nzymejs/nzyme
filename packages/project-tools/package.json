@@ -25,9 +25,9 @@
     "dependencies": {
         "@lerna/package": "^6.4.1",
         "@lerna/project": "^6.4.1",
-        "@oclif/core": "^4.0.29",
-        "@oclif/plugin-help": "^6.2.16",
-        "@oclif/plugin-version": "^2.2.15",
+        "@oclif/core": "^4.0.33",
+        "@oclif/plugin-help": "^6.2.18",
+        "@oclif/plugin-version": "^2.2.16",
         "@types/fs-extra": "^11.0.4",
         "@vue/compiler-sfc": "^3.5.12",
         "chalk": "^5.3.0",

@@ -24,6 +24,7 @@ export * from './utils/getBase.js';
 export * from './utils/isSchema.js';
 export * from './utils/nonNullable.js';
 export * from './utils/nullable.js';
+export * from './utils/nullish.js';
 export * from './utils/optional.js';
 export * from './utils/parseJson.js';
 export * from './utils/serialize.js';

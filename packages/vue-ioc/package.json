@@ -1,5 +1,5 @@
 {
-    "name": "@nzyme/vue-utils",
+    "name": "@nzyme/vue-ioc",
     "version": "1.0.0",
     "type": "module",
     "main": "./dist/index.js",
@@ -12,9 +12,8 @@
         "build": "tsc --build"
     },
     "dependencies": {
-        "@nzyme/dom-utils": "*",
+        "@nzyme/ioc": "*",
         "@nzyme/types": "*",
-        "@nzyme/utils": "*",
         "vue": "^3.5.12"
     }
 }

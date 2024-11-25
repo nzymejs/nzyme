@@ -1,9 +1,7 @@
 import type { Plugin } from 'vue';
 
 import { CancelError } from '@nzyme/utils';
-
-import type { VueContainer } from './createContainer.js';
-import { containerSymbol } from './useContainer.js';
+import type { VueContainer } from '@nzyme/vue-ioc';
 
 export interface CommonPluginOptions {
     container: VueContainer;
@@ -11,7 +9,7 @@ export interface CommonPluginOptions {
 
 export const CommonPlugin: Plugin<CommonPluginOptions> = {
     install(app, options: CommonPluginOptions) {
-        app.provide(containerSymbol, options.container);
+        app.provide(options.container.injectionKey, options.container);
 
         if (typeof window !== 'undefined') {
             // unhandled promises are caught by this handler

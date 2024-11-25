@@ -1,17 +1,26 @@
-import type { EffectScope } from 'vue';
+import type { EffectScope, InjectionKey } from 'vue';
 import { effectScope as createEffectScope, getCurrentScope } from 'vue';
 
-import { createContainer as createContainerBase, type Container } from '@nzyme/ioc';
+import {
+    createContainer as createContainerBase,
+    type Container,
+    type ContainerScope,
+} from '@nzyme/ioc';
+import type { Writable } from '@nzyme/types';
 
-export type VueContainer = Container & {
-    effectScope: EffectScope;
-};
+export const injectionKey = Symbol('container') as InjectionKey<VueContainer>;
+
+export interface VueContainer extends Container {
+    readonly effectScope: EffectScope;
+    readonly injectionKey: typeof injectionKey;
+    createChild(this: void, scope: ContainerScope): VueContainer;
+}
 
 export type VueContainerOptions = {
     parent?: VueContainer;
 };
 
-export function createContainer(options?: VueContainerOptions) {
+export function createContainer(options?: VueContainerOptions): VueContainer {
     const parent = options?.parent;
     const effectScope = parent
         ? (getCurrentScope() ?? parent.effectScope)
@@ -19,7 +28,7 @@ export function createContainer(options?: VueContainerOptions) {
 
     const container = createContainerBase({
         parent,
-        child: () => createContainer({ parent: container }),
+        createChild: () => createContainer({ parent: container }),
         resolve: (resolvable, scope) => {
             const current = getCurrentScope();
 
@@ -31,9 +40,10 @@ export function createContainer(options?: VueContainerOptions) {
                 return resolvable.resolve(container, scope);
             });
         },
-    }) as VueContainer;
+    }) as Writable<VueContainer>;
 
     container.effectScope = effectScope;
+    container.injectionKey = injectionKey;
 
     return container;
 }
