@@ -1,4 +1,4 @@
-import type { QueryObject} from 'ufo';
+import type { QueryObject } from 'ufo';
 import { withQuery } from 'ufo';
 
 import { FetchError } from './FetchError.js';
@@ -39,6 +39,10 @@ export async function fetchJson<T>(request: SimpleRequest | DataRequest) {
     const response = await fetch(url, requestInit);
     if (!response.ok) {
         throw new FetchError(response);
+    }
+
+    if (response.status === 204) {
+        return null;
     }
 
     return (await response.json()) as T;

@@ -1,6 +1,6 @@
 import type { Container } from './Container.js';
 
-export type Module<TParams extends unknown[], TResult> = {
+export type Module<TParams extends unknown[] = [], TResult = void> = {
     (container: Container, ...params: TParams): TResult;
 };
 

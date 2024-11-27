@@ -10,6 +10,9 @@
     "references": [
         {
             "path": "../ioc/tsconfig.json"
+        },
+        {
+            "path": "../types/tsconfig.json"
         }
     ]
 }

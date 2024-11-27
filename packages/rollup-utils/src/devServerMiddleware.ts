@@ -87,6 +87,10 @@ export function devServerMiddleware(options: RollupWatchOptions): NextHandleFunc
                 workerData: {
                     port,
                 },
+                env: {
+                    ...process.env,
+                    DEBUG_COLORS: '1', // without this settings, colors won't be shown
+                },
             });
 
             worker.stdout.pipe(process.stdout);
