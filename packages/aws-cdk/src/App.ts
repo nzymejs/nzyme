@@ -103,12 +103,15 @@ export class App extends cdk.App {
                 progress: StackActivityProgress.EVENTS,
             });
 
-            consola.success(
-                `Successfully deployed stack ${chalk.green(stackName)} in ${chalk.green(
-                    perf.format(start),
-                )}`,
-                deployment.outputs,
-            );
+            if (deployment.type === 'did-deploy-stack') {
+                consola.success(
+                    `Successfully deployed stack ${chalk.green(stackName)} in ${chalk.green(
+                        perf.format(start),
+                    )}`,
+                    deployment.outputs,
+                );
+            }
+
             if (stack instanceof Stack) {
                 await stack?.$.emitAsync('deploy:finished', deployment);
             }
