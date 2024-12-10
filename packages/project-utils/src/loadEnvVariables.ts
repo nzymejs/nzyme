@@ -20,8 +20,10 @@ export function loadEnvVariables(options: EnvVariablesOptions = {}) {
 
     loadEnvFile(envFile, envVariables);
 
-    for (const envName of asArray(options.env)) {
-        loadEnvFile(`${envFile}.${envName}`, envVariables);
+    if (options.env) {
+        for (const envName of asArray(options.env)) {
+            loadEnvFile(`${envFile}.${envName}`, envVariables);
+        }
     }
 
     return envVariables;
