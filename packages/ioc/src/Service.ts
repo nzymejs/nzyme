@@ -1,3 +1,4 @@
+import type { Flatten, SomeObject } from '@nzyme/types';
 import { createMemo, noop } from '@nzyme/utils';
 
 import type { Container } from './Container.js';
@@ -34,12 +35,13 @@ export interface ServiceOptions<T, TExtend extends T = T> {
     readonly setup: ServiceSetup<TExtend>;
 }
 
-export interface Service<T = unknown> extends Injectable<T> {
-    readonly [SERVICE_SYMBOL]: true;
-    readonly for?: Injectable;
-    readonly scope?: ContainerScope;
-    readonly resolve: (container: Container, source?: Injectable) => T;
-}
+export type Service<T = unknown, TOptions extends object = SomeObject> = Injectable<T> &
+    Readonly<TOptions> & {
+        readonly [SERVICE_SYMBOL]: true;
+        readonly for?: Injectable;
+        readonly scope?: ContainerScope;
+        readonly resolve: (container: Container, source?: Injectable) => T;
+    };
 
 /*#__NO_SIDE_EFFECTS__*/
 export function defineService<
@@ -49,7 +51,7 @@ export function defineService<
 >(options: ServiceOptions<T, TExtend> & TOptions) {
     const resolution = resolveStrategy(options.resolution ?? 'singleton');
 
-    const service: Service<TExtend> & TOptions = {
+    const service: Service<TExtend, Flatten<Omit<TOptions, keyof ServiceOptions<T, TExtend>>>> = {
         ...options,
         [INJECTABLE_SYMBOL]: true,
         [SERVICE_SYMBOL]: true,
@@ -57,7 +59,9 @@ export function defineService<
         resolve: (container, source) => resolution({ service, options, container, source }),
     };
 
-    return Object.freeze(service);
+    Object.freeze(service);
+
+    return service;
 }
 
 export function isService<T>(value: Injectable<T>): value is Service<T>;
