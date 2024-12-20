@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-export function noop(...args: any[]) {
-    //
-}
+export function noop(...args: unknown[]): void;
+export function noop(...args: unknown[]): undefined;
+export function noop(): undefined {}
