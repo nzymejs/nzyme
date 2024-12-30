@@ -1,8 +1,8 @@
 import { test, expect } from 'vitest';
 
-import { coerce } from './utils/coerce.js';
-import { extend } from './utils/extend.js';
-import { number } from './schemas/number.js';
+import { coerce } from './coerce.js';
+import { extend } from './extend.js';
+import { number } from '../schemas/number.js';
 
 test('extend number to nullable', () => {
     const schema = number();

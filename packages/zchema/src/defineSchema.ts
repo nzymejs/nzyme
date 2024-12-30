@@ -1,15 +1,7 @@
 import type { FunctionParams } from '@nzyme/types';
 import { createNamedFunction, identity } from '@nzyme/utils';
 
-import {
-    SCHEMA_BASE,
-    SCHEMA_PROTO,
-    type SchemaAny,
-    type SchemaBase,
-    type SchemaOptions,
-    type SchemaProto,
-    type SchemaValue,
-} from './Schema.js';
+import type { SchemaAny, SchemaBase, SchemaOptions, SchemaProto, SchemaValue } from './Schema.js';
 
 type SchemaBaseValue<F extends SchemaBase> = Exclude<SchemaValue<ReturnType<F>>, undefined | null>;
 
@@ -47,8 +39,8 @@ export function defineSchema<
             nullable: options.nullable ?? false,
             optional: options.optional ?? false,
             validators: (options.validators ?? []) as SchemaAny['validators'],
-            [SCHEMA_BASE]: SchemaBase,
-            [SCHEMA_PROTO]: protoFactory(options) as SchemaAny[typeof SCHEMA_PROTO],
+            base: SchemaBase,
+            proto: protoFactory(options) as SchemaAny['proto'],
         };
 
         return schema;

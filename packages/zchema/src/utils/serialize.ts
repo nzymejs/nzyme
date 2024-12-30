@@ -1,7 +1,7 @@
-import { SCHEMA_PROTO, type SchemaAny, type SchemaValue } from '../Schema.js';
+import type { SchemaAny, SchemaValue } from '../Schema.js';
 
 export function serialize<S extends SchemaAny>(schema: S, value: SchemaValue<S>): unknown {
-    const def = schema[SCHEMA_PROTO];
+    const proto = schema.proto;
 
     if (value === null && schema.nullable) {
         return null;
@@ -11,5 +11,5 @@ export function serialize<S extends SchemaAny>(schema: S, value: SchemaValue<S>)
         return undefined;
     }
 
-    return def.serialize(value);
+    return proto.serialize(value);
 }

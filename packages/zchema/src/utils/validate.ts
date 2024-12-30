@@ -7,7 +7,7 @@ import {
     type ValidationResult,
 } from '@nzyme/validate';
 
-import { SCHEMA_PROTO, type SchemaAny, type SchemaProto, type SchemaValue } from '../Schema.js';
+import type { SchemaAny, SchemaValue } from '../Schema.js';
 
 export function validate<S extends SchemaAny>(
     schema: S,
@@ -34,7 +34,7 @@ function validateInner<S extends SchemaAny>(
     value: SchemaValue<S>,
     ctx: ValidationContext,
 ): ValidationResult {
-    const proto = schema[SCHEMA_PROTO] as SchemaProto<SchemaValue<S>>;
+    const proto = schema.proto;
 
     if (value === null) {
         if (!schema.nullable) {

@@ -20,7 +20,7 @@ export type ArraySchemaOptions<T extends SchemaAny = SchemaAny> = SchemaOptions<
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ArraySchema<O extends ArraySchemaOptions> = ForceName<
+export type ArraySchema<O extends ArraySchemaOptions = ArraySchemaOptions> = ForceName<
     O extends ArraySchemaOptions<infer T extends SchemaAny> ? Schema<SchemaValue<T>[], O> : never
 >;
 

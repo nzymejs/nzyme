@@ -20,7 +20,7 @@ export type SchemaOptionsSimlify<O extends SchemaOptions<any>> = Simplify<{
 }>;
 
 export interface SchemaProto<V = unknown, U = V> {
-    coerce: (value: unknown) => V;
+    coerce: (value: unknown) => V | undefined;
     serialize: (value: U) => unknown;
     check: (value: unknown) => value is V;
     default: () => V;
@@ -36,15 +36,12 @@ export interface SchemaVisitor {
     (schema: Schema, value: unknown, key: string | number): unknown;
 }
 
-export const SCHEMA_PROTO = Symbol('SchemaProto');
-export const SCHEMA_BASE = Symbol('SchemaBase');
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaOptionsOf<S extends SchemaAny> = S extends Schema<any, infer O> ? O : never;
 
 export type Schema<V = unknown, O extends SchemaOptions<V> = SchemaOptions<V>> = SchemaProps<V> & {
-    [SCHEMA_PROTO]: SchemaProto<V, unknown>;
-    [SCHEMA_BASE]: SchemaBase;
+    proto: SchemaProto<V, unknown>;
+    base: SchemaBase;
     nullable: IfAny<O, boolean, IfUnknown<O['nullable'], false, Exclude<O['nullable'], undefined>>>;
     optional: IfAny<O, boolean, IfUnknown<O['optional'], false, Exclude<O['optional'], undefined>>>;
     default?: () => V;
