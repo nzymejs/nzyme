@@ -6,7 +6,6 @@ module.exports = {
             1,
             {
                 publicOnly: {
-                    ancestorsOnly: true,
                     esm: true,
                     cjs: false,
                 },
@@ -15,6 +14,7 @@ module.exports = {
                     'ClassProperty',
                     'FunctionDeclaration',
                     'MethodDefinition',
+                    'ExportNamedDeclaration > VariableDeclaration',
                     'TSDeclareFunction',
                     'TSEnumDeclaration',
                     'TSInterfaceDeclaration',
