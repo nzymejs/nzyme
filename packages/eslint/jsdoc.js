@@ -19,10 +19,12 @@ module.exports = {
                     'TSEnumDeclaration',
                     'TSInterfaceDeclaration',
                     'TSMethodSignature',
-                    'TSPropertySignature',
+                    ':not(TSTypeParameterDeclaration) TSPropertySignature',
                     'TSTypeAliasDeclaration',
                 ],
             },
         ],
+        'jsdoc/no-blank-block-descriptions': 'warn',
+        'jsdoc/no-blank-blocks': 'warn',
     },
 };
