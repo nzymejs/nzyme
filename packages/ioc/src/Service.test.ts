@@ -2,7 +2,7 @@ import { test, expect, describe } from 'vitest';
 
 import { createContainer } from './Container.js';
 import { defineScope } from './ContainerScope.js';
-import { defineInjectable } from './Injectable.js';
+import { defineInterface } from './Interface.js';
 import { defineService } from './Service.js';
 
 test('resolve service with no deps', () => {
@@ -42,9 +42,10 @@ test('resolve service with deps', () => {
 
     const Service2 = defineService({
         name: 'service2',
-
-        setup({ inject }) {
-            const service1 = inject(Service1);
+        deps: {
+            service1: Service1,
+        },
+        setup({ service1 }) {
             service2Count++;
             expect(service1).toBe('service1');
             return 'service2';
@@ -53,10 +54,11 @@ test('resolve service with deps', () => {
 
     const service3 = defineService({
         name: 'service3',
-
-        setup({ inject }) {
-            const service1 = inject(Service1);
-            const service2 = inject(Service2);
+        deps: {
+            service1: Service1,
+            service2: Service2,
+        },
+        setup({ service1, service2 }) {
             service3Count++;
             expect(service1).toBe('service1');
             expect(service2).toBe('service2');
@@ -90,13 +92,13 @@ test('resolve service with deps', () => {
 });
 
 test('register service as injectable - resolve injectable first', () => {
-    const injectable = defineInjectable<{ foo: string }>({
+    const injectable = defineInterface<{ foo: string }>({
         name: 'foobar',
     });
     let serviceCount = 0;
 
     const service = defineService({
-        for: injectable,
+        implements: injectable,
         name: 'service',
         setup() {
             serviceCount++;
@@ -122,13 +124,13 @@ test('register service as injectable - resolve injectable first', () => {
 });
 
 test('register service as injectable - resolve service first', () => {
-    const Injectable = defineInjectable<{ foo: string }>({
+    const Injectable = defineInterface<{ foo: string }>({
         name: 'foobar',
     });
     let serviceCount = 0;
 
     const Service = defineService({
-        for: Injectable,
+        implements: Injectable,
         name: 'service',
         setup() {
             serviceCount++;
@@ -185,11 +187,11 @@ describe('transient services', () => {
 
         let count = 0;
 
-        const injectable = defineInjectable<string>();
+        const injectable = defineInterface<string>();
 
         const factory = defineService({
             resolution: 'transient',
-            for: injectable,
+            implements: injectable,
             setup() {
                 count++;
                 return 'foo';
@@ -216,7 +218,7 @@ describe('transient services', () => {
 
         let count = 0;
 
-        const factory = defineService({
+        const transient = defineService({
             resolution: 'transient',
             setup() {
                 count++;
@@ -225,8 +227,11 @@ describe('transient services', () => {
         });
 
         const service = defineService({
-            setup({ inject }) {
-                return inject(factory) + 'bar';
+            deps: {
+                transient,
+            },
+            setup({ transient }) {
+                return transient + 'bar';
             },
         });
 
@@ -310,8 +315,10 @@ describe('child containers', () => {
         const Service2 = defineService({
             name: 'service2',
             scope,
-            setup({ inject }) {
-                const service1 = inject(Service1);
+            deps: {
+                service1: Service1,
+            },
+            setup({ service1 }) {
                 service2Count++;
                 expect(service1.name).toBe('service1');
                 return { name: 'service2' };
@@ -321,9 +328,11 @@ describe('child containers', () => {
         const Service3 = defineService({
             name: 'service3',
             scope,
-            setup({ inject }) {
-                const service1 = inject(Service1);
-                const service2 = inject(Service2);
+            deps: {
+                service1: Service1,
+                service2: Service2,
+            },
+            setup({ service1, service2 }) {
                 service3Count++;
                 expect(service1.name).toBe('service1');
                 expect(service2.name).toBe('service2');
@@ -380,8 +389,10 @@ describe('child containers', () => {
         const Service2 = defineService({
             name: 'service2',
             scope: childScope,
-            setup({ inject }) {
-                const service1 = inject(Service1);
+            deps: {
+                service1: Service1,
+            },
+            setup({ service1 }) {
                 service2Count++;
                 expect(service1.name).toBe('service1');
                 return { name: 'service2' };
@@ -391,9 +402,11 @@ describe('child containers', () => {
         const Service3 = defineService({
             name: 'service3',
             scope: childScope,
-            setup({ inject }) {
-                const service1 = inject(Service1);
-                const service2 = inject(Service2);
+            deps: {
+                service1: Service1,
+                service2: Service2,
+            },
+            setup({ service1, service2 }) {
                 service3Count++;
                 expect(service1.name).toBe('service1');
                 expect(service2.name).toBe('service2');

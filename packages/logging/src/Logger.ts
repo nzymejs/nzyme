@@ -1,4 +1,4 @@
-import { defineInjectable } from '@nzyme/ioc';
+import { defineInterface } from '@nzyme/ioc';
 
 export type LoggerArgs = {
     [key: string]: unknown;
@@ -22,6 +22,6 @@ export interface Logger {
     context<T extends Record<string, any>>(name: string, ctx: T | null | undefined): void;
 }
 
-export const Logger = defineInjectable<Logger>({
+export const Logger = defineInterface<Logger>({
     name: 'Logger',
 });

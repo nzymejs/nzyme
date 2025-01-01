@@ -1,7 +1,6 @@
-import { defineService } from '@nzyme/ioc';
+import { Caller, defineService } from '@nzyme/ioc';
 
-import type { LoggerArgs, LoggerErrorArgs } from './Logger.js';
-import { Logger } from './Logger.js';
+import type { LoggerArgs, LoggerErrorArgs, Logger } from './Logger.js';
 import { perf } from './perf.js';
 
 export class ConsoleLogger implements Logger {
@@ -78,9 +77,10 @@ export class ConsoleLogger implements Logger {
 
 export const ConsoleLoggerFactory = defineService({
     name: 'ConsoleLogger',
-    for: Logger,
-    resolution: 'transient',
-    setup({ source }) {
-        return new ConsoleLogger(source?.name);
+    deps: {
+        caller: Caller,
+    },
+    setup({ caller }) {
+        return new ConsoleLogger(caller?.name);
     },
 });

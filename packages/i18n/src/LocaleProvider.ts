@@ -1,9 +1,9 @@
-import { defineInjectable } from '@nzyme/ioc';
+import { defineInterface } from '@nzyme/ioc';
 
 export interface LocaleProvider {
     locale: string;
 }
 
-export const LocaleProvider = defineInjectable<LocaleProvider>({
+export const LocaleProvider = defineInterface<LocaleProvider>({
     name: 'LocaleProvider',
 });

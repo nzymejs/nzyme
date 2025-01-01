@@ -20,9 +20,10 @@ export interface TranslatorForModule<TKey extends string> {
 
 export const Translator = defineService({
     name: 'Translator',
-    setup({ inject }): Translator {
-        const localeProvider = inject(LocaleProvider);
-
+    deps: {
+        localeProvider: LocaleProvider,
+    },
+    setup({ localeProvider }): Translator {
         const translator = (<FunctionOnly<Translator>>function (value, params) {
             return translate(value, {
                 params,

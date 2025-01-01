@@ -2,19 +2,19 @@ import { test, expect } from 'vitest';
 
 import { createContainer } from './Container.js';
 import { defineScope } from './ContainerScope.js';
-import { defineInjectable } from './Injectable.js';
+import { defineInterface } from './Interface.js';
 
-test('register and get injectable', () => {
+test('register and get interface', () => {
     const container = createContainer();
-    const injectable = defineInjectable<string>();
+    const injectable = defineInterface<string>();
 
     container.set(injectable, 'test');
     expect(container.get(injectable)).toBe('test');
 });
 
-test('register and get named injectable', () => {
+test('register and get named interface', () => {
     const container = createContainer();
-    const injectable = defineInjectable<string>({
+    const injectable = defineInterface<string>({
         name: 'test',
     });
 
@@ -22,21 +22,21 @@ test('register and get named injectable', () => {
     expect(container.get(injectable)).toBe('test');
 });
 
-test('get non registered injectable', () => {
+test('get non registered interface', () => {
     const container = createContainer();
-    const injectable = defineInjectable<string>({
+    const injectable = defineInterface<string>({
         name: 'test',
     });
 
     expect(container.get(injectable)).toBe(undefined);
 });
 
-test('resolve injectable from parent container', () => {
+test('resolve interface from parent container', () => {
     const parent = createContainer();
     const childScope = defineScope('child');
     const child = parent.createChild(childScope);
 
-    const injectable = defineInjectable<string>({
+    const injectable = defineInterface<string>({
         name: 'test',
     });
 

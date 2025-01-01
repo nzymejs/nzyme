@@ -2,7 +2,7 @@ import { test, expect } from 'vitest';
 
 import { defineCommand } from './Command.js';
 import { createContainer } from './Container.js';
-import { defineInjectable } from './Injectable.js';
+import { defineInterface } from './Interface.js';
 import { defineService } from './Service.js';
 
 test('resolve command with no deps', () => {
@@ -40,10 +40,10 @@ test('resolve command registered as injectable', () => {
 
     let count = 0;
 
-    const injectable = defineInjectable<(value: number) => number>();
+    const injectable = defineInterface<(value: number) => number>();
 
     const command = defineCommand({
-        for: injectable,
+        implements: injectable,
         setup() {
             count++;
             return (value: number) => {
@@ -89,8 +89,11 @@ test('resolve command with service dependency', () => {
 
     let commandCount = 0;
     const command = defineCommand({
-        setup({ inject }) {
-            inject(service);
+        deps: {
+            service,
+        },
+        setup({ service }) {
+            console.log(service);
             commandCount++;
             return (value: number) => {
                 return value;
@@ -134,10 +137,12 @@ test('resolve service with command dependency', () => {
 
     let serviceCount = 0;
     const service = defineService({
-        setup({ inject }) {
-            const c = inject(command);
+        deps: {
+            command,
+        },
+        setup({ command }) {
             serviceCount++;
-            return c;
+            return command;
         },
     });
 

@@ -1,7 +1,7 @@
-import type { Injectable } from '@nzyme/ioc';
+import type { Interface } from '@nzyme/ioc';
 
 import { useContainer } from './useContainer.js';
 
-export function useService<T>(service: Injectable<T>): T {
+export function useService<T>(service: Interface<T>): T {
     return useContainer().resolve(service);
 }

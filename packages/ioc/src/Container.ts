@@ -1,34 +1,43 @@
 import type { ContainerScope } from './ContainerScope.js';
-import type { Injectable } from './Injectable.js';
+import { defineInjectable, isInjectable, type Injectable } from './Injectable.js';
+import type { Interface } from './Interface.js';
 import type { Module } from './Module.js';
 import { isService, type Service } from './Service.js';
+
+export const CONTAINER_SYMBOL = Symbol('container');
 
 export type ContainerOptions = {
     parent?: Container;
     scope?: ContainerScope;
-    resolve?: (service: Service, scope?: Injectable) => unknown;
+    resolve?: (service: Service, scope?: Interface) => unknown;
     createChild?: (scope: ContainerScope) => Container;
 };
 
 export type Container = {
     readonly parent?: Container;
     readonly scope?: ContainerScope;
+    readonly [CONTAINER_SYMBOL]: true;
     addModule<TParams extends unknown[], TResult>(
         this: void,
         module: Module<TParams, TResult>,
         ...params: TParams
     ): void;
     createChild(this: void, scope: ContainerScope): Container;
-    get<T>(this: void, injectable: Injectable<T>): T | undefined;
+    get<T>(this: void, injectable: Injectable<T>): T | Injectable<T> | undefined;
     set<T>(this: void, injectable: Injectable<T>, instance: T): void;
-    set<T>(this: void, injectable: Injectable<T>, service: Service<T>): void;
-    resolve<T>(this: void, injectable: Injectable<T>, source?: Injectable): T;
-    tryResolve<T>(this: void, injectable: Injectable<T>, source?: Injectable): T | undefined;
+    set<T>(this: void, injectable: Injectable<T>, service: Injectable<T>): void;
+    resolve<T>(this: void, injectable: Injectable<T>, source?: Interface): T;
+    tryResolve<T>(this: void, injectable: Injectable<T>, source?: Interface): T | undefined;
 };
 
+export const Container = defineInjectable({
+    name: 'Container',
+    resolve: container => container,
+});
+
 export function createContainer(options?: ContainerOptions) {
-    const instances = new Map<symbol, unknown>();
-    const services = new Map<symbol, Service>();
+    const instances = new Map<object, unknown>();
+    const injectables = new Map<object, Injectable>();
     const parent = options?.parent;
     const scope = options?.scope;
     const resolve = options?.resolve ?? ((service, source) => service.resolve(container, source));
@@ -36,37 +45,42 @@ export function createContainer(options?: ContainerOptions) {
         options?.createChild ?? (scope => createContainer({ parent: container, scope }));
 
     const container: Container = {
+        [CONTAINER_SYMBOL]: true,
+        scope,
+        parent,
         addModule: (module, ...params) => module(container, ...params),
         createChild,
-        get: <T>(injectable: Injectable<T>) => instances.get(injectable.key) as T | undefined,
-        set: (injectable, instanceOrService) => {
-            if (isService(instanceOrService)) {
-                services.set(injectable.key, instanceOrService);
-            } else {
-                instances.set(injectable.key, instanceOrService);
-            }
-        },
-        resolve: <T>(injectable: Injectable<T>, scope?: Injectable) => {
-            const instance = tryResolve(injectable, scope);
-            if (instance == null) {
-                throw new Error(`Service ${injectable.name ?? ''} was not registered`);
-            }
-
-            return instance;
-        },
+        get,
+        set,
+        resolve: injectable => injectable.resolve(container),
         tryResolve,
     };
 
     return container;
 
-    function tryResolve<T>(injectable: Injectable<T>, source?: Injectable): T | undefined {
-        const instance = instances.get(injectable.key) as T | undefined;
+    function get<T>(injectable: Injectable<T>): T | Injectable<T> | undefined {
+        return (
+            (instances.get(injectable) as T | undefined) ??
+            (injectables.get(injectable) as Injectable<T> | undefined)
+        );
+    }
+
+    function set<T>(injectable: Injectable<T>, instanceOrService: T | Service<T>): void {
+        if (isInjectable(instanceOrService)) {
+            injectables.set(injectable, instanceOrService);
+        } else {
+            instances.set(injectable, instanceOrService);
+        }
+    }
+
+    function tryResolve<T>(injectable: Injectable<T>, source?: Interface): T | undefined {
+        const instance = instances.get(injectable) as T | undefined;
         if (instance) {
             return instance;
         }
 
         // Try to resolve as a registered service
-        const service = services.get(injectable.key) as Service<T> | undefined;
+        const service = injectables.get(injectable) as Service<T> | undefined;
         if (service) {
             return resolveService(service, source);
         }
@@ -78,11 +92,15 @@ export function createContainer(options?: ContainerOptions) {
         return parent?.tryResolve(injectable, source);
     }
 
-    function resolveService<T>(service: Service<T>, source?: Injectable): T | undefined {
+    function resolveService<T>(service: Service<T>, source?: Interface): T | undefined {
         if (service.scope !== scope) {
             return parent?.tryResolve(service, source);
         }
 
         return resolve(service, source) as T | undefined;
     }
+}
+
+export function isContainer(value: unknown): value is Container {
+    return typeof value === 'object' && value != null && CONTAINER_SYMBOL in value;
 }

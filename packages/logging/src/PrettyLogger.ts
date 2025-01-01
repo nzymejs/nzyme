@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import consola from 'consola';
 
-import { defineService } from '@nzyme/ioc';
+import { Caller, defineService } from '@nzyme/ioc';
 
 import type { LoggerArgs } from './Logger.js';
 import { Logger } from './Logger.js';
@@ -83,9 +83,12 @@ export class PrettyLogger implements Logger {
 
 export const PrettyLoggerFactory = defineService({
     name: 'PrettyLogger',
-    for: Logger,
+    implements: Logger,
     resolution: 'transient',
-    setup({ source }) {
-        return new PrettyLogger(source?.name);
+    deps: {
+        caller: Caller,
+    },
+    setup({ caller }) {
+        return new PrettyLogger(caller?.name);
     },
 });

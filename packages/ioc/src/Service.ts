@@ -1,141 +1,87 @@
-import type { Flatten, SomeObject } from '@nzyme/types';
-import { createMemo, noop } from '@nzyme/utils';
+import type { EmptyObject, Writable } from '@nzyme/types';
 
-import type { Container } from './Container.js';
 import type { ContainerScope } from './ContainerScope.js';
+import { INJECTABLE_SYMBOL, type Injectable } from './Injectable.js';
+import type { Interface } from './Interface.js';
 import {
-    INJECTABLE_SYMBOL,
-    type Injectable,
-    type InjectableKey,
-    type InjectableOptions,
-} from './Injectable.js';
+    getResolutionStrategy,
+    type ServiceResolutionStrategy,
+    type ServiceResolutionType,
+} from './serviceResolve.js';
+const SERVICE_SYMBOL = Symbol('service');
 
-export const SERVICE_SYMBOL = Symbol('service');
-
-export interface ServiceContext {
-    readonly container: Container;
-    readonly inject: <T>(injectable: Injectable<T>) => T;
-    readonly source?: Injectable;
-}
-
-export type ServiceResolutionParams<T = unknown> = {
-    service: Service<T>;
-    options: ServiceOptions<unknown, T>;
-    container: Container;
-    source?: Injectable;
+export type ServiceDependencies = {
+    [key: string]: Injectable;
 };
-export type ServiceResolutionStrategy<T = unknown> = (params: ServiceResolutionParams<T>) => T;
-export type ServiceResolutionType = 'transient' | 'singleton' | 'lazy';
-export type ServiceSetup<T = unknown> = (ctx: ServiceContext) => T;
 
-export interface ServiceOptions<T, TExtend extends T = T> {
-    readonly for?: Injectable<T>;
-    readonly resolution?: ServiceResolutionType | ServiceResolutionStrategy<TExtend>;
+export type ResolveDependencies<D extends ServiceDependencies> = keyof D extends never
+    ? void
+    : {
+          [K in keyof D]: D[K] extends Injectable<infer T> ? T : unknown;
+      };
+
+export interface ServiceOptions<
+    T = unknown,
+    TExtend extends T = T,
+    TDeps extends ServiceDependencies = ServiceDependencies,
+> {
+    readonly name?: string;
+    readonly implements?: Interface<T>;
+    readonly deps?: TDeps;
+    readonly resolution?: ServiceResolutionType | ServiceResolutionStrategy;
     readonly scope?: ContainerScope;
-    readonly setup: ServiceSetup<TExtend>;
+    readonly setup: ServiceConstructor<TExtend, TDeps>;
 }
 
-export type Service<T = unknown, TOptions extends object = SomeObject> = Injectable<T> &
-    Readonly<TOptions> & {
-        readonly [SERVICE_SYMBOL]: true;
-        readonly for?: Injectable;
+export type ServiceConstructor<
+    T = unknown,
+    TDeps extends ServiceDependencies = ServiceDependencies,
+> = (deps: ResolveDependencies<TDeps>) => T;
+
+export type Service<
+    T = unknown,
+    TDeps extends ServiceDependencies = ServiceDependencies,
+> = ServiceConstructor<T, TDeps> &
+    Injectable<T> & {
+        readonly implements?: Interface;
         readonly scope?: ContainerScope;
-        readonly resolve: (container: Container, source?: Injectable) => T;
+        readonly deps: TDeps;
     };
 
 /*#__NO_SIDE_EFFECTS__*/
 export function defineService<
     T,
     TExtend extends T = T,
-    TOptions extends InjectableOptions = InjectableOptions,
->(options: ServiceOptions<T, TExtend> & TOptions) {
-    const resolution = resolveStrategy(options.resolution ?? 'singleton');
+    TDeps extends ServiceDependencies = EmptyObject,
+>(options: ServiceOptions<T, TExtend, TDeps>): Service<TExtend, TDeps> {
+    const name = options.name ?? options.implements?.name ?? 'UnnamedService';
+    const resolution = getResolutionStrategy(options.resolution ?? 'singleton');
 
-    const service: Service<TExtend, Flatten<Omit<TOptions, keyof ServiceOptions<T, TExtend>>>> = {
-        ...options,
-        [INJECTABLE_SYMBOL]: true,
-        [SERVICE_SYMBOL]: true,
-        key: Symbol(options?.name) as InjectableKey<TExtend>,
-        resolve: (container, source) => resolution({ service, options, container, source }),
+    const wrapper: { [key: string]: ServiceConstructor<TExtend, TDeps> } = {
+        [name](deps) {
+            return options.setup(deps);
+        },
     };
 
-    Object.freeze(service);
+    const service = wrapper[name] as unknown as Writable<Service<TExtend, TDeps>>;
 
-    return service;
+    service[INJECTABLE_SYMBOL] = SERVICE_SYMBOL;
+    service.implements = options.implements as Interface;
+    service.scope = options.scope;
+    service.deps = options.deps ?? ({} as TDeps);
+    service.resolve = (container, caller) =>
+        resolution({
+            service: service as unknown as Service,
+            options: options as unknown as ServiceOptions,
+            container,
+            caller,
+        }) as TExtend;
+
+    return service as Service<TExtend, TDeps>;
 }
 
 export function isService<T>(value: Injectable<T>): value is Service<T>;
 export function isService(value: unknown): value is Service;
 export function isService(value: unknown) {
-    return value != null && (value as Service)[SERVICE_SYMBOL] === true;
-}
-
-function resolveStrategy<T>(strategy: ServiceResolutionType | ServiceResolutionStrategy<T>) {
-    if (typeof strategy === 'function') {
-        return strategy;
-    }
-
-    switch (strategy) {
-        case 'transient':
-            return transientStrategy as ServiceResolutionStrategy<T>;
-        case 'singleton':
-            return singletonStrategy as ServiceResolutionStrategy<T>;
-        case 'lazy':
-            return lazyStrategy as ServiceResolutionStrategy<T>;
-    }
-}
-
-export function singletonStrategy<T>({
-    service,
-    options,
-    container,
-    source,
-}: ServiceResolutionParams<T>) {
-    const instance = options.setup({
-        container,
-        inject: container.resolve,
-        source,
-    });
-
-    container.set(service, instance);
-
-    if (options.for && !container.get(options.for)) {
-        container.set(options.for, instance);
-    }
-
-    return instance;
-}
-
-export function transientStrategy<T>({ options, container, source }: ServiceResolutionParams<T>) {
-    return options.setup({
-        container,
-        inject: injectable => container.resolve(injectable, source),
-    });
-}
-
-export function lazyStrategy<T>(params: ServiceResolutionParams<T>) {
-    // Short-circuit if already resolved
-    const existing = params.container.get(params.service);
-    if (existing) {
-        return existing;
-    }
-
-    const memo = createMemo(() => singletonStrategy(params));
-    const proxy = new Proxy(noop, {
-        get: (target, prop) => {
-            return (memo() as Record<string | symbol, unknown>)[prop];
-        },
-        set: (target, prop, value) => {
-            (memo() as Record<string | symbol, unknown>)[prop] = value;
-            return true;
-        },
-        has: (target, prop) => {
-            return prop in (memo() as Record<string | symbol, unknown>);
-        },
-        apply: (target, thisArg, args: unknown[]) => {
-            return (memo() as (...args: unknown[]) => unknown)(...args);
-        },
-    });
-
-    return proxy;
+    return value != null && (value as Injectable)[INJECTABLE_SYMBOL] === SERVICE_SYMBOL;
 }

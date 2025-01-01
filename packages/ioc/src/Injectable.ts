@@ -1,28 +1,31 @@
+import type { Container } from './Container.js';
+
 export const INJECTABLE_SYMBOL = Symbol('injectable');
-declare const s: unique symbol;
 
-export interface InjectableOptions {
+export type Injected<T> = T extends Injectable ? ReturnType<T['resolve']> : never;
+
+export type InjectableOptions<T> = {
     name?: string;
-}
+    resolve: (container: Container, caller?: Injectable) => T;
+};
 
-export type InjectableKey<T> = symbol & { [s]: T };
+export type InjectableResolver<T, TInjectable extends Injectable<T> = Injectable<T>> = (
+    this: TInjectable,
+    container: Container,
+    caller?: Injectable,
+) => T;
 
-export type InjectableOf<T> = T extends Injectable<infer U> ? U : never;
-
-export interface Injectable<T = unknown> {
-    readonly [INJECTABLE_SYMBOL]: true;
+export type Injectable<T = unknown> = {
+    readonly [INJECTABLE_SYMBOL]: true | symbol;
     readonly name?: string;
-    readonly key: InjectableKey<T>;
-}
+    resolve(container: Container, caller?: Injectable): T;
+};
 
-export function defineInjectable<T, TOptions extends InjectableOptions = InjectableOptions>(
-    options: TOptions = {} as TOptions,
-): Injectable<T> & TOptions {
-    return Object.freeze({
+export function defineInjectable<T>(options: InjectableOptions<T>): Injectable<T> {
+    return {
         ...options,
         [INJECTABLE_SYMBOL]: true,
-        key: Symbol(options?.name) as InjectableKey<T>,
-    });
+    };
 }
 
 export function isInjectable(injectable: unknown): injectable is Injectable {
@@ -30,5 +33,5 @@ export function isInjectable(injectable: unknown): injectable is Injectable {
         return false;
     }
 
-    return (injectable as Injectable)[INJECTABLE_SYMBOL] === true;
+    return (injectable as Injectable)[INJECTABLE_SYMBOL] !== undefined;
 }
