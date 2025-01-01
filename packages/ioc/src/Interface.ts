@@ -2,17 +2,50 @@ import { INJECTABLE_SYMBOL, isInjectable, type Injectable } from './Injectable.j
 
 const INTERFACE_SYMBOL = Symbol('interface');
 
+/**
+ * Options for the interface.
+ */
 export interface InterfaceOptions {
+    /**
+     * Name of the interface.
+     */
     name?: string;
 }
 
+/**
+ * Interface injectable.
+ */
 export type Interface<T = unknown> = Injectable<T> & {
+    /**
+     * Make the interface optional.
+     * Will resolve to `undefined` if the interface is not registered in the container.
+     */
     optional(): Injectable<T | undefined>;
+    /**
+     * Set the default value for the interface.
+     * Will resolve to the default value if the interface is not registered in the container.
+     * @param value - Default value.
+     */
     default(value: T): Injectable<T>;
+    /**
+     * Set the default value for the interface.
+     * Will resolve to the default value if the interface is not registered in the container.
+     * @param value - Default value.
+     */
     default<D>(value: D): Injectable<T | D>;
+    /**
+     * Set the default value for the interface.
+     * Will resolve to the default value if the interface is not registered in the container.
+     * @param value - Default value.
+     */
     default<D>(injectable: Injectable<D>): Injectable<T | D>;
 };
 
+/**
+ * Define an interface injectable.
+ * @param options - Options for the interface.
+ * @returns Interface injectable.
+ */
 export function defineInterface<T>(options: InterfaceOptions = {}): Interface<T> {
     return {
         [INJECTABLE_SYMBOL]: INTERFACE_SYMBOL,
@@ -44,12 +77,17 @@ export function defineInterface<T>(options: InterfaceOptions = {}): Interface<T>
     };
 }
 
-export function isInterface(injectable: unknown): injectable is Interface {
-    if (injectable == null) {
+/**
+ * Check if the value is an interface injectable.
+ * @param value - Value to check.
+ * @returns True if the value is an interface, false otherwise.
+ */
+export function isInterface(value: unknown): value is Interface {
+    if (value == null) {
         return false;
     }
 
-    return (injectable as Interface)[INJECTABLE_SYMBOL] === INTERFACE_SYMBOL;
+    return (value as Interface)[INJECTABLE_SYMBOL] === INTERFACE_SYMBOL;
 }
 
 function optional<T>(this: Interface<T>): Injectable<T | undefined> {
