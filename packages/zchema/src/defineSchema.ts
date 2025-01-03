@@ -1,9 +1,9 @@
 import type { FunctionParams } from '@nzyme/types';
 import { createNamedFunction, identity } from '@nzyme/utils';
 
-import type { SchemaAny, SchemaBase, SchemaOptions, SchemaProto, SchemaValue } from './Schema.js';
+import type { SchemaAny, SchemaBase, SchemaOptions, SchemaProto, Infer } from './Schema.js';
 
-type SchemaBaseValue<F extends SchemaBase> = Exclude<SchemaValue<ReturnType<F>>, undefined | null>;
+type SchemaBaseValue<F extends SchemaBase> = Exclude<Infer<ReturnType<F>>, undefined | null>;
 
 type SchemaOptionsFactory<
     F extends SchemaBase = SchemaBase,

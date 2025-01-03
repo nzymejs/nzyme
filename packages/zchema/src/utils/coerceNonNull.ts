@@ -1,11 +1,11 @@
-import type { Schema, SchemaProto, SchemaValueNonNull } from '../Schema.js';
+import type { Schema, SchemaProto, InferNonNull } from '../Schema.js';
 
-export function coerceNonNull<S extends Schema>(schema: S, value?: unknown): SchemaValueNonNull<S> {
-    const proto = schema.proto as SchemaProto<SchemaValueNonNull<S>>;
+export function coerceNonNull<S extends Schema>(schema: S, value?: unknown): InferNonNull<S> {
+    const proto = schema.proto as SchemaProto<InferNonNull<S>>;
 
     if (value === null) {
         if (schema.default) {
-            return schema.default() as SchemaValueNonNull<S>;
+            return schema.default() as InferNonNull<S>;
         }
 
         return proto.default();
@@ -13,7 +13,7 @@ export function coerceNonNull<S extends Schema>(schema: S, value?: unknown): Sch
 
     if (value === undefined) {
         if (schema.default) {
-            return schema.default() as SchemaValueNonNull<S>;
+            return schema.default() as InferNonNull<S>;
         }
 
         return proto.default();

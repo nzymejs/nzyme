@@ -1,30 +1,20 @@
-import type {
-    Schema,
-    SchemaOptions,
-    SchemaOptionsSimlify,
-    SchemaProto,
-    SchemaValue,
-} from '../Schema.js';
+import type { Schema, SchemaOptions, SchemaOptionsSimlify, SchemaProto, Infer } from '../Schema.js';
 import { defineSchema } from '../defineSchema.js';
 import { serialize } from '../utils/serialize.js';
 
-export type UnionSchemaOptions<T extends Schema[] = Schema[]> = SchemaOptions<
-    SchemaValue<T[number]>
-> & {
+export type UnionSchemaOptions<T extends Schema[] = Schema[]> = SchemaOptions<Infer<T[number]>> & {
     of: T;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UnionSchema<O extends UnionSchemaOptions = UnionSchemaOptions> = ForceName<
-    O extends UnionSchemaOptions<infer T extends Schema[]>
-        ? Schema<SchemaValue<T[number]>, O>
-        : never
+    O extends UnionSchemaOptions<infer T extends Schema[]> ? Schema<Infer<T[number]>, O> : never
 >;
 
 declare class FF {}
 type ForceName<T> = T & FF;
 
-export type UnionSchemaValue<O extends UnionSchemaOptions> = SchemaValue<O['of'][number]>;
+export type UnionSchemaValue<O extends UnionSchemaOptions> = Infer<O['of'][number]>;
 
 type UnionSchemaBase = {
     <S extends Schema[]>(of: S): UnionSchema<{ of: S }>;

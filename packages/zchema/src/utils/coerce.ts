@@ -1,21 +1,21 @@
-import type { Schema, SchemaProto, SchemaValue, SchemaValueNonNull } from '../Schema.js';
+import type { Schema, SchemaProto, Infer, InferNonNull } from '../Schema.js';
 
-export function coerce<S extends Schema>(schema: S, value: Partial<SchemaValue<S>>): SchemaValue<S>;
-export function coerce<S extends Schema>(schema: S, value?: unknown): SchemaValue<S>;
-export function coerce<S extends Schema>(schema: S, value?: unknown): SchemaValue<S> {
-    const proto = schema.proto as SchemaProto<SchemaValueNonNull<S>>;
+export function coerce<S extends Schema>(schema: S, value: Partial<Infer<S>>): Infer<S>;
+export function coerce<S extends Schema>(schema: S, value?: unknown): Infer<S>;
+export function coerce<S extends Schema>(schema: S, value?: unknown): Infer<S> {
+    const proto = schema.proto as SchemaProto<InferNonNull<S>>;
 
     if (value === null) {
         if (schema.nullable) {
-            return null as SchemaValue<S>;
+            return null as Infer<S>;
         }
 
         if (schema.default) {
-            return schema.default() as SchemaValue<S>;
+            return schema.default() as Infer<S>;
         }
 
         if (schema.optional) {
-            return undefined as SchemaValue<S>;
+            return undefined as Infer<S>;
         }
 
         return proto.default();
@@ -23,15 +23,15 @@ export function coerce<S extends Schema>(schema: S, value?: unknown): SchemaValu
 
     if (value === undefined) {
         if (schema.optional) {
-            return undefined as SchemaValue<S>;
+            return undefined as Infer<S>;
         }
 
         if (schema.default) {
-            return schema.default() as SchemaValue<S>;
+            return schema.default() as Infer<S>;
         }
 
         if (schema.nullable) {
-            return null as SchemaValue<S>;
+            return null as Infer<S>;
         }
 
         return proto.default();

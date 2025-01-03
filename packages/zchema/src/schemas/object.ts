@@ -7,7 +7,7 @@ import type {
     SchemaOptions,
     SchemaOptionsSimlify,
     SchemaProto,
-    SchemaValue,
+    Infer,
     SchemaVisitor,
 } from '../Schema.js';
 import { defineSchema } from '../defineSchema.js';
@@ -20,13 +20,9 @@ export type ObjectSchemaProps = {
 
 export type ObjectSchemaPropsValue<TProps extends ObjectSchemaProps> = Flatten<
     {
-        [K in keyof TProps as TProps[K]['optional'] extends false ? K : never]: SchemaValue<
-            TProps[K]
-        >;
+        [K in keyof TProps as TProps[K]['optional'] extends false ? K : never]: Infer<TProps[K]>;
     } & {
-        [K in keyof TProps as TProps[K]['optional'] extends false ? never : K]+?: SchemaValue<
-            TProps[K]
-        >;
+        [K in keyof TProps as TProps[K]['optional'] extends false ? never : K]+?: Infer<TProps[K]>;
     }
 >;
 

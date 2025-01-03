@@ -1,10 +1,7 @@
 import { coerce } from './coerce.js';
-import type { Schema, SchemaValue } from '../Schema.js';
+import type { Schema, Infer } from '../Schema.js';
 
-export function parseJson<S extends Schema>(
-    schema: S,
-    json: string | undefined | null,
-): SchemaValue<S> {
+export function parseJson<S extends Schema>(schema: S, json: string | undefined | null): Infer<S> {
     if (!json) {
         return coerce(schema);
     }

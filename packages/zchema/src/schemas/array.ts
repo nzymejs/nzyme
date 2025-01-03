@@ -6,28 +6,26 @@ import type {
     SchemaOptions,
     SchemaOptionsSimlify,
     SchemaProto,
-    SchemaValue,
+    Infer,
 } from '../Schema.js';
 import { defineSchema } from '../defineSchema.js';
 import { coerce } from '../utils/coerce.js';
 import { isSchema } from '../utils/isSchema.js';
 import { serialize } from '../utils/serialize.js';
 
-export type ArraySchemaOptions<T extends SchemaAny = SchemaAny> = SchemaOptions<
-    SchemaValue<T>[]
-> & {
+export type ArraySchemaOptions<T extends SchemaAny = SchemaAny> = SchemaOptions<Infer<T>[]> & {
     of: T;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ArraySchema<O extends ArraySchemaOptions = ArraySchemaOptions> = ForceName<
-    O extends ArraySchemaOptions<infer T extends SchemaAny> ? Schema<SchemaValue<T>[], O> : never
+    O extends ArraySchemaOptions<infer T extends SchemaAny> ? Schema<Infer<T>[], O> : never
 >;
 
 declare class FF {}
 type ForceName<T> = T & FF;
 
-export type ArraySchemaValue<O extends ArraySchemaOptions> = SchemaValue<O['of']>[];
+export type ArraySchemaValue<O extends ArraySchemaOptions> = Infer<O['of']>[];
 
 type ArraySchemaBase = {
     <S extends SchemaAny>(of: S): ArraySchema<{ of: S }>;

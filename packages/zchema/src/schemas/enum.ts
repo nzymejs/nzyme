@@ -9,7 +9,9 @@ export type EnumSchemaOptions<V extends Primitive[] = Primitive[]> = SchemaOptio
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type EnumSchema<O extends EnumSchemaOptions> = ForceName<Schema<O['values'][number], O>>;
+export type EnumSchema<O extends EnumSchemaOptions = EnumSchemaOptions> = ForceName<
+    Schema<O['values'][number], O>
+>;
 
 declare class FF {}
 type ForceName<T> = T & FF;

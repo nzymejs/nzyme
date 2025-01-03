@@ -1,6 +1,6 @@
-import type { SchemaAny, SchemaValue } from '../Schema.js';
+import type { SchemaAny, Infer } from '../Schema.js';
 
-export function serialize<S extends SchemaAny>(schema: S, value: SchemaValue<S>): unknown {
+export function serialize<S extends SchemaAny>(schema: S, value: Infer<S>): unknown {
     const proto = schema.proto;
 
     if (value === null && schema.nullable) {

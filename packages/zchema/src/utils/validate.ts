@@ -7,11 +7,11 @@ import {
     type ValidationResult,
 } from '@nzyme/validate';
 
-import type { SchemaAny, SchemaValue } from '../Schema.js';
+import type { SchemaAny, Infer } from '../Schema.js';
 
 export function validate<S extends SchemaAny>(
     schema: S,
-    value: SchemaValue<S>,
+    value: Infer<S>,
     ctx: ValidationContext = {},
 ) {
     const errors = validateInner(schema, value, ctx);
@@ -20,7 +20,7 @@ export function validate<S extends SchemaAny>(
 
 export function validateOrThrow<S extends SchemaAny>(
     schema: S,
-    value: SchemaValue<S>,
+    value: Infer<S>,
     ctx: ValidationContext = {},
 ) {
     const result = validate(schema, value, ctx);
@@ -31,7 +31,7 @@ export function validateOrThrow<S extends SchemaAny>(
 
 function validateInner<S extends SchemaAny>(
     schema: S,
-    value: SchemaValue<S>,
+    value: Infer<S>,
     ctx: ValidationContext,
 ): ValidationResult {
     const proto = schema.proto;

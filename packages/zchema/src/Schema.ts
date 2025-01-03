@@ -53,11 +53,11 @@ export type Schema<V = unknown, O extends SchemaOptions<V> = SchemaOptions<V>> =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaAny = Schema<any, any>;
 
-export type SchemaValueNonNull<TSchema extends SchemaAny> =
+export type InferNonNull<TSchema extends SchemaAny> =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TSchema extends Schema<infer V, any> ? V : never;
 
-export type SchemaValue<TSchema extends SchemaAny> =
+export type Infer<TSchema extends SchemaAny> =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TSchema extends Schema<infer V, any>
         ? V | NullableValue<TSchema['nullable']> | OptionalValue<TSchema['optional']>
